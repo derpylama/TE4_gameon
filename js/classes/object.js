@@ -1,3 +1,4 @@
+// Each GameObject have a unique id they exists in bellow set
 const assignedIds = new Set();
 
 class GameObject {
@@ -23,8 +24,6 @@ class GameObject {
     }
 }
 
-
-
 class GameTile extends GameObject {
     constructor(texture, isGoal, isDeath) {
         super(texture);
@@ -34,45 +33,45 @@ class GameTile extends GameObject {
 }
 
 class VoidTile extends GameObject {
-    constructor(texture) {
-        super(texture);
+    constructor() {
+        super("./assets/images/tiles/void.png");
     }
 }
 
 class DisabledVoidTile extends VoidTile {
-    constructor(texture) {
-        super(texture);
+    constructor() {
+        super(tileVoid);
     }
 }
 
 class DisabledVoidTile_NonVoidAbove extends VoidTile {
-    constructor(texture) {
-        super(texture);
+    constructor() {
+        super(tileNonVoidAbove);
     }
 }
 
 class BeePlayerTile extends GameObject {
-    constructor(texture, direction) {
-        super(texture);
+    constructor(direction) {
+        super(tilePlayerBee);
         this.direction = direction;
     }
 }
 
 class BeehiveTile extends GameObject {
-    constructor(texture) {
-        super(texture);
+    constructor() {
+        super(tileBeeHive);
     }
 }
 
 class LavaTile extends GameObject {
-    constructor(texture) {
-        super(texture);
+    constructor() {
+        super(tileLava);
     }
 }
 
 // inte sten weman
 class StoneTile extends GameObject {
-    constructor(texture) {
-        super(texture);
+    constructor() {
+        super(tileStone);
     }
 }

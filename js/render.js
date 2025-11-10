@@ -1,8 +1,10 @@
-// Provide handling for images, renderings things and rendering objects of the "GameObject" class.
+// The default size of each checker square
 const checkerSize = (800/10)/2;
 
-const borderOffset = [20, 20]; // Each txPx is 5* scrPx, we add 4 txPx offset in both directions
+// Define offset to account for border texture, each txPx is 5* scrPx, we add 4 txPx offset in both directions
+const borderOffset = [20, 20]; 
 
+// Main texture class ensuring they are loaded
 class Texture {
     constructor(texturePath) {
         this.image = new Image();
@@ -27,6 +29,7 @@ class Texture {
     }
 }
 
+// Helper to draw a checkerboard pattern instead of a texture
 function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0) {
     for (let row = 0; row < height / checkerSize; row++) {
         for (let col = 0; col < width / checkerSize; col++) {
@@ -60,6 +63,7 @@ function renderTexture(ctx, texture, x, y, width, height) {
     }
 }
 
+// Function to render a grid object
 function renderGrid(gridObj) {
     const gridData = gridObj.getGrid();
     const gaps = gridObj.getGaps();
@@ -105,12 +109,14 @@ function renderGrid(gridObj) {
     }
 }
 
+// Main render function (called in loop)
 function Render(ctx, gridObj) {
 
     // Render backgrounds
     renderTexture(ctx, gridBackgroundImg, 0, 0, 800, 800);
     renderTexture(ctx, invBackgroundImg, 800, 0, 480, 800);
 
+    // Render grid
     renderGrid(gridObj);
 
     // Render border

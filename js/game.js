@@ -21,8 +21,13 @@ const playButtonImg = new Texture("./assets/images/play.png");
 const borderImg = new Texture("./assets/images/border.png");
 const gridBackgroundImg = new Texture("./assets/images/grid.png");
 const invBackgroundImg = new Texture("./assets/images/inventory.png");
+
 const tileVoid = new Texture("./assets/images/tiles/void.png");
 const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
+const tilePlayerBee = new Texture("./assets/images/tiles/bee.png");
+const tileBeeHive = new Texture("./assets/images/tiles/hive.png");
+const tileLava = new Texture("./assets/images/tiles/lava.png");
+const tileStone = new Texture("./assets/images/tiles/stone.png");
 
 
 // Sounds
@@ -63,18 +68,18 @@ function GameLoop(gameGrid) {
     );
 }
 
+// Function to start the game
 function StartGame(gameGrid) {
     audio.playSound("bg.music");
     GameLoop(gameGrid);
 }
 
+// If we got a canvas run the game
 if (gameCanvas) {
-    // call gameloop
-    //GameLoop(grid);
-
     // Start menu
     var inStartMenu = true;
 
+    // Click hook for start menu play button
     let startMenuClickHook = (x,y,type) => {
         if (type === 0) {
             // Check if click is inside play button
@@ -90,6 +95,7 @@ if (gameCanvas) {
     }
     registerClickHook(startMenuClickHook);
 
+    // Inner loop for start menu
     let startMenuLoop = () => {
         if (!inStartMenu) return;
         renderStartMenu(ctx)

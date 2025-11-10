@@ -1,3 +1,4 @@
+// Handle unmute/mute buttons
 const playBtn = document.getElementById("audioIcon-paused");
 const pauseBtn = document.getElementById("audioIcon-playing");
 
@@ -17,6 +18,7 @@ if (playBtn && pauseBtn && audio) {
     });
 }
 
+// Handle volume slider
 const volumeSlider = document.getElementById("volumeSlider");
 
 if (volumeSlider && audio) {
