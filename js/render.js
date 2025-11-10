@@ -101,3 +101,12 @@ function Render(ctx, gridObj) {
         ctx.strokeRect(800 + borderOffset[0], borderOffset[1], 480, 800);
     }
 }
+
+
+function renderStartMenu(ctx) {
+    // Render start menu background
+    renderTexture(ctx, startBackgroundImg, 0, 0, 1320, 840);
+
+    // Render play button centered of playButtonImg (64x64) inside the canvas (1320x840)
+    renderTexture(ctx, playButtonImg, (1320/2)-(64/2), (840/2)-(64/2), 64, 64);
+}

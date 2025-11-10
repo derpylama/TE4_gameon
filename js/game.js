@@ -11,6 +11,8 @@ const ctx = gameCanvas ? gameCanvas.getContext("2d") : null;
 
 
 // Textures
+const startBackgroundImg = new Texture("./assets/images/startmenu.png");
+const playButtonImg = new Texture("./assets/images/play.png");
 const borderImg = new Texture("./assets/images/border.png");
 const gridBackgroundImg = new Texture("./assets/images/grid.png");
 const invBackgroundImg = new Texture("./assets/images/inventory.png");
@@ -38,5 +40,30 @@ function GameLoop(grid) {
 
 if (gameCanvas) {
     // call gameloop
-    GameLoop(grid);
+    //GameLoop(grid);
+
+    // Start menu
+    var inStartMenu = true;
+
+    let startMenuClickHook = (x,y,type) => {
+        if (type === 0) {
+            // Check if click is inside play button
+            const buttonX = (1320/2) - (64/2);
+            const buttonY = (840/2) - (64/2);
+            if (x >= buttonX && x <= buttonX + 64*1.33 && y >= buttonY && y <= buttonY + 64*1.33) {
+                // Start game
+                inStartMenu = false;
+                unregisterClickHook(startMenuClickHook);
+                GameLoop(grid);
+            }
+        }
+    }
+    registerClickHook(startMenuClickHook);
+
+    let startMenuLoop = () => {
+        if (!inStartMenu) return;
+        renderStartMenu(ctx)
+        requestAnimationFrame(startMenuLoop);
+    }
+    requestAnimationFrame(startMenuLoop);
 }
