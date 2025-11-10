@@ -29,6 +29,23 @@ class Texture {
     }
 }
 
+// Layered texture class for drawing multiple textures ontop of each other in order
+class LayeredTexture {
+    constructor(texturePaths) {
+        // this.textures is an array of Texture objects
+        this.textures = texturePaths.map(path => new Texture(path));
+    }
+
+    isLoaded() {
+        return this.textures.every(texture => texture.isLoaded());
+    }
+
+    getImage() {
+        // return array of images
+        return this.textures.map(texture => texture.getImage());
+    }
+}
+
 // Helper to draw a checkerboard pattern instead of a texture
 function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0) {
     for (let row = 0; row < height / checkerSize; row++) {
@@ -56,7 +73,17 @@ function renderTexture(ctx, texture, x, y, width, height) {
         x += borderOffset[0];
         y += borderOffset[1];
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(texture.getImage(), x, y, width, height);
+        
+        let textures = [];
+        if (texture instanceof LayeredTexture) {
+            textures = texture.getImage();
+        } else {
+            textures.push(texture.getImage());
+        }
+
+        for (const img of textures) {
+            ctx.drawImage(img, x, y, width, height);
+        }
     } else {
         // Draw purple/black checkerboard
         drawCheckerboard(ctx, x, y, width, height, checkerSize);
