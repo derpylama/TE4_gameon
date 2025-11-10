@@ -14,10 +14,7 @@ const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
 
 
 // Instantiate
-const grid = new Grid(10, 10, 720/10);
-grid.setTile(5, 5, new DisabledVoidTile(tileVoid));
-grid.setTile(4, 5, new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove));
-
+const grid = new Grid(10, 10, 720/10, (row, col) => {return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));});
 
 // Define loops
 function GameLoop(grid) {
