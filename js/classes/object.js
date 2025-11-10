@@ -4,7 +4,7 @@ class GameObject {
     constructor(textureOrPath) {
         // If string call toTexture
         if (typeof textureOrPath === "string") {
-            this.texture = toTexture(textureOrPath);
+            this.texture = new Texture(textureOrPath);
         } else {
             this.texture = textureOrPath;
         }

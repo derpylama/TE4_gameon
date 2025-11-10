@@ -1,4 +1,29 @@
 // Provide handling for images, renderings things and rendering objects of the "GameObject" class.
+const checkerSize = (720/16)/2;
+
+class Texture {
+    constructor(texturePath) {
+        this.image = new Image();
+        this.image.src = texturePath;
+        this.loaded = false;
+
+        if (this.image.complete) {
+            this.loaded = true;
+        } else {
+            this.image.onload = () => {
+                this.loaded = true;
+            };
+        }
+    }
+
+    isLoaded() {
+        return this.loaded;
+    }
+
+    getImage() {
+        return this.image;
+    }
+}
 
 function drawCheckerboard(ctx, x, y, width, height, checkerSize) {
     for (let row = 0; row < height / checkerSize; row++) {
@@ -15,45 +40,34 @@ function drawCheckerboard(ctx, x, y, width, height, checkerSize) {
 
 // Handles if not loaded show purple/black checkerboard
 function renderTexture(ctx, texture, x, y, width, height) {
-    if (texture.complete) {
+    if (texture.isLoaded()) {
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(texture, x, y, width, height);
+        ctx.drawImage(texture.getImage(), x, y, width, height);
     } else {
         // Draw purple/black checkerboard
-        const checkerSize = 8;
         drawCheckerboard(ctx, x, y, width, height, checkerSize);
     }
 }
 
-function toTexture(texturePath) {
-    const img = new Image();
-    img.src = texturePath;
-    return img;
-}
+function Render(ctx, gridObj) {
+    const gridData = gridObj.getGrid();
 
-function Render(ctx, grid) {
-    const grid = grid.getGrid(); // 2D array
-
-    // Render background image from ./assets/images/background.png
-    const backgroundImg = new Image();
-    backgroundImg.src = "./assets/images/background.png";
-
-    renderTexture(ctx, backgroundImg, 0, 0, grid[0].length * grid.getTileSize(), grid.length * grid.getTileSize());
+    // Render background image
+    renderTexture(ctx, backgroundImg, 0, 0, 1280, 720);
 
     // Render grid by iterating
-    for (let r = 0; r < grid.length; r++) {
-        for (let c = 0; c < grid[r].length; c++) {
-            const gameObj = grid[r][c];
-            if (gameObj) {
+    for (let r = 0; r < gridData.length; r++) {
+        for (let c = 0; c < gridData[r].length; c++) {
+            const gameObj = gridData[r][c];
+            if (gameObj != null) {
                 const texture = gameObj.texture;
 
-                // Each image is 16x16 but should be scaled to grid.getTileSize() => int
+                // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                renderTexture(ctx, texture, c * grid.getTileSize(), r * grid.getTileSize(), grid.getTileSize(), grid.getTileSize());
+                renderTexture(ctx, texture, c * gridObj.getTileSize(), r * gridObj.getTileSize(), gridObj.getTileSize(), gridObj.getTileSize());
             } else {
                 // Draw purple/black checkerboard for empty tiles
-                const checkerSize = 8;
-                drawCheckerboard(ctx, c * grid.getTileSize(), r * grid.getTileSize(), grid.getTileSize(), grid.getTileSize(), checkerSize);
+                drawCheckerboard(ctx, c * gridObj.getTileSize(), r * gridObj.getTileSize(), gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
             }
         }
     }
