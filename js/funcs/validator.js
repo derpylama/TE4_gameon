@@ -3,7 +3,7 @@
 
 
 
-function validateRow(blockrow) { //made it take an entire row incase we wanna add ex is action for like  stone-is-tree-moveto-left   //change all stones to trees then move all trees to left
+function validateRow(blockrow) { //made it take an entire row incase we wanna add ex "is" action for like  stone-is-tree-moveto-left   //change all stones to trees -> move all trees to left
     for (let i = 0; i < blockrow.length; i++) {
         const block = blockrow[i];
         if (block instanceof CodeBlockAction) {

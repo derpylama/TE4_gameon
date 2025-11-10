@@ -49,7 +49,7 @@ const codeGrid = new Grid(4, 5, 800/10, null);
 //MARK: Test codeblocks
 codeBlockEntity1 = new CodeBlockObject("stone");
 codeBlockEntity2 = new CodeBlockModifier("left");
-codeBlockAction1 = new CodeBlockAction("moveto", ["object", "modifier"]);
+codeBlockAction1 = new CodeBlockAction("moveto", ["object", "modifier"]); //also acceps "any"
 gameGrid.setTile(1, 1, codeBlockEntity1);
 gameGrid.setTile(1, 2, codeBlockAction1);
 gameGrid.setTile(1, 3, codeBlockEntity2);
