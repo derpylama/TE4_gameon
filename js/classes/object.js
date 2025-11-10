@@ -12,6 +12,10 @@ class GameObject {
         }
         this.id = proposedId;
     }
+
+    getId() {
+        return this.id;
+    }
 }
 
 class CodeBlock extends GameObject {

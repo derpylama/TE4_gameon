@@ -15,8 +15,8 @@ class Grid {
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
                 const cellObj = this.grid[r][c];
-                if (cellObj && cellObj.id === gameObj.id) {
-                    return { row: r, col: c };
+                if (cellObj && cellObj.getId() === gameObj.getId()) {
+                    return { "row": r, "col": c };
                 }
             }
         }  
@@ -78,5 +78,9 @@ class Grid {
                 this.grid[r][c] = null;
             }
         }
+    }
+
+    getGrid() {
+        return this.grid;
     }
 }
