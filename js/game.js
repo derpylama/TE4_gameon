@@ -34,6 +34,20 @@ const tileBeeHive = new Texture("./assets/images/tiles/hive.png");
 const tileLava = new Texture("./assets/images/tiles/lava.png");
 const tileStone = new Texture("./assets/images/tiles/stone.png");
 
+//MARK: Test
+// const tileAnimTest = new AnimatedTexture(
+//     [
+//         "./assets/images/tiles/void.png",
+//         tileNonVoidAbove
+//     ],
+//     500 // Switch every 500ms
+// )
+
+// const tileLayeredTest = new LayeredTexture([
+//     tileAnimTest,
+//     "./assets/images/tiles/bee.png"
+// ]);
+
 
 // Overlays (rendered using `overlayer.showOverlayObj(<overlayObj>)`)
 const onOverlayGameOverClickRestart = (x,y,type) => {console.log(x,y,type)};
@@ -75,6 +89,8 @@ const gameGrid = new Grid(
 );
 const inventoryGrid = new Grid(4, 4, 800/10, null);
 const codeGrid = new Grid(4, 5, 800/10, null);
+
+// gameGrid.setTile(5,5, new GameTile(tileLayeredTest)); //MARK: Test
 
 // Define loops
 function GameLoop(gameGrid) {

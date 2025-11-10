@@ -29,11 +29,49 @@ class Texture {
     }
 }
 
+// Animated texture class for handling frame-based animations
+class AnimatedTexture {
+    // Frames are an array of Texture objects or strings
+    constructor(frames, frameDuration) {
+        this.frames = frames.map(frame => {
+            if (typeof frame === 'string') {
+                return new Texture(frame);
+            } else {
+                return frame;
+            }
+        });
+
+        this.frameDuration = frameDuration; // in milliseconds
+        this.startTime = null;
+    }
+
+    isLoaded() {
+        return this.frames.every(frame => frame.isLoaded());
+    }
+
+    getImage() {
+        // First time call sets startTime
+        // Then we use elapsed time to determine current frame according to frameDuration
+        if (this.startTime === null) {
+            this.startTime = Date.now();
+        }
+        const elapsed = Date.now() - this.startTime;
+        const currentFrameIndex = Math.floor(elapsed / this.frameDuration) % this.frames.length;
+        return this.frames[currentFrameIndex].getImage();
+    }
+}
+
 // Layered texture class for drawing multiple textures ontop of each other in order
 class LayeredTexture {
     constructor(texturePaths) {
-        // this.textures is an array of Texture objects
-        this.textures = texturePaths.map(path => new Texture(path));
+        // this.textures is an array of Texture/AnimatedTexture objects but accepts strings as well
+        this.textures = texturePaths.map(path => {
+            if (typeof path === 'string') {
+                return new Texture(path);
+            } else {
+                return path;
+            }
+        });
     }
 
     isLoaded() {
