@@ -61,22 +61,25 @@ function renderGrid(gridObj) {
     for (let r = 0; r < gridData.length; r++) {
         for (let c = 0; c < gridData[r].length; c++) {
             const gameObj = gridData[r][c];
+
+            const calculatedOffset = gridObj.getOffset(r, c);
+
             if (gameObj != null) {
                 const texture = gameObj.texture;
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                renderTexture(ctx, texture, (c * gridObj.getTileSize())+(c * gaps[0]), (r * gridObj.getTileSize())+(r * gaps[1]), gridObj.getTileSize(), gridObj.getTileSize());
+                renderTexture(ctx, texture, (c * gridObj.getTileSize())+(c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize())+(r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize());
             } else {
                 // Draw purple/black checkerboard for empty tiles
-                drawCheckerboard(ctx, (c * gridObj.getTileSize())+(c * gaps[0]), (r * gridObj.getTileSize())+(r * gaps[1]), gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
+                drawCheckerboard(ctx, (c * gridObj.getTileSize())+(c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize())+(r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
             }
 
             // If debug mode draw a border inside the tile
             if (DEBUG) {
                 ctx.strokeStyle = "red";
                 ctx.lineWidth = 1;
-                ctx.strokeRect((c * gridObj.getTileSize()) + borderOffset[0] + (c * gaps[0]), (r * gridObj.getTileSize()) + borderOffset[1] + (r * gaps[1]), gridObj.getTileSize(), gridObj.getTileSize());
+                ctx.strokeRect((c * gridObj.getTileSize()) + borderOffset[0] + (c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize()) + borderOffset[1] + (r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize());
             }
         }
     }
