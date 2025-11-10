@@ -13,6 +13,7 @@ const ctx = gameCanvas ? gameCanvas.getContext("2d") : null;
 // Systems
 const _volumeSlider = document.getElementById("volumeSlider");
 const audio = new SoundHandler(parseInt(_volumeSlider.value, 10));
+const overlayer = new OverlayHandler();
 
 
 // Textures
@@ -22,12 +23,32 @@ const borderImg = new Texture("./assets/images/border.png");
 const gridBackgroundImg = new Texture("./assets/images/grid.png");
 const invBackgroundImg = new Texture("./assets/images/inventory.png");
 
+const overlayGameOverImg = new Texture("./assets/images/overlays/gameover.png");
+const overlayRealityIsWrongImg = new Texture("./assets/images/overlays/reality_is_wrong.png");
+const overlayWonImg = new Texture("./assets/images/overlays/won.png");
+
 const tileVoid = new Texture("./assets/images/tiles/void.png");
 const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
 const tilePlayerBee = new Texture("./assets/images/tiles/bee.png");
 const tileBeeHive = new Texture("./assets/images/tiles/hive.png");
 const tileLava = new Texture("./assets/images/tiles/lava.png");
 const tileStone = new Texture("./assets/images/tiles/stone.png");
+
+
+// Overlays (rendered using `overlayer.showOverlayObj(<overlayObj>)`)
+const onOverlayGameOverClickRestart = (x,y,type) => {console.log(x,y,type)};
+const overlayGameOver = new Overlay(
+    // Texture,         [ [ [x,y,width,height], function(x,y,type) ], ... ]
+    overlayGameOverImg, [ [ [400-50,400-50,50,50], onOverlayGameOverClickRestart ] ] // 100x100 button centered
+);
+const overlayRealityIsWrong = new Overlay(
+    overlayRealityIsWrongImg, []
+);
+const onOverlayWonClickContinue = (x,y,type) => {console.log(x,y,type)};
+const overlayWon = new Overlay(
+    // Texture,    [ [ [x,y,width,height], function(x,y,type) ], ... ]
+    overlayWonImg, [ [ [400-50,400-50,50,50], onOverlayWonClickContinue ] ] // 100x100 button centered
+);
 
 
 // Sounds
@@ -98,7 +119,7 @@ if (gameCanvas) {
     // Inner loop for start menu
     let startMenuLoop = () => {
         if (!inStartMenu) return;
-        renderStartMenu(ctx)
+        renderStartMenu(ctx);
         requestAnimationFrame(startMenuLoop);
     }
     requestAnimationFrame(startMenuLoop);

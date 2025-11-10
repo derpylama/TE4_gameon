@@ -4,6 +4,9 @@ const lastClick = { "x": 0, "y": 0, "key": null }; // ex 100,100,left
 const inputHooks = []; // Contains func(key, up/down)
 const clickHooks = []; // Contains func(x,y,key
 
+var inputHooksDisabled = false;
+var inputHooksDisableExclusions = [];
+
 // Register/Unregister functions for hooks
 function registerInputHook(hook) {
     inputHooks.push(hook);
@@ -35,6 +38,9 @@ window.addEventListener("load", () => {
 
             // Call input hooks
             for (const hook of inputHooks) {
+                if (inputHooksDisabled && !inputHooksDisableExclusions.includes(hook)) {
+                    continue;
+                }
                 hook(event.key, "down");
             }
         }
@@ -47,6 +53,9 @@ window.addEventListener("load", () => {
 
             // Call input hooks
             for (const hook of inputHooks) {
+                if (inputHooksDisabled && !inputHooksDisableExclusions.includes(hook)) {
+                    continue;
+                }
                 hook(event.key, "up");
             }
         }
@@ -59,6 +68,9 @@ window.addEventListener("load", () => {
 
         // Call click hooks
         for (const hook of clickHooks) {
+            if (inputHooksDisabled && !inputHooksDisableExclusions.includes(hook)) {
+                continue;
+            }
             hook(lastClick.x, lastClick.y, lastClick.key);
         }
     });

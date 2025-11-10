@@ -109,6 +109,15 @@ function renderGrid(gridObj) {
     }
 }
 
+// Helper function to render overlays if set
+function renderOverlays(ctx) {
+    const currentOverlay = overlayer.getCurrentOverlay();
+    if (currentOverlay !== null) {
+        renderTexture(ctx, currentOverlay, borderOffset[0], borderOffset[1], 800, 800);
+    }
+}
+
+
 // Main render function (called in loop)
 function Render(ctx, gridObj) {
 
@@ -129,6 +138,9 @@ function Render(ctx, gridObj) {
         ctx.strokeRect(borderOffset[0], borderOffset[1], 800, 800);
         ctx.strokeRect(800 + borderOffset[0], borderOffset[1], 480, 800);
     }
+
+    // If overlay render it on top
+    renderOverlays(ctx);
 }
 
 
