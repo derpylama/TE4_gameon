@@ -1,5 +1,6 @@
 class Grid {
-    constructor(rows, cols) {
+    // cellSize is pixels
+    constructor(rows, cols, cellSize = 32) {
         // Initialize a 2D array to represent the grid
         this.grid = [];
         for (let r = 0; r < rows; r++) {
@@ -8,6 +9,12 @@ class Grid {
                 this.grid[r][c] = null; // Initialize each cell to null
             }
         }
+
+        this.cellSize = cellSize;
+    }
+
+    getTileSize() {
+        return this.cellSize;
     }
 
     getPosOfObj(gameObj) {

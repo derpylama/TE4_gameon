@@ -1,8 +1,13 @@
 const assignedIds = new Set();
 
 class GameObject {
-    constructor(texture) {
-        this.texture = texture;
+    constructor(textureOrPath) {
+        // If string call toTexture
+        if (typeof textureOrPath === "string") {
+            this.texture = toTexture(textureOrPath);
+        } else {
+            this.texture = textureOrPath;
+        }
 
         // assign random id
         let proposedId = self.crypto.randomUUID();
