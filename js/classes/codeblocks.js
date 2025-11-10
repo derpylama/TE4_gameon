@@ -2,21 +2,25 @@ class CodeBlock extends GameObject {
     constructor(texture, value) {
         super(texture);
         this.value = value;
-        this.predecessor = predecessor;
-        this.successor = successor;
     }
 }
 
-class CodeBlockObject extends CodeBlock {
+class CodeBlockEntity extends CodeBlock {
     constructor(texture, value) {
         super(texture, value);
     }
 }
+
 class CodeBlockAction extends CodeBlock {
-    constructor(texture, value, predecessor = null, successor = null) {
+    constructor(texture, value) {
         super(texture, value);
-        this.predecessor = predecessor;
-        this.successor = successor;
+
     }
-    
+    validate(adjacentBlocks) { //array of two blocks  left, right    each action needs to be between two entities  ex:  (entity - action - entity), (stone - moveto - left)
+        const [left, right] = adjacentBlocks;
+        return (
+            left instanceof CodeBlockEntity &&
+            right instanceof CodeBlockEntity
+        );
+    }
 }
