@@ -1,6 +1,8 @@
 // Provide handling for images, renderings things and rendering objects of the "GameObject" class.
 const checkerSize = (800/10)/2;
 
+const borderOffset = [20, 20]; // Each txPx is 5* scrPx, we add 4 txPx offset in both directions
+
 class Texture {
     constructor(texturePath) {
         this.image = new Image();
@@ -40,6 +42,8 @@ function drawCheckerboard(ctx, x, y, width, height, checkerSize) {
 
 // Handles if not loaded show purple/black checkerboard
 function renderTexture(ctx, texture, x, y, width, height) {
+    x += borderOffset[0];
+    y += borderOffset[1];
     if (texture.isLoaded()) {
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(texture.getImage(), x, y, width, height);
@@ -52,8 +56,10 @@ function renderTexture(ctx, texture, x, y, width, height) {
 function Render(ctx, gridObj) {
     const gridData = gridObj.getGrid();
 
-    // Render background image
-    renderTexture(ctx, backgroundImg, 0, 0, 1280, 800);
+    // Render backgrounds
+    renderTexture(ctx, borderImg, 0-borderOffset[0], 0-borderOffset[1], 1320, 840);
+    renderTexture(ctx, gridBackgroundImg, 0, 0, 800, 800);
+    renderTexture(ctx, invBackgroundImg, 800, 0, 480, 800);
 
     // Render grid by iterating
     for (let r = 0; r < gridData.length; r++) {

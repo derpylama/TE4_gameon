@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = window.location.search.includes("debug");
 
 
 // Defines
@@ -11,7 +11,9 @@ const ctx = gameCanvas ? gameCanvas.getContext("2d") : null;
 
 
 // Textures
-const backgroundImg = new Texture("./assets/images/background.png");
+const borderImg = new Texture("./assets/images/border.png");
+const gridBackgroundImg = new Texture("./assets/images/grid.png");
+const invBackgroundImg = new Texture("./assets/images/inventory.png");
 const tileVoid = new Texture("./assets/images/tiles/void.png");
 const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
 
