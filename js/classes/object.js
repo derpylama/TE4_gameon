@@ -23,15 +23,7 @@ class GameObject {
     }
 }
 
-class CodeBlock extends GameObject {
-    constructor(texture, type, name, predecessor = null, successor = null) {
-        super(texture);
-        this.type = type;
-        this.name = name;
-        this.predecessor = predecessor;
-        this.successor = successor;
-    }
-}
+
 
 class GameTile extends GameObject {
     constructor(texture, isGoal, isDeath) {
