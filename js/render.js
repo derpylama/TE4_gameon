@@ -1,6 +1,8 @@
 // Provide handling for images, renderings things and rendering objects of the "GameObject" class.
 const checkerSize = (800/10)/2;
 
+const borderOffset = [20, 20]; // Each txPx is 5* scrPx, we add 4 txPx offset in both directions
+
 class Texture {
     constructor(texturePath) {
         this.image = new Image();
@@ -40,6 +42,8 @@ function drawCheckerboard(ctx, x, y, width, height, checkerSize) {
 
 // Handles if not loaded show purple/black checkerboard
 function renderTexture(ctx, texture, x, y, width, height) {
+    x += borderOffset[0];
+    y += borderOffset[1];
     if (texture.isLoaded()) {
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(texture.getImage(), x, y, width, height);
@@ -49,11 +53,9 @@ function renderTexture(ctx, texture, x, y, width, height) {
     }
 }
 
-function Render(ctx, gridObj) {
+function renderGrid(gridObj) {
     const gridData = gridObj.getGrid();
-
-    // Render background image
-    renderTexture(ctx, backgroundImg, 0, 0, 1280, 800);
+    const gaps = gridObj.getGaps();
 
     // Render grid by iterating
     for (let r = 0; r < gridData.length; r++) {
@@ -64,26 +66,47 @@ function Render(ctx, gridObj) {
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                renderTexture(ctx, texture, (c * gridObj.getTileSize()), (r * gridObj.getTileSize()), gridObj.getTileSize(), gridObj.getTileSize());
+                renderTexture(ctx, texture, (c * gridObj.getTileSize())+(c * gaps[0]), (r * gridObj.getTileSize())+(r * gaps[1]), gridObj.getTileSize(), gridObj.getTileSize());
             } else {
                 // Draw purple/black checkerboard for empty tiles
-                drawCheckerboard(ctx, (c * gridObj.getTileSize()), (r * gridObj.getTileSize()), gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
+                drawCheckerboard(ctx, (c * gridObj.getTileSize())+(c * gaps[0]), (r * gridObj.getTileSize())+(r * gaps[1]), gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
             }
 
             // If debug mode draw a border inside the tile
             if (DEBUG) {
                 ctx.strokeStyle = "red";
                 ctx.lineWidth = 1;
-                ctx.strokeRect(c * gridObj.getTileSize(), r * gridObj.getTileSize(), gridObj.getTileSize(), gridObj.getTileSize());
+                ctx.strokeRect((c * gridObj.getTileSize()) + borderOffset[0] + (c * gaps[0]), (r * gridObj.getTileSize()) + borderOffset[1] + (r * gaps[1]), gridObj.getTileSize(), gridObj.getTileSize());
             }
         }
     }
+}
+
+function Render(ctx, gridObj) {
+
+    // Render backgrounds
+    renderTexture(ctx, gridBackgroundImg, 0, 0, 800, 800);
+    renderTexture(ctx, invBackgroundImg, 800, 0, 480, 800);
+
+    renderGrid(gridObj);
+
+    // Render border
+    renderTexture(ctx, borderImg, 0-borderOffset[0], 0-borderOffset[1], 1320, 840);
 
     // If debug draw a purple border around the 800x800 grid and then one for 800,0 > 1280,800
     if (DEBUG) {
         ctx.strokeStyle = "hotpink";
         ctx.lineWidth = 4;
-        ctx.strokeRect(0, 0, 800, 800);
-        ctx.strokeRect(800, 0, 480, 800);
+        ctx.strokeRect(borderOffset[0], borderOffset[1], 800, 800);
+        ctx.strokeRect(800 + borderOffset[0], borderOffset[1], 480, 800);
     }
+}
+
+
+function renderStartMenu(ctx) {
+    // Render start menu background
+    renderTexture(ctx, startBackgroundImg, 0, 0, 1320, 840);
+
+    // Render play button centered of playButtonImg (64x64) inside the canvas (1320x840)
+    renderTexture(ctx, playButtonImg, (1320/2)-(64/2), (840/2)-(64/2), 64, 64);
 }
