@@ -46,6 +46,23 @@ const gameGrid = new Grid(
 const inventoryGrid = new Grid(4, 4, 800/10, null);
 const codeGrid = new Grid(4, 5, 800/10, null);
 
+//MARK: Test codeblocks
+codeBlockEntity1 = new CodeBlockEntity(playButtonImg, "stone");
+codeBlockEntity2 = new CodeBlockEntity(playButtonImg, "left");
+codeBlockAction1 = new CodeBlockAction(tileNonVoidAbove, "moveto");
+gameGrid.setTile(1, 1, codeBlockEntity1);
+gameGrid.setTile(1, 2, codeBlockAction1);
+gameGrid.setTile(1, 3, codeBlockEntity2);
+
+//test use codeBlock action validate
+let actionblock = gameGrid.getPosOfObj(codeBlockAction1);
+let leftBlock = gameGrid.getRelationalTile(actionblock.row, actionblock.col, 0, -1);
+let rightBlock = gameGrid.getRelationalTile(actionblock.row, actionblock.col, 0, 1);
+let isValid = codeBlockAction1.validate([leftBlock, rightBlock]);
+console.log("CodeBlockAction validation result:", isValid); // Expected: true
+
+
+
 // Define loops
 function GameLoop(gameGrid) {
     //TODO: Things
