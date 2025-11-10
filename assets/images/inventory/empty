@@ -1,0 +1,6 @@
+This folder should contain:
+
+    filledcomb.png          # Background for codeblock text
+    filledcomb_disabled.png # Background for disabled codeblock slot
+    selected.png            # Transparent with outline for selected slot
+    

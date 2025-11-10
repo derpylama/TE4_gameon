@@ -1,16 +1,31 @@
 class Grid {
     // cellSize is pixels
-    constructor(rows, cols, cellSize = 32) {
+    constructor(rows, cols, cellSize = 32, defaultTileMaker = null, xGap = 0, yGap = 0, offsetMaker = null) {
         // Initialize a 2D array to represent the grid
         this.grid = [];
         for (let r = 0; r < rows; r++) {
             this.grid[r] = [];
             for (let c = 0; c < cols; c++) {
-                this.grid[r][c] = null; // Initialize each cell to null
+                this.grid[r][c] = defaultTileMaker === null ? null : defaultTileMaker(r,c);
             }
         }
 
         this.cellSize = cellSize;
+        this.xGap = xGap;
+        this.yGap = yGap;
+        this.offsetMaker = offsetMaker;
+    }
+
+    getGaps() {
+        return [this.xGap, this.yGap];
+    }
+
+    getOffset(row, col) {
+        if (this.offsetMaker) {
+            return this.offsetMaker(row, col);
+        } else {
+            return [0, 0];
+        }
     }
 
     getTileSize() {

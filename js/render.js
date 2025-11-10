@@ -1,4 +1,31 @@
 // Provide handling for images, renderings things and rendering objects of the "GameObject" class.
+const checkerSize = (800/10)/2;
+
+const borderOffset = [20, 20]; // Each txPx is 5* scrPx, we add 4 txPx offset in both directions
+
+class Texture {
+    constructor(texturePath) {
+        this.image = new Image();
+        this.image.src = texturePath;
+        this.loaded = false;
+
+        if (this.image.complete) {
+            this.loaded = true;
+        } else {
+            this.image.onload = () => {
+                this.loaded = true;
+            };
+        }
+    }
+
+    isLoaded() {
+        return this.loaded;
+    }
+
+    getImage() {
+        return this.image;
+    }
+}
 
 function drawCheckerboard(ctx, x, y, width, height, checkerSize) {
     for (let row = 0; row < height / checkerSize; row++) {
@@ -15,46 +42,74 @@ function drawCheckerboard(ctx, x, y, width, height, checkerSize) {
 
 // Handles if not loaded show purple/black checkerboard
 function renderTexture(ctx, texture, x, y, width, height) {
-    if (texture.complete) {
+    x += borderOffset[0];
+    y += borderOffset[1];
+    if (texture.isLoaded()) {
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(texture, x, y, width, height);
+        ctx.drawImage(texture.getImage(), x, y, width, height);
     } else {
         // Draw purple/black checkerboard
-        const checkerSize = 8;
         drawCheckerboard(ctx, x, y, width, height, checkerSize);
     }
 }
 
-function toTexture(texturePath) {
-    const img = new Image();
-    img.src = texturePath;
-    return img;
-}
-
-function Render(ctx, grid) {
-    const grid = grid.getGrid(); // 2D array
-
-    // Render background image from ./assets/images/background.png
-    const backgroundImg = new Image();
-    backgroundImg.src = "./assets/images/background.png";
-
-    renderTexture(ctx, backgroundImg, 0, 0, grid[0].length * grid.getTileSize(), grid.length * grid.getTileSize());
+function renderGrid(gridObj) {
+    const gridData = gridObj.getGrid();
+    const gaps = gridObj.getGaps();
 
     // Render grid by iterating
-    for (let r = 0; r < grid.length; r++) {
-        for (let c = 0; c < grid[r].length; c++) {
-            const gameObj = grid[r][c];
-            if (gameObj) {
+    for (let r = 0; r < gridData.length; r++) {
+        for (let c = 0; c < gridData[r].length; c++) {
+            const gameObj = gridData[r][c];
+
+            const calculatedOffset = gridObj.getOffset(r, c);
+
+            if (gameObj != null) {
                 const texture = gameObj.texture;
 
-                // Each image is 16x16 but should be scaled to grid.getTileSize() => int
+                // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                renderTexture(ctx, texture, c * grid.getTileSize(), r * grid.getTileSize(), grid.getTileSize(), grid.getTileSize());
+                renderTexture(ctx, texture, (c * gridObj.getTileSize())+(c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize())+(r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize());
             } else {
                 // Draw purple/black checkerboard for empty tiles
-                const checkerSize = 8;
-                drawCheckerboard(ctx, c * grid.getTileSize(), r * grid.getTileSize(), grid.getTileSize(), grid.getTileSize(), checkerSize);
+                drawCheckerboard(ctx, (c * gridObj.getTileSize())+(c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize())+(r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
+            }
+
+            // If debug mode draw a border inside the tile
+            if (DEBUG) {
+                ctx.strokeStyle = "red";
+                ctx.lineWidth = 1;
+                ctx.strokeRect((c * gridObj.getTileSize()) + borderOffset[0] + (c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize()) + borderOffset[1] + (r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize());
             }
         }
     }
+}
+
+function Render(ctx, gridObj) {
+
+    // Render backgrounds
+    renderTexture(ctx, gridBackgroundImg, 0, 0, 800, 800);
+    renderTexture(ctx, invBackgroundImg, 800, 0, 480, 800);
+
+    renderGrid(gridObj);
+
+    // Render border
+    renderTexture(ctx, borderImg, 0-borderOffset[0], 0-borderOffset[1], 1320, 840);
+
+    // If debug draw a purple border around the 800x800 grid and then one for 800,0 > 1280,800
+    if (DEBUG) {
+        ctx.strokeStyle = "hotpink";
+        ctx.lineWidth = 4;
+        ctx.strokeRect(borderOffset[0], borderOffset[1], 800, 800);
+        ctx.strokeRect(800 + borderOffset[0], borderOffset[1], 480, 800);
+    }
+}
+
+
+function renderStartMenu(ctx) {
+    // Render start menu background
+    renderTexture(ctx, startBackgroundImg, 0, 0, 1320, 840);
+
+    // Render play button centered of playButtonImg (64x64) inside the canvas (1320x840)
+    renderTexture(ctx, playButtonImg, (1320/2)-(64/2), (840/2)-(64/2), 64, 64);
 }

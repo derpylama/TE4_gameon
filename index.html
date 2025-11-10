@@ -7,16 +7,29 @@
     <link rel="stylesheet" href="./css/style.css">
 
     <!-- JS IMPORTS -->
-    <script src="./js/logic.js"></script>
-    <script src="./js/render.js"></script>
     <script src="./js/classes/grid.js"></script>
     <script src="./js/classes/object.js"></script>
     <script src="./js/classes/codeblocks.js"></script>
+    <script src="./js/logic.js"></script>
+    <script src="./js/render.js"></script>
+    <script src="./js/audio.js"></script>
     <script src="./js/game.js" defer></script>
+
+
+    <script src="./js/frontend.js" defer></script>
 
 </head>
 <body>
-    <canvas id="canvas" width="1280" height="720"></canvas>
-    <i>Made by toalettpojkarna (Te4)</i>
+    <!-- Each texture pixel is 5 screenpixels, we add four txPx around canvas, i.e + 2*(4*5) -->
+    <!-- Non offset size is: 1280x800 -->
+    <canvas id="canvas" width="1320" height="840"></canvas>
+    <footer>
+        <i>Made by toalettpojkarna (Te4)</i>
+        <!-- Known issue: pressing pause before audio is declared then later resuming it fails to play until paused/played again -->
+        <div id="audioPauseBtn">
+            <img src="./assets/images/icons/play.png" alt="Audio Toggle" id="audioIcon-paused" style="display: none;">
+            <img src="./assets/images/icons/pause.png" alt="Audio Toggle" id="audioIcon-playing">
+        </div>
+        <input type="range" id="volumeSlider" min="0" max="100" step="1" value="50">
 </body>
 </html>
