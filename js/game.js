@@ -1,3 +1,6 @@
+const DEBUG = true;
+
+
 // Defines
 const TargetFPS = 60;
 let currentFPS = 0;
@@ -14,7 +17,7 @@ const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
 
 
 // Instantiate
-const grid = new Grid(10, 10, 720/10, (row, col) => {return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));});
+const grid = new Grid(10, 10, 800/10, (row, col) => {return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));});
 
 // Define loops
 function GameLoop(grid) {

@@ -1,5 +1,5 @@
 // Provide handling for images, renderings things and rendering objects of the "GameObject" class.
-const checkerSize = (720/16)/2;
+const checkerSize = (800/10)/2;
 
 class Texture {
     constructor(texturePath) {
@@ -53,7 +53,7 @@ function Render(ctx, gridObj) {
     const gridData = gridObj.getGrid();
 
     // Render background image
-    renderTexture(ctx, backgroundImg, 0, 0, 1280, 720);
+    renderTexture(ctx, backgroundImg, 0, 0, 1280, 800);
 
     // Render grid by iterating
     for (let r = 0; r < gridData.length; r++) {
@@ -64,11 +64,26 @@ function Render(ctx, gridObj) {
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                renderTexture(ctx, texture, c * gridObj.getTileSize(), r * gridObj.getTileSize(), gridObj.getTileSize(), gridObj.getTileSize());
+                renderTexture(ctx, texture, (c * gridObj.getTileSize()), (r * gridObj.getTileSize()), gridObj.getTileSize(), gridObj.getTileSize());
             } else {
                 // Draw purple/black checkerboard for empty tiles
-                drawCheckerboard(ctx, c * gridObj.getTileSize(), r * gridObj.getTileSize(), gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
+                drawCheckerboard(ctx, (c * gridObj.getTileSize()), (r * gridObj.getTileSize()), gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
+            }
+
+            // If debug mode draw a border inside the tile
+            if (DEBUG) {
+                ctx.strokeStyle = "red";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(c * gridObj.getTileSize(), r * gridObj.getTileSize(), gridObj.getTileSize(), gridObj.getTileSize());
             }
         }
+    }
+
+    // If debug draw a purple border around the 800x800 grid and then one for 800,0 > 1280,800
+    if (DEBUG) {
+        ctx.strokeStyle = "hotpink";
+        ctx.lineWidth = 4;
+        ctx.strokeRect(0, 0, 800, 800);
+        ctx.strokeRect(800, 0, 480, 800);
     }
 }
