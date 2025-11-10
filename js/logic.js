@@ -1,9 +1,10 @@
 // Click and input handling
-const pressedInputs = [];
+const pressedInputs = []; // Contains keys that are currently pressed
 const lastClick = { "x": 0, "y": 0, "key": null }; // ex 100,100,left
 const inputHooks = []; // Contains func(key, up/down)
 const clickHooks = []; // Contains func(x,y,key
 
+// Register/Unregister functions for hooks
 function registerInputHook(hook) {
     inputHooks.push(hook);
 }
@@ -26,6 +27,7 @@ function unregisterClickHook(hook) {
     }
 }
 
+// Register event listeners
 window.addEventListener("load", () => {
     document.addEventListener("keydown", (event) => {
         if (!pressedInputs.includes(event.key)) {
@@ -62,4 +64,6 @@ window.addEventListener("load", () => {
     });
 });
 
+
+// Main update function (called in loop)
 function Update(ctx, grid) {}
