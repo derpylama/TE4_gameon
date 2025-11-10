@@ -53,13 +53,9 @@ function renderTexture(ctx, texture, x, y, width, height) {
     }
 }
 
-function Render(ctx, gridObj) {
+function renderGrid(gridObj) {
     const gridData = gridObj.getGrid();
     const gaps = gridObj.getGaps();
-
-    // Render backgrounds
-    renderTexture(ctx, gridBackgroundImg, 0, 0, 800, 800);
-    renderTexture(ctx, invBackgroundImg, 800, 0, 480, 800);
 
     // Render grid by iterating
     for (let r = 0; r < gridData.length; r++) {
@@ -84,6 +80,15 @@ function Render(ctx, gridObj) {
             }
         }
     }
+}
+
+function Render(ctx, gridObj) {
+
+    // Render backgrounds
+    renderTexture(ctx, gridBackgroundImg, 0, 0, 800, 800);
+    renderTexture(ctx, invBackgroundImg, 800, 0, 480, 800);
+
+    renderGrid(gridObj);
 
     // Render border
     renderTexture(ctx, borderImg, 0-borderOffset[0], 0-borderOffset[1], 1320, 840);
