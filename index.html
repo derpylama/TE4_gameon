@@ -14,12 +14,21 @@
     <script src="./js/audio.js"></script>
     <script src="./js/game.js" defer></script>
 
+
+    <script src="./js/frontend.js" defer></script>
+
 </head>
 <body>
     <!-- Each texture pixel is 5 screenpixels, we add four txPx around canvas, i.e + 2*(4*5) -->
     <!-- Non offset size is: 1280x800 -->
     <canvas id="canvas" width="1320" height="840"></canvas>
-    <i>Made by toalettpojkarna (Te4)</i>
-    <div id="test"></div>
+    <footer>
+        <i>Made by toalettpojkarna (Te4)</i>
+        <!-- Known issue: pressing pause before audio is declared then later resuming it fails to play until paused/played again -->
+        <div id="audioPauseBtn">
+            <img src="./assets/images/icons/play.png" alt="Audio Toggle" id="audioIcon-paused" style="display: none;">
+            <img src="./assets/images/icons/pause.png" alt="Audio Toggle" id="audioIcon-playing">
+        </div>
+    </footer>
 </body>
 </html>

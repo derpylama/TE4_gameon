@@ -26,8 +26,9 @@ const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
 
 // Sounds
 audio.addSound("test.1", "./assets/audio/toot.mp3", false);
-audio.addSound("bg.music.1", "./assets/audio/backgroundMusic.wav", false, 0);
-audio.addSound("bg.music.2", "./assets/audio/spring-in-my-step.wav", false, 0);
+// audio.addSound("bg.music.1", "./assets/audio/backgroundMusic.wav", true, 0);
+// audio.addSound("bg.music.2", "./assets/audio/spring-in-my-step.wav", true, 0);
+audio.addPlaylist("bg.music", ["./assets/audio/backgroundMusic.wav", "./assets/audio/spring-in-my-step.wav"], true, 0);
 
 
 // Instantiate
@@ -49,7 +50,7 @@ function GameLoop(gameGrid) {
 }
 
 function StartGame(gameGrid) {
-    audio.playSound("test.1");
+    audio.playSound("bg.music");
     GameLoop(gameGrid);
 }
 

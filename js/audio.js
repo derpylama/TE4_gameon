@@ -1,9 +1,33 @@
 class SoundHandler {
     constructor() {
+        this._disAllowNewPlays = false;
         this.playLists = {};
     }
 
+    disAllowNewPlays() {
+        this._disAllowNewPlays = true;
+    }
+
+    allowNewPlays() {
+        this._disAllowNewPlays = false;
+    }
+
     addPlaylist(strid, songs, loop = false, delay = 0) {
+        // Throw if type of songs is not list
+        if (!Array.isArray(songs)) {
+            throw new Error("Songs must be an array");
+        }
+
+        // If strid is not string throw
+        if (typeof strid !== "string") {
+            throw new Error("strid must be a string");
+        }
+
+        // If strid already exists throw
+        if (this.playLists[strid]) {
+            throw new Error(`Playlist/Sound with strid ${strid} already exists`);
+        }
+
         // if your playlist has single song duplicate it to fix wrap around issues
         if (songs.length === 1 && loop === true) {
             songs.push(songs[0]);
@@ -44,7 +68,7 @@ class SoundHandler {
 
     playNextSong(strid) {
         const playlist = this.playLists[strid];
-        if (!playlist || !playlist.isPlaying) return;
+        if (!playlist || !playlist.isPlaying || playlist.isPaused || this._disAllowNewPlays) return;
 
         const index = playlist.currentSongIndex;
         if (index < 0 || index >= playlist.songs.length) {
@@ -115,6 +139,13 @@ class SoundHandler {
 
     resumePlaylist(strid) {
         const playlist = this.playLists[strid];
+
+        // Was it never started play it instead
+        if (!playlist.isPlaying) {            
+            this.playNextSong(strid);
+            return;
+        } 
+
         if (!playlist || !playlist.isPaused) return;
 
         const audio = playlist.songs[playlist.currentSongIndex];
@@ -150,6 +181,21 @@ class SoundHandler {
     }
 
     addSound(strid, song, loop, delay = 0) {
+        // If song is not string or Audio object throw
+        if (typeof song !== "string" && !(song instanceof Audio)) {
+            throw new Error("Song must be a string URL or Audio object");
+        }
+
+        // If strid is not string throw
+        if (typeof strid !== "string") {
+            throw new Error("strid must be a string");
+        }
+
+        // If strid already exists throw
+        if (this.playLists[strid]) {
+            throw new Error(`Playlist/Sound with strid ${strid} already exists`);
+        }
+
         this.addPlaylist(strid, [song], loop, delay);
     }
 
