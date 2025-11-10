@@ -47,9 +47,9 @@ const inventoryGrid = new Grid(4, 4, 800/10, null);
 const codeGrid = new Grid(4, 5, 800/10, null);
 
 //MARK: Test codeblocks
-codeBlockEntity1 = new CodeBlockObject(playButtonImg, "stone");
-codeBlockEntity2 = new CodeBlockModifier(playButtonImg, "left");
-codeBlockAction1 = new CodeBlockAction(tileNonVoidAbove, "moveto");
+codeBlockEntity1 = new CodeBlockObject("stone");
+codeBlockEntity2 = new CodeBlockModifier("left");
+codeBlockAction1 = new CodeBlockAction("moveto", ["object", "modifier"]);
 gameGrid.setTile(1, 1, codeBlockEntity1);
 gameGrid.setTile(1, 2, codeBlockAction1);
 gameGrid.setTile(1, 3, codeBlockEntity2);
@@ -60,6 +60,11 @@ let leftBlock = gameGrid.getRelationalTile(actionblock.row, actionblock.col, 0, 
 let rightBlock = gameGrid.getRelationalTile(actionblock.row, actionblock.col, 0, 1);
 let isValid = codeBlockAction1.validate([leftBlock, rightBlock]);
 console.log("CodeBlockAction validation result:", isValid); // Expected: true
+row1=gameGrid.getRow(1); //test for validator
+console.log("Validate Row 1 result:", validateRow(row1)); // Expected: true
+//log row1
+console.log("Row 1 contents:", row1);
+//MARK: End test codeblocks
 
 
 

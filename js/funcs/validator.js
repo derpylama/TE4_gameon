@@ -3,7 +3,7 @@
 
 
 
-function validateRow(blockrow) {
+function validateRow(blockrow) { //made it take an entire row incase we wanna add ex is action for like  stone-is-tree-moveto-left   //change all stones to trees then move all trees to left
     for (let i = 0; i < blockrow.length; i++) {
         const block = blockrow[i];
         if (block instanceof CodeBlockAction) {
@@ -14,5 +14,5 @@ function validateRow(blockrow) {
             }
         }
     }
-    return true; // All arrangements valid     try executing if true is returned
+    return true; // All arrangements valid (only checks actions are valid placements)   ->  try executing code if true is returned
 }

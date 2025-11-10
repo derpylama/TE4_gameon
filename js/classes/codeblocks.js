@@ -27,15 +27,30 @@ class CodeBlockModifier extends CodeBlockEntity {
 
 
 class CodeBlockAction extends CodeBlock {
-    constructor(value) {
+    constructor(value, adjacentCodeBlocksCanBe = ["any", "any"]) {
         super("./assets/images/codeblocks/action.png", value);
+        this.adjacentCodeBlocksCanBe = adjacentCodeBlocksCanBe; // e.g., ["object", "modifier"]   what left and rigth codeblocks can be 
     }
-    
-    validate(adjacentBlocks) { //array of two blocks  left, right    each action needs to be between two entities  ex:  (entity - action - entity), (stone - moveto - left)
+
+    validate(adjacentBlocks) {
         const [left, right] = adjacentBlocks;
-        return (
-            left instanceof CodeBlockEntity &&
-            right instanceof CodeBlockEntity
-        );
+
+        // helper function to check one side
+        const isValid = (block, expectedType) => {
+            if (expectedType === "any") {
+                return block instanceof CodeBlockEntity;
+            }
+            if (expectedType === "object") {
+                return block instanceof CodeBlockObject;
+            }
+            if (expectedType === "modifier") {
+                return block instanceof CodeBlockModifier;
+            }
+            console.warn("Unknown expected type in CodeBlockAction validation:", expectedType);
+            return false; // unknown type keyword
+        };
+
+        const [leftType, rightType] = this.adjacentCodeBlocksCanBe;
+        return isValid(left, leftType) && isValid(right, rightType);
     }
 }
