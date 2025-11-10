@@ -1,5 +1,18 @@
 // Provide handling for images, renderings things and rendering objects of the "GameObject" class.
 
+function drawCheckerboard(ctx, x, y, width, height, checkerSize) {
+    for (let row = 0; row < height / checkerSize; row++) {
+        for (let col = 0; col < width / checkerSize; col++) {
+            if ((row + col) % 2 === 0) {
+                ctx.fillStyle = "#800080"; // Purple
+            } else {
+                ctx.fillStyle = "#000000"; // Black
+            }
+            ctx.fillRect(x + col * checkerSize, y + row * checkerSize, checkerSize, checkerSize);
+        }
+    }
+}
+
 // Handles if not loaded show purple/black checkerboard
 function renderTexture(ctx, texture, x, y, width, height) {
     if (texture.complete) {
@@ -8,16 +21,7 @@ function renderTexture(ctx, texture, x, y, width, height) {
     } else {
         // Draw purple/black checkerboard
         const checkerSize = 8;
-        for (let row = 0; row < height / checkerSize; row++) {
-            for (let col = 0; col < width / checkerSize; col++) {
-                if ((row + col) % 2 === 0) {
-                    ctx.fillStyle = "#800080"; // Purple
-                } else {
-                    ctx.fillStyle = "#000000"; // Black
-                }
-                ctx.fillRect(x + col * checkerSize, y + row * checkerSize, checkerSize, checkerSize);
-            }
-        }
+        drawCheckerboard(ctx, x, y, width, height, checkerSize);
     }
 }
 
@@ -46,6 +50,10 @@ function Render(ctx, grid) {
                 // Each image is 16x16 but should be scaled to grid.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
                 renderTexture(ctx, texture, c * grid.getTileSize(), r * grid.getTileSize(), grid.getTileSize(), grid.getTileSize());
+            } else {
+                // Draw purple/black checkerboard for empty tiles
+                const checkerSize = 8;
+                drawCheckerboard(ctx, c * grid.getTileSize(), r * grid.getTileSize(), grid.getTileSize(), grid.getTileSize(), checkerSize);
             }
         }
     }
