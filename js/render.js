@@ -27,24 +27,31 @@ class Texture {
     }
 }
 
-function drawCheckerboard(ctx, x, y, width, height, checkerSize) {
+function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0) {
     for (let row = 0; row < height / checkerSize; row++) {
         for (let col = 0; col < width / checkerSize; col++) {
             if ((row + col) % 2 === 0) {
-                ctx.fillStyle = "#800080"; // Purple
+                ctx.fillStyle = `rgba(128, 0, 128, ${opacity})`; // Purple
             } else {
-                ctx.fillStyle = "#000000"; // Black
+                ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`; // Black
             }
-            ctx.fillRect(x + col * checkerSize, y + row * checkerSize, checkerSize, checkerSize);
+
+            let calcX = x + col * checkerSize;
+            let calcY = y + row * checkerSize;
+
+            calcX += borderOffset[0];
+            calcY += borderOffset[1];
+
+            ctx.fillRect(calcX, calcY, checkerSize, checkerSize);
         }
     }
 }
 
 // Handles if not loaded show purple/black checkerboard
 function renderTexture(ctx, texture, x, y, width, height) {
-    x += borderOffset[0];
-    y += borderOffset[1];
     if (texture.isLoaded()) {
+        x += borderOffset[0];
+        y += borderOffset[1];
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(texture.getImage(), x, y, width, height);
     } else {
@@ -64,22 +71,35 @@ function renderGrid(gridObj) {
 
             const calculatedOffset = gridObj.getOffset(r, c);
 
-            if (gameObj != null) {
+            let x = (c * gridObj.getTileSize()) + (c * gaps[0]) + calculatedOffset[0]
+            let y = (r * gridObj.getTileSize()) + (r * gaps[1]) + calculatedOffset[1]
+
+            if (gameObj !== null) {
                 const texture = gameObj.texture;
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                renderTexture(ctx, texture, (c * gridObj.getTileSize())+(c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize())+(r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize());
-            } else {
-                // Draw purple/black checkerboard for empty tiles
-                drawCheckerboard(ctx, (c * gridObj.getTileSize())+(c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize())+(r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
+                renderTexture(ctx, texture, x, y, gridObj.getTileSize(), gridObj.getTileSize());
             }
 
             // If debug mode draw a border inside the tile
             if (DEBUG) {
+
+                // Null => Checkerboard
+                if (gameObj === null) {
+                    // Draw purple/black checkerboard for empty tiles
+                    drawCheckerboard(ctx, x, y, gridObj.getTileSize(), gridObj.getTileSize(), checkerSize, 0.35);
+                }
+
+                // Outlines
                 ctx.strokeStyle = "red";
                 ctx.lineWidth = 1;
-                ctx.strokeRect((c * gridObj.getTileSize()) + borderOffset[0] + (c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize()) + borderOffset[1] + (r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize());
+                ctx.strokeRect(
+                    (c * gridObj.getTileSize()) + borderOffset[0] + (c * gaps[0]) + calculatedOffset[0],
+                    (r * gridObj.getTileSize()) + borderOffset[1] + (r * gaps[1]) + calculatedOffset[1],
+                    gridObj.getTileSize(),
+                    gridObj.getTileSize()
+                );
             }
         }
     }

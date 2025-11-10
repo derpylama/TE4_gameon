@@ -36,10 +36,14 @@ audio.addPlaylist("bg.music", ["./assets/audio/backgroundMusic.wav", "./assets/a
 //     return [(row % 2 === 0 ? 0 : -((800/10)/2)), 0];
 // };
 
+// let generateVoids = (row, col) => {
+//     return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));
+// };
+
 const gameGrid = new Grid(
     10, 10, // Rows x Cols
     800/10, // Tile Size, scrPx size of a cell
-    (row, col) => {return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));}, // Func to generate default tiles, can be set null
+    null, // Func to generate default tiles, can be set null
     0, 0,   // Gaps in scrPx
     null // Func to generate offsets per tile [txpx, txpx], can be set null
 );
