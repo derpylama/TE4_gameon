@@ -47,8 +47,8 @@ const inventoryGrid = new Grid(4, 4, 800/10, null);
 const codeGrid = new Grid(4, 5, 800/10, null);
 
 //MARK: Test codeblocks
-codeBlockEntity1 = new CodeBlockEntity(playButtonImg, "stone");
-codeBlockEntity2 = new CodeBlockEntity(playButtonImg, "left");
+codeBlockEntity1 = new CodeBlockObject(playButtonImg, "stone");
+codeBlockEntity2 = new CodeBlockModifier(playButtonImg, "left");
 codeBlockAction1 = new CodeBlockAction(tileNonVoidAbove, "moveto");
 gameGrid.setTile(1, 1, codeBlockEntity1);
 gameGrid.setTile(1, 2, codeBlockAction1);
