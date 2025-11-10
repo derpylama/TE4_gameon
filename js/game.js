@@ -10,6 +10,10 @@ const gameCanvas = document.getElementById("canvas");
 const ctx = gameCanvas ? gameCanvas.getContext("2d") : null;
 
 
+// Systems
+const audio = new SoundHandler();
+
+
 // Textures
 const startBackgroundImg = new Texture("./assets/images/startmenu.png");
 const playButtonImg = new Texture("./assets/images/play.png");
@@ -20,22 +24,33 @@ const tileVoid = new Texture("./assets/images/tiles/void.png");
 const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
 
 
+// Sounds
+audio.addSound("test.1", "./assets/audio/toot.mp3", false);
+audio.addSound("bg.music.1", "./assets/audio/backgroundMusic.wav", false, 0);
+audio.addSound("bg.music.2", "./assets/audio/spring-in-my-step.wav", false, 0);
+
+
 // Instantiate
-const grid = new Grid(10, 10, 800/10, (row, col) => {return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));});
+const gameGrid = new Grid(10, 10, 800/10, (row, col) => {return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));});
 const inventoryGrid = new Grid(5, 3, 800/10, null);
 const codeGrid = new Grid(5, 1, 800/10, null);
 
 // Define loops
-function GameLoop(grid) {
+function GameLoop(gameGrid) {
     //TODO: Things
 
-    Update(ctx, grid);
-    Render(ctx, grid);
+    Update(ctx, gameGrid);
+    Render(ctx, gameGrid);
 
     // Schedule the next frame
     requestAnimationFrame(
-        () => GameLoop(grid)
+        () => GameLoop(gameGrid)
     );
+}
+
+function StartGame(gameGrid) {
+    audio.playSound("test.1");
+    GameLoop(gameGrid);
 }
 
 if (gameCanvas) {
@@ -54,7 +69,7 @@ if (gameCanvas) {
                 // Start game
                 inStartMenu = false;
                 unregisterClickHook(startMenuClickHook);
-                GameLoop(grid);
+                StartGame(gameGrid);
             }
         }
     }
