@@ -1,12 +1,12 @@
 class Grid {
     // cellSize is pixels
-    constructor(rows, cols, cellSize = 32) {
+    constructor(rows, cols, cellSize = 32, defaultTileMaker = null) {
         // Initialize a 2D array to represent the grid
         this.grid = [];
         for (let r = 0; r < rows; r++) {
             this.grid[r] = [];
             for (let c = 0; c < cols; c++) {
-                this.grid[r][c] = null; // Initialize each cell to null
+                this.grid[r][c] = defaultTileMaker === null ? null : defaultTileMaker(r,c);
             }
         }
 
