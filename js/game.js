@@ -11,7 +11,8 @@ const ctx = gameCanvas ? gameCanvas.getContext("2d") : null;
 
 
 // Systems
-const audio = new SoundHandler();
+const _volumeSlider = document.getElementById("volumeSlider");
+const audio = new SoundHandler(parseInt(_volumeSlider.value, 10));
 
 
 // Textures

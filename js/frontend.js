@@ -16,3 +16,12 @@ if (playBtn && pauseBtn && audio) {
         playBtn.style.display = "block";
     });
 }
+
+const volumeSlider = document.getElementById("volumeSlider");
+
+if (volumeSlider && audio) {
+    volumeSlider.addEventListener("input", (event) => {
+        const volume = parseInt(event.target.value, 10);
+        audio.setMasterVolume(volume);
+    });
+}

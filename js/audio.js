@@ -1,7 +1,36 @@
+function mapSliderToVolume(value) {
+    // Clamp
+    if (value < 0) value = 0;
+    if (value > 100) value = 100;
+    if (value === 0) return 0.0;
+    const minp = 0;
+    const maxp = 100;
+    const minv = Math.log(0.001); // avoid silence being log(0)
+    const maxv = Math.log(1);
+    const scale = (maxv - minv) / (maxp - minp);
+    return Math.exp(minv + scale * (value - minp));
+}
+
 class SoundHandler {
-    constructor() {
+    constructor(masterVolume = 1.0) {
         this._disAllowNewPlays = false;
         this.playLists = {};
+        this.masterVolume = mapSliderToVolume(masterVolume);
+    }
+
+    setMasterVolume(linearVolume) {
+        this.masterVolume = mapSliderToVolume(linearVolume);
+
+        // Find any audios that are playing and update their volume
+        for (const id in this.playLists) {
+            const playlist = this.playLists[id];
+            if (playlist.isPlaying && !playlist.isPaused) {
+                const audio = playlist.songs[playlist.currentSongIndex];
+                if (audio) {
+                    audio.volume = this.masterVolume;
+                }
+            }
+        }
     }
 
     disAllowNewPlays() {
@@ -120,6 +149,8 @@ class SoundHandler {
             playlist.isPlaying = false;
         };
 
+        audio.volume = this.masterVolume;
+
         audio.play().catch(err => {
             console.warn(`Playback failed for ${strid}:`, err);
             playlist.isPlaying = false;
@@ -150,6 +181,7 @@ class SoundHandler {
 
         const audio = playlist.songs[playlist.currentSongIndex];
         if (audio && audio.paused) {
+            audio.volume = this.masterVolume;
             audio.play()
                 .catch(err => console.warn(`Resume failed for ${strid}:`, err));
         }
