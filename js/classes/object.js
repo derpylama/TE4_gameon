@@ -25,14 +25,14 @@ class GameObject {
 }
 
 class GameTile extends GameObject {
-    constructor(texture, isGoal, isDeath) {
+    constructor(texture, isGoal = false, isDeath = false) {
         super(texture);
         this.isGoal = isGoal;
         this.isDeath = isDeath;
     }
 }
 
-class VoidTile extends GameObject {
+class VoidTile extends GameTile {
     constructor() {
         super("./assets/images/tiles/void.png");
     }
@@ -50,27 +50,27 @@ class DisabledVoidTile_NonVoidAbove extends VoidTile {
     }
 }
 
-class BeePlayerTile extends GameObject {
+class BeePlayerTile extends GameTile {
     constructor(direction) {
         super(tilePlayerBee);
         this.direction = direction;
     }
 }
 
-class BeehiveTile extends GameObject {
+class BeehiveTile extends GameTile {
     constructor() {
         super(tileBeeHive);
     }
 }
 
-class LavaTile extends GameObject {
+class LavaTile extends GameTile {
     constructor() {
         super(tileLava);
     }
 }
 
 // inte sten weman
-class StoneTile extends GameObject {
+class StoneTile extends GameTile {
     constructor() {
         super(tileStone);
     }
