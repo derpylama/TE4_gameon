@@ -1,6 +1,6 @@
 class Grid {
     // cellSize is pixels
-    constructor(rows, cols, cellSize = 32, defaultTileMaker = null) {
+    constructor(rows, cols, cellSize = 32, defaultTileMaker = null, xGap = 0, yGap = 0) {
         // Initialize a 2D array to represent the grid
         this.grid = [];
         for (let r = 0; r < rows; r++) {
@@ -11,6 +11,12 @@ class Grid {
         }
 
         this.cellSize = cellSize;
+        this.xGap = xGap;
+        this.yGap = yGap;
+    }
+
+    getGaps() {
+        return [this.xGap, this.yGap];
     }
 
     getTileSize() {

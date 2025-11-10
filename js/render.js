@@ -55,6 +55,7 @@ function renderTexture(ctx, texture, x, y, width, height) {
 
 function Render(ctx, gridObj) {
     const gridData = gridObj.getGrid();
+    const gaps = gridObj.getGaps();
 
     // Render backgrounds
     renderTexture(ctx, gridBackgroundImg, 0, 0, 800, 800);
@@ -69,17 +70,17 @@ function Render(ctx, gridObj) {
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                renderTexture(ctx, texture, (c * gridObj.getTileSize()), (r * gridObj.getTileSize()), gridObj.getTileSize(), gridObj.getTileSize());
+                renderTexture(ctx, texture, (c * gridObj.getTileSize())+(c * gaps[0]), (r * gridObj.getTileSize())+(r * gaps[1]), gridObj.getTileSize(), gridObj.getTileSize());
             } else {
                 // Draw purple/black checkerboard for empty tiles
-                drawCheckerboard(ctx, (c * gridObj.getTileSize()), (r * gridObj.getTileSize()), gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
+                drawCheckerboard(ctx, (c * gridObj.getTileSize())+(c * gaps[0]), (r * gridObj.getTileSize())+(r * gaps[1]), gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
             }
 
             // If debug mode draw a border inside the tile
             if (DEBUG) {
                 ctx.strokeStyle = "red";
                 ctx.lineWidth = 1;
-                ctx.strokeRect(c * gridObj.getTileSize() + borderOffset[0], r * gridObj.getTileSize() + borderOffset[1], gridObj.getTileSize(), gridObj.getTileSize());
+                ctx.strokeRect((c * gridObj.getTileSize()) + borderOffset[0] + (c * gaps[0]), (r * gridObj.getTileSize()) + borderOffset[1] + (r * gaps[1]), gridObj.getTileSize(), gridObj.getTileSize());
             }
         }
     }
