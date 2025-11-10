@@ -20,6 +20,8 @@ const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
 
 // Instantiate
 const grid = new Grid(10, 10, 800/10, (row, col) => {return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));});
+const inventoryGrid = new Grid(5, 3, 800/10, null);
+const codeGrid = new Grid(5, 1, 800/10, null);
 
 // Define loops
 function GameLoop(grid) {
