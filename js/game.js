@@ -48,6 +48,21 @@ const tileStone = new Texture("./assets/images/tiles/stone.png");
 //     "./assets/images/tiles/bee.png"
 // ]);
 
+// const tileDatadrivenTest = new DataDrivenTexture(
+//     (_, cellContext) => {
+//         // cellContext can be null or object with row and col where col/row can be null too
+//         if (cellContext !== null && cellContext.row && cellContext.col) {
+//             const above = gameGrid.getTile(cellContext.row - 1, cellContext.col);
+//             // check if above is not null and above is instance of or instance of subclass of VoidTile
+//             if (above === null || above instanceof VoidTile) {
+//                 return tileNonVoidAbove;
+//             } else {
+//                 return tileVoid;
+//             }
+//         }
+//     }
+// )
+
 
 // Overlays (rendered using `overlayer.showOverlayObj(<overlayObj>)`)
 const onOverlayGameOverClickRestart = (x,y,type) => {console.log(x,y,type)};
@@ -91,6 +106,11 @@ const inventoryGrid = new Grid(4, 4, 800/10, null);
 const codeGrid = new Grid(4, 5, 800/10, null);
 
 // gameGrid.setTile(5,5, new GameTile(tileLayeredTest)); //MARK: Test
+
+// gameGrid.setTile(1,4, new GameTile(tileDatadrivenTest)); //MARK: Test
+// gameGrid.setTile(2,4, new GameTile(tileDatadrivenTest)); //
+// gameGrid.setTile(2,3, new GameTile(tileDatadrivenTest)); //
+// gameGrid.setTile(3,3, new GameTile(tileDatadrivenTest)); //
 
 // Define loops
 function GameLoop(gameGrid) {

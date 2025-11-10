@@ -24,7 +24,7 @@ class Texture {
         return this.loaded;
     }
 
-    getImage() {
+    getImage(_) {
         return this.image;
     }
 }
@@ -49,7 +49,7 @@ class AnimatedTexture {
         return this.frames.every(frame => frame.isLoaded());
     }
 
-    getImage() {
+    getImage(cellContext={"row":null, "col":null}) {
         // First time call sets startTime
         // Then we use elapsed time to determine current frame according to frameDuration
         if (this.startTime === null) {
@@ -57,7 +57,7 @@ class AnimatedTexture {
         }
         const elapsed = Date.now() - this.startTime;
         const currentFrameIndex = Math.floor(elapsed / this.frameDuration) % this.frames.length;
-        return this.frames[currentFrameIndex].getImage();
+        return this.frames[currentFrameIndex].getImage(cellContext);
     }
 }
 
@@ -78,11 +78,35 @@ class LayeredTexture {
         return this.textures.every(texture => texture.isLoaded());
     }
 
-    getImage() {
+    getImage(cellContext={"row":null, "col":null}) {
         // return array of images
-        return this.textures.map(texture => texture.getImage());
+        return this.textures.map(texture => texture.getImage(cellContext));
     }
 }
+
+// DataDrivenTexture has `selector(selectBetween, cellContext) => <Texture/AnimatedTexture/LayeredTexture>`
+//                   and [selectBetween] which is all textures to be selected between (given to ensure isLoaded safety)
+class DataDrivenTexture {
+    constructor(textureSelector, selectedBetween = []) {
+        this.textureSelector = textureSelector;
+        this.selectedBetween = selectedBetween;
+    }
+
+    isLoaded() {
+        return this.selectedBetween.every(texture => texture.isLoaded());
+    }
+
+    getImage(cellContext={"row":null, "col":null}) {
+        const selectedTexture = this.textureSelector(this.selectedBetween, cellContext);
+        if (selectedTexture === null || selectedTexture === undefined) {
+            return MissingTexture.getImage();
+        }
+        return selectedTexture.getImage();
+    }
+}
+
+// Define needed internal textures
+const MissingTexture = new Texture("./assets/images/missing.png");
 
 // Helper to draw a checkerboard pattern instead of a texture
 function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0) {
@@ -106,21 +130,26 @@ function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0) {
 }
 
 // Handles if not loaded show purple/black checkerboard
-function renderTexture(ctx, texture, x, y, width, height) {
+function renderTexture(ctx, texture, x, y, width, height, cellContext={"row":null, "col":null}) {
     if (texture.isLoaded()) {
-        x += borderOffset[0];
-        y += borderOffset[1];
+        drawX = x + borderOffset[0];
+        drawY = y + borderOffset[1];
         ctx.imageSmoothingEnabled = false;
-        
+
         let textures = [];
         if (texture instanceof LayeredTexture) {
-            textures = texture.getImage();
+            textures = texture.getImage(cellContext);
         } else {
-            textures.push(texture.getImage());
+            textures.push(texture.getImage(cellContext));
         }
 
         for (const img of textures) {
-            ctx.drawImage(img, x, y, width, height);
+            try {
+                ctx.drawImage(img, drawX, drawY, width, height);
+            } catch (e) {
+                // If error drawing image, draw checkerboard instead
+                drawCheckerboard(ctx, x, y, width, height, checkerSize);
+            }
         }
     } else {
         // Draw purple/black checkerboard
@@ -148,7 +177,8 @@ function renderGrid(gridObj) {
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                renderTexture(ctx, texture, x, y, gridObj.getTileSize(), gridObj.getTileSize());
+                const cellContext = {"row": r, "col": c};
+                renderTexture(ctx, texture, x, y, gridObj.getTileSize(), gridObj.getTileSize(), cellContext);
             }
 
             // If debug mode draw a border inside the tile
