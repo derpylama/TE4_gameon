@@ -1,0 +1,65 @@
+const assignedIds = new Set();
+
+class GameObject {
+    constructor(texture) {
+        this.texture = texture;
+
+        // assign random id
+        let proposedId = self.crypto.randomUUID();
+        // while id is in assignedIds, generate new id
+        while (assignedIds.has(proposedId)) {
+            proposedId = self.crypto.randomUUID();
+        }
+        this.id = proposedId;
+    }
+}
+
+class CodeBlock extends GameObject {
+    constructor(texture, type, name, predecessor = null, successor = null) {
+        super(texture);
+        this.type = type;
+        this.name = name;
+        this.predecessor = predecessor;
+        this.successor = successor;
+    }
+}
+
+class GameTile extends GameObject {
+    constructor(texture, isGoal, isDeath) {
+        super(texture);
+        this.isGoal = isGoal;
+        this.isDeath = isDeath;
+    }
+}
+
+class DisabledVoidTile extends Object {
+    constructor(texture) {
+        super(texture);
+    }
+}
+
+class BeePlayerTile extends Object {
+    constructor(texture, direction) {
+        super(texture);
+        this.direction = direction;
+    }
+}
+
+class BeehiveTile extends Object {
+    constructor(texture) {
+        super(texture);
+    }
+}
+
+class LavaTile extends Object {
+    constructor(texture) {
+        super(texture);
+    }
+}
+
+// inte sten weman
+class StoneTile extends Object {
+    constructor(texture) {
+        super(texture);
+    }
+}
