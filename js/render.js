@@ -57,7 +57,6 @@ function Render(ctx, gridObj) {
     const gridData = gridObj.getGrid();
 
     // Render backgrounds
-    renderTexture(ctx, borderImg, 0-borderOffset[0], 0-borderOffset[1], 1320, 840);
     renderTexture(ctx, gridBackgroundImg, 0, 0, 800, 800);
     renderTexture(ctx, invBackgroundImg, 800, 0, 480, 800);
 
@@ -80,16 +79,19 @@ function Render(ctx, gridObj) {
             if (DEBUG) {
                 ctx.strokeStyle = "red";
                 ctx.lineWidth = 1;
-                ctx.strokeRect(c * gridObj.getTileSize(), r * gridObj.getTileSize(), gridObj.getTileSize(), gridObj.getTileSize());
+                ctx.strokeRect(c * gridObj.getTileSize() + borderOffset[0], r * gridObj.getTileSize() + borderOffset[1], gridObj.getTileSize(), gridObj.getTileSize());
             }
         }
     }
+
+    // Render border
+    renderTexture(ctx, borderImg, 0-borderOffset[0], 0-borderOffset[1], 1320, 840);
 
     // If debug draw a purple border around the 800x800 grid and then one for 800,0 > 1280,800
     if (DEBUG) {
         ctx.strokeStyle = "hotpink";
         ctx.lineWidth = 4;
-        ctx.strokeRect(0, 0, 800, 800);
-        ctx.strokeRect(800, 0, 480, 800);
+        ctx.strokeRect(borderOffset[0], borderOffset[1], 800, 800);
+        ctx.strokeRect(800 + borderOffset[0], borderOffset[1], 480, 800);
     }
 }
