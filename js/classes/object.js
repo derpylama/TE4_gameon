@@ -32,33 +32,45 @@ class GameTile extends GameObject {
     }
 }
 
-class DisabledVoidTile extends Object {
+class VoidTile extends GameObject {
     constructor(texture) {
         super(texture);
     }
 }
 
-class BeePlayerTile extends Object {
+class DisabledVoidTile extends VoidTile {
+    constructor(texture) {
+        super(texture);
+    }
+}
+
+class DisabledVoidTile_NonVoidAbove extends VoidTile {
+    constructor(texture) {
+        super(texture);
+    }
+}
+
+class BeePlayerTile extends GameObject {
     constructor(texture, direction) {
         super(texture);
         this.direction = direction;
     }
 }
 
-class BeehiveTile extends Object {
+class BeehiveTile extends GameObject {
     constructor(texture) {
         super(texture);
     }
 }
 
-class LavaTile extends Object {
+class LavaTile extends GameObject {
     constructor(texture) {
         super(texture);
     }
 }
 
 // inte sten weman
-class StoneTile extends Object {
+class StoneTile extends GameObject {
     constructor(texture) {
         super(texture);
     }
