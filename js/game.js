@@ -49,10 +49,16 @@ const tilePlayerBee4 = new Texture("./assets/images/tiles/bee4.png");
 const tilePlayerBee5 = new Texture("./assets/images/tiles/bee5.png");
 const tileBeeHive = new Texture("./assets/images/tiles/hive.png");
 const tileLava = new Texture("./assets/images/tiles/lava.png");
+const tileLava2 = new Texture("./assets/images/tiles/lava2.png");
+const tileLava3 = new Texture("./assets/images/tiles/lava3.png");
+const tileLava4 = new Texture("./assets/images/tiles/lava4.png");
+const tileLava5 = new Texture("./assets/images/tiles/lava5.png");
+const tileLava6 = new Texture("./assets/images/tiles/lava6.png");
+const tileLava7 = new Texture("./assets/images/tiles/lava7.png");
 const tileStone = new Texture("./assets/images/tiles/stone.png");
 
 //MARK: Test
-const tileAnimTest = new AnimatedTexture(
+const tileAnimBee = new AnimatedTexture(
     [
         //"./assets/images/tiles/void.png",
         "./assets/images/tiles/bee.png",
@@ -66,11 +72,31 @@ const tileAnimTest = new AnimatedTexture(
         "./assets/images/tiles/bee.png",
         //tileNonVoidAbove
     ],
-    200 // Switch every 500ms
+    170 // Switch every 500ms
+)
+
+const tileAnimLava = new AnimatedTexture(
+    [
+        //"./assets/images/tiles/void.png",
+        "./assets/images/tiles/lava.png",
+        "./assets/images/tiles/lava2.png",
+        "./assets/images/tiles/lava3.png",
+        "./assets/images/tiles/lava4.png",
+        "./assets/images/tiles/lava5.png",
+        "./assets/images/tiles/lava6.png",
+        "./assets/images/tiles/lava7.png",
+        "./assets/images/tiles/lava6.png",
+        "./assets/images/tiles/lava4.png",
+        "./assets/images/tiles/lava3.png",
+        "./assets/images/tiles/lava2.png",
+        "./assets/images/tiles/lava.png",
+        //tileNonVoidAbove
+    ],
+    300 // Switch every 500ms
 )
 
 const tileLayeredTest = new LayeredTexture([
-    tileAnimTest,
+    tileAnimBee,
     "./assets/images/tiles/bee.png",
     "./assets/images/tiles/bee2.png",
     "./assets/images/tiles/bee3.png"

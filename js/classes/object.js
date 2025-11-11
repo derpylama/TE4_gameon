@@ -68,7 +68,7 @@ class DisabledVoidTile_NonVoidAbove extends VoidTile {
 
 class BeePlayerTile extends GameTile {
     constructor(direction) {
-        super(tileAnimTest);
+        super(tileAnimBee);
         this.direction = direction;
     }
 }
@@ -81,7 +81,7 @@ class BeehiveTile extends GameTile {
 
 class LavaTile extends GameTile {
     constructor() {
-        super(tileLava);
+        super(tileAnimLava);
     }
 }
 
