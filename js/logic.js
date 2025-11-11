@@ -341,6 +341,13 @@ const inLevelClickHook = (x,y,type)=>{
                 // Bounds check
                 if (x >= renderedState[0] && x <= renderedState[0] + renderedState[2] &&
                     y >= renderedState[1] && y <= renderedState[1] + renderedState[3]) {
+
+                    // Attempt to getTile on the codeGrid at this r,c and if not null, skip
+                    const codeGridTile = codeGrid.getTile(r3, c3);
+                    if (codeGridTile !== null) {
+                        // Cell occupied, skip
+                        continue;
+                    }
                     
                     // Click is inside this cell
                     // Get the first block in the inventory that is selected
