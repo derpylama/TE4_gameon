@@ -226,7 +226,7 @@ function GameLoop(gameGrid) {
     Render(ctx, gameGrid);
 
     const [frameDelta, deltaTime, FPS, elapsed, avgFPS] = getTimeParams();
-    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s`, "12px monospace", "left", "#00ff00");
+    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st`, "12px monospace", "left", "#00ff00");
 
     // Schedule the next frame
     requestAnimationFrame(
@@ -268,7 +268,7 @@ if (gameCanvas) {
         renderStartMenu(ctx);
 
         const [frameDelta, deltaTime, FPS, elapsed, avgFPS] = getTimeParams();
-        if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s`, "12px monospace", "left", "#00ff00");
+        if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st`, "12px monospace", "left", "#00ff00");
         
         requestAnimationFrame(startMenuLoop);
     }
