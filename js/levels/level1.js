@@ -7,7 +7,13 @@ level1 = new Level("level1", () => {
     // Add the global player to this levels game grid
     gameGrid.setTile(4,0, playerObj)
 
-    
+
+    // Open up code tiles
+    codeGrid.setTile(0,0, null);
+    codeGrid.setTile(0,1, null);
+    codeGrid.setTile(0,2, null);
+
+
     // Place level tiles
     gameGrid.setTile(4,8, new StoneTile());
 

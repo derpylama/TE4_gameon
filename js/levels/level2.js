@@ -30,6 +30,15 @@ level2 = new Level("level2", () => {
     );
 
 
+    // Open up code tiles
+    codeGrid.setTile(0,0, null);
+    codeGrid.setTile(0,1, null);
+    codeGrid.setTile(0,2, null);
+    codeGrid.setTile(1,0, null);
+    codeGrid.setTile(1,1, null);
+    codeGrid.setTile(1,2, null);
+
+
     // Add the global player to this levels game grid
     gameGrid.setTile(5,4, playerObj)
 

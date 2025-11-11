@@ -1,4 +1,5 @@
 const DEBUG = window.location.search.includes("debug");
+const GLOSSY = window.location.search.includes("glossy");
 
 
 // Defines
@@ -110,9 +111,18 @@ const tileStone = new Texture("./assets/images/tiles/stone.png");
 const tileCodeblockSelectedTx = new Texture("./assets/images/codeblocks/selected.png");
 const tileCodeblockIgnoredTx = new Texture("./assets/images/codeblocks/ignored.png");
 const tileCodeblockEmptyTx = new Texture("./assets/images/codeblocks/empty.png");
+const tileCodeblockDisabledTx = new Texture("./assets/images/codeblocks/disabled1.png");
+const tileCodeblockDisabledAltTx = new Texture("./assets/images/codeblocks/disabled2.png");
+
+const tileCodeblockDisabledGlossyTx = new Texture("./assets/images/codeblocks/disabled1_glossy.png");
+
 const tileCodeblockObjectTx = new Texture("./assets/images/codeblocks/object.png");
 const tileCodeblockModifierTx = new Texture("./assets/images/codeblocks/modifier.png");
 const tileCodeblockActionTx = new Texture("./assets/images/codeblocks/action.png");
+
+const tileCodeblockObjectGlossyTx = new Texture("./assets/images/codeblocks/object_glossy.png");
+const tileCodeblockModifierGlossyTx = new Texture("./assets/images/codeblocks/modifier_glossy.png");
+const tileCodeblockActionGlossyTx = new Texture("./assets/images/codeblocks/action_glossy.png");
 
 //MARK: Test
 const tileAnimBee = new AnimatedTexture(
@@ -181,15 +191,15 @@ const tileCodeblockOverlay = new DataDrivenTexture(
 );
 
 const tileCodeblockObject = new LayeredTexture([
-    tileCodeblockObjectTx,
+    GLOSSY ? tileCodeblockObjectGlossyTx : tileCodeblockObjectTx,
     tileCodeblockOverlay
 ]);
 const tileCodeblockModifier = new LayeredTexture([
-    tileCodeblockModifierTx,
+    GLOSSY ? tileCodeblockModifierGlossyTx : tileCodeblockModifierTx,
     tileCodeblockOverlay
 ]);
 const tileCodeblockAction = new LayeredTexture([
-    tileCodeblockActionTx,
+    GLOSSY ? tileCodeblockActionGlossyTx : tileCodeblockActionTx,
     tileCodeblockOverlay
 ]);
 
@@ -243,6 +253,10 @@ function instantiateGrids() {
     //     return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));
     // };
 
+    let fillCodeGridWithDisabled = (row, col) => {
+        return new GameTile(GLOSSY ? tileCodeblockDisabledGlossyTx : tileCodeblockDisabledTx);
+    };
+
     const _gameGrid = new Grid(
         0, 0,   // Position in scrPx
         10, 10, // Rows x Cols
@@ -263,7 +277,7 @@ function instantiateGrids() {
         893, 393,   // Position in scrPx
         5, 4, // Rows x Cols
         800/10, // Tile Size, scrPx size of a cell
-        null, // Func to generate default tiles, can be set null
+        fillCodeGridWithDisabled, // Func to generate default tiles, can be set null
         16, 0,   // Gaps in scrPx
         hexagonOffsetMakerLeft // Func to generate offsets per tile [txpx, txpx], can be set null
     );
