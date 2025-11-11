@@ -103,9 +103,9 @@ var movedDown = false;
 // Main update function (called in loop)
 function Update(ctx, grid) {
     const isPressingW = pressedInputs.includes("w");
-    const isPressingS = pressedInputs.includes("s")
-    const isPressingD = pressedInputs.includes("d")
-    const isPressingA = pressedInputs.includes("a")
+    const isPressingS = pressedInputs.includes("s");
+    const isPressingD = pressedInputs.includes("d");
+    const isPressingA = pressedInputs.includes("a");
 
     if (!gameOver && !gameWon) {
         if (isPressingW && !movedUpward) {

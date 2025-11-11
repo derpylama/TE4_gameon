@@ -46,6 +46,7 @@ const tilePlayerBee2 = new Texture("./assets/images/tiles/bee2.png");
 const tilePlayerBee3 = new Texture("./assets/images/tiles/bee3.png");
 const tilePlayerBee4 = new Texture("./assets/images/tiles/bee4.png");
 const tilePlayerBee5 = new Texture("./assets/images/tiles/bee5.png");
+const tilePlayerBee5Blink = new Texture("./assets/images/tiles/bee5_blink.png");
 const tileBeeHive = new Texture("./assets/images/tiles/hive.png");
 const tileLava = new Texture("./assets/images/tiles/lava.png");
 const tileLava2 = new Texture("./assets/images/tiles/lava2.png");
@@ -59,8 +60,8 @@ const tileStone = new Texture("./assets/images/tiles/stone.png");
 //MARK: Test
 const tileAnimBee = new AnimatedTexture(
     [
-        //"./assets/images/tiles/void.png",
         "./assets/images/tiles/bee.png",
+
         "./assets/images/tiles/bee2.png",
         "./assets/images/tiles/bee3.png",
         "./assets/images/tiles/bee4.png",
@@ -68,8 +69,18 @@ const tileAnimBee = new AnimatedTexture(
         "./assets/images/tiles/bee4.png",
         "./assets/images/tiles/bee3.png",
         "./assets/images/tiles/bee2.png",
+
         "./assets/images/tiles/bee.png",
-        //tileNonVoidAbove
+
+        "./assets/images/tiles/bee2.png",
+        "./assets/images/tiles/bee3.png",
+        "./assets/images/tiles/bee4.png",
+        "./assets/images/tiles/bee5_blink.png",
+        "./assets/images/tiles/bee4.png",
+        "./assets/images/tiles/bee3.png",
+        "./assets/images/tiles/bee2.png",
+
+        "./assets/images/tiles/bee.png",
     ],
     170 // Switch every 500ms
 )
@@ -94,12 +105,12 @@ const tileAnimLava = new AnimatedTexture(
     300 // Switch every 500ms
 )
 
-const tileLayeredTest = new LayeredTexture([
-    tileAnimBee,
-    "./assets/images/tiles/bee.png",
-    "./assets/images/tiles/bee2.png",
-    "./assets/images/tiles/bee3.png"
-]);
+// const tileLayeredTest = new LayeredTexture([
+//     tileAnimBee,
+//     "./assets/images/tiles/bee.png",
+//     "./assets/images/tiles/bee2.png",
+//     "./assets/images/tiles/bee3.png"
+// ]);
 
 // const tileDatadrivenTest = new DataDrivenTexture(
 //     (_, cellContext) => {
@@ -198,7 +209,7 @@ codeGrid.setTile(0, 0, codeBlockEntity1);
 codeGrid.setTile(0, 1, codeBlockAction1);
 codeGrid.setTile(0, 2, codeBlockEntity2);
 
-interpreter.executeAllRows({
+interpreter.executeAllRows(codeGrid,{ //execute code on updates  //move to only trigger when a codeblock is moved
     "gameGrid": gameGrid
 });
 
@@ -213,13 +224,14 @@ interpreter.executeAllRows({
 // gameGrid.setTile(3,3, new GameTile(tileDatadrivenTest)); //
 
 const playerObj = new BeePlayerTile(tilePlayerBee);
-gameGrid.setTile(3,3, playerObj)
+
+gameGrid.setTile(3,3, playerObj);
 
 gameGrid.setTile(2,3, new BeehiveTile())
 gameGrid.setTile(4,4, new LavaTile())
 
 const stone = new StoneTile();
-gameGrid.setTile(3,2, stone);
+gameGrid.setTile(3,6, stone);
 
 // Define loops
 function GameLoop(gameGrid) {
@@ -228,7 +240,7 @@ function GameLoop(gameGrid) {
     Render(ctx, gameGrid);
 
     const [frameDelta, deltaTime, FPS, elapsed, avgFPS] = getTimeParams();
-    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s`, "12px monospace", "left", "#00ff00");
+    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st`, "12px monospace", "left", "#00ff00");
 
     // Schedule the next frame
     requestAnimationFrame(
@@ -240,6 +252,15 @@ function GameLoop(gameGrid) {
 function StartGame(gameGrid) {
     audio.playSound("bg.music");
     GameLoop(gameGrid);
+}
+
+function maybePlayBeeSound() {
+    const chance = 0.12;
+
+    if (Math.random() < chance) {
+        audio.stopSound("sfx.bee");
+        audio.playSound("sfx.bee");
+    }
 }
 
 // If we got a canvas run the game
@@ -270,7 +291,7 @@ if (gameCanvas) {
         renderStartMenu(ctx);
 
         const [frameDelta, deltaTime, FPS, elapsed, avgFPS] = getTimeParams();
-        if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s`, "12px monospace", "left", "#00ff00");
+        if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st`, "12px monospace", "left", "#00ff00");
         
         requestAnimationFrame(startMenuLoop);
     }

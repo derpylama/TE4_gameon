@@ -33,17 +33,20 @@ class GameTile extends GameObject {
     }
 
     getReff() {
-        return gameGrid.getPosOfObj(this.self)
+        console.log("Getting position of object:", this);
+        console.log(gameGrid.getPosOfObj(this));
+        return gameGrid.getPosOfObj(this);
+        
     }
 
     moveBy(rowDelta, colDelta) {
         const objCurrentPos = this.getReff();
 
-        const newObjPosCheck = grid.getRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta);
+        const newObjPosCheck = gameGrid.getRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta);
         
         if (newObjPosCheck != false){
-            grid.setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this.self);
-            grid.clearTile(objCurrentPos[0], objCurrentPos[1]);
+            gameGrid.setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this);
+            gameGrid.clearTile(objCurrentPos[0], objCurrentPos[1]);
         }
     }
 }

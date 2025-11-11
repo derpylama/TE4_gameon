@@ -80,8 +80,39 @@ class CodeBlockAction extends CodeBlock {
 //context is what it needs to interect with the game ex it pretty much always needs the gamegrid to find objects to move/attack  (maybe needs ex "stones and gamegrid" if we say stone-attack-left)
 const ActionRegistry = {  
     "move.to": (left, right, context) => {
-        console.log("move.to action called with:", left, right, context);
-        return true;
+         console.log("move.to action called with:", left, right, context);
+        // return true;
+
+        const gridData = context.gameGrid.getGrid();
+
+        for (let r = 0; r < gridData.length; r++) {
+            for (let c = 0; c < gridData[r].length; c++) {
+                const block = gridData[r][c];
+                if (block && block instanceof left.linkedClass) {
+                    console.log("Found block to move:", block);
+                    console.log(block.getId());
+                    console.log("test");
+                    switch(right.value) {
+                        case "up":
+                            block.moveBy(-1, 0);
+                            break;
+                        case "down":
+                            block.moveBy(1, 0);
+                            break;
+                        case "left":
+                            console.log("Moving left");
+                            block.moveBy(0, -1);
+                            break;
+                        case "right":
+                            block.moveBy(0, 1);
+                            break;
+                        default:
+                            console.warn(`Invalid direction '${right.value}' for move.to action.`);
+                            return false;
+                    }
+                }
+            }
+        }
     },
 };
 
