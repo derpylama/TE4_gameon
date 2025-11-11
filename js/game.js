@@ -193,8 +193,7 @@ function StartGame(level) {
 
     audio.playSound("bg.music");
 
-    levels.setCurrentLevel(level);
-    currentGrids = levels.loadAndRunLevel();
+    currentGrids = levels.setLoadAndRunLevel(level);
 
     // Code interpreter
     interpreter = new CodeInterpreter(currentGrids[1]); // codeGrid

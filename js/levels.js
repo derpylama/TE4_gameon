@@ -40,6 +40,16 @@ class LevelHandler {
         return [null, null, null];
     }
 
+    setLoadAndRunLevelByIndex(index) {
+        this.setCurrentLevelByIndex(index);
+        return this.loadAndRunLevel();
+    }
+
+    setLoadAndRunLevel(level) {
+        this.setCurrentLevel(level);
+        return this.loadAndRunLevel();
+    }
+
     getCurrentLevelIndex() {
         return this.currentIndex;
     }
