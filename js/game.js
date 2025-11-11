@@ -225,7 +225,7 @@ interpreter.executeAllRows(codeGrid,{ //execute code on updates  //move to only 
 
 const playerObj = new BeePlayerTile(tilePlayerBee);
 
-gameGrid.setTile(3,3, playerObj)
+gameGrid.setTile(3,3, playerObj);
 
 const stone = new StoneTile();
 gameGrid.setTile(3,6, stone);
