@@ -1,3 +1,36 @@
+class RowColToRenderState {
+    constructor() {
+      // Internally store mapping as a Map<string, [x, y, width, height]>
+      this.map = new Map();
+    }
+  
+    // Internal helper: turn [row, col] into a unique key
+    _key(rowCol) {
+      return `${rowCol[0]},${rowCol[1]}`;
+    }
+  
+    // Set a rectangle value for a [row, col] key
+    set(rowCol, renderState) {
+      this.map.set(this._key(rowCol), renderState);
+      return this; // for chaining
+    }
+  
+    // Get a rectangle value for a [row, col] key
+    get(rowCol) {
+      return this.map.get(this._key(rowCol));
+    }
+  
+    // Check if a [row, col] key exists
+    has(rowCol) {
+      return this.map.has(this._key(rowCol));
+    }
+  
+    // Delete a [row, col] key
+    delete(rowCol) {
+      return this.map.delete(this._key(rowCol));
+    }
+}
+
 class Grid {
     // Rows and Cols are in number of cells
     // cellSize is in scrPx
@@ -21,6 +54,9 @@ class Grid {
         this.offsetMaker = offsetMaker;
         this.x = x;
         this.y = y;
+
+        // Map r,c to a [x,y,width,height]
+        this.cellRenderStates = new RowColToRenderState();
     }
 
     // Getter for [x, y] position of the grid in scrPx

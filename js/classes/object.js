@@ -17,10 +17,25 @@ class GameObject {
             proposedId = self.crypto.randomUUID();
         }
         this.id = proposedId;
+
+        
+        this.renderedState = null;
     }
 
     getId() {
         return this.id;
+    }
+
+    setRenderedState(x,y,width,height) {
+        this.renderedState = [x,y,width,height];
+    }
+
+    getRenderedState() {
+        return this.renderedState;
+    }
+
+    resetRenderedState() {
+        this.renderedState = null;
     }
 }
 
@@ -29,7 +44,7 @@ class GameTile extends GameObject {
         super(texture);
         this.isGoal = isGoal;
         this.isDeath = isDeath;
-        this.isWalkable = isWalkable
+        this.isWalkable = isWalkable;
     }
 
     getReff() {
