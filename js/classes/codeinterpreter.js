@@ -22,7 +22,7 @@ class CodeInterpreter {
                 const right = blocks[i + 1] ?? null;
 
                 if (!block.validate([left, right])) {
-                    console.log(`Invalid syntax near ${block.value}`);
+                    console.log(`Invalid syntax near ${block.value} or already executed. Skipping.`);
                     continue;
                 }
 
