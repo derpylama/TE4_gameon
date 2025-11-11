@@ -61,7 +61,6 @@ let rightBlock = gameGrid.getRelationalTile(actionblock.row, actionblock.col, 0,
 let isValid = codeBlockAction1.validate([leftBlock, rightBlock]);
 console.log("CodeBlockAction validation result:", isValid); // Expected: true
 row1=gameGrid.getRow(1); //test for validator
-console.log("Validate Row 1 result:", validateRow(row1)); // Expected: true
 //log row1
 console.log("Row 1 contents:", row1);
 //MARK: End test codeblocks
