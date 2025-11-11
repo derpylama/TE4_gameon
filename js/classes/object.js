@@ -33,9 +33,7 @@ class GameTile extends GameObject {
     }
 
     getReff() {
-        console.log("Getting position of object:", this);
-        console.log(currentGrids[0].getPosOfObj(this));
-        return currentGrids[0].getPosOfObj(this);
+        return gameGrid.getPosOfObj(this);
         
     }
 
