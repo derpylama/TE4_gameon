@@ -2,9 +2,22 @@ const DEBUG = window.location.search.includes("debug");
 
 
 // Defines
-const TargetFPS = 60;
-let currentFPS = 0;
-let deltaTime = 0;
+let lastTime = performance.now();
+let startTime = lastTime;
+let frameCount = 0;
+
+function getTimeParams() {
+    const now = performance.now();
+    const frameDelta = now - lastTime;   // ms since last frame
+    const deltaTime = frameDelta / 1000; // seconds
+    const FPS = 1000 / frameDelta;       // instantaneous FPS
+    frameCount++;
+    const elapsed = (now - startTime) / 1000; // total seconds since start
+    const avgFPS = frameCount / elapsed;      // true average FPS
+    lastTime = now;
+
+    return [frameDelta, deltaTime, FPS, elapsed, avgFPS];
+}
 
 const gameCanvas = document.getElementById("canvas");
 const ctx = gameCanvas ? gameCanvas.getContext("2d") : null;
@@ -115,10 +128,12 @@ const codeGrid = new Grid(4, 5, 800/10, null);
 
 // Define loops
 function GameLoop(gameGrid) {
-    //TODO: Things
 
     Update(ctx, gameGrid);
     Render(ctx, gameGrid);
+
+    const [frameDelta, deltaTime, FPS, elapsed, avgFPS] = getTimeParams();
+    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s`, "12px monospace", "left", "#00ff00");
 
     // Schedule the next frame
     requestAnimationFrame(
@@ -156,7 +171,12 @@ if (gameCanvas) {
     // Inner loop for start menu
     let startMenuLoop = () => {
         if (!inStartMenu) return;
+    
         renderStartMenu(ctx);
+
+        const [frameDelta, deltaTime, FPS, elapsed, avgFPS] = getTimeParams();
+        if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s`, "12px monospace", "left", "#00ff00");
+        
         requestAnimationFrame(startMenuLoop);
     }
     requestAnimationFrame(startMenuLoop);

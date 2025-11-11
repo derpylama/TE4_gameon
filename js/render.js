@@ -108,6 +108,30 @@ class DataDrivenTexture {
 // Define needed internal textures
 const MissingTexture = new Texture("./assets/images/missing.png");
 
+function renderText(ctx, x, y, text, text_font, text_align, text_color="#ffffff") {
+    ctx.fillStyle = text_color;
+    ctx.font = text_font;
+    ctx.textAlign = text_align;
+    ctx.fillText(text, x, y);
+}
+
+class Text {
+    constructor(x, y, text, text_font, text_align, text_color="#ffffff") {
+        this.pos = new Position(x,y);
+        this.text = text;
+        this.text_font = text_font;
+        this.text_align = text_align;
+        this.text_color = text_color;
+        this.active = true;
+    }
+    
+    render(ctx) {
+        if (this.active) {
+            renderText(ctx, this.pos.x, this.pos.y, this.text, this.text_font, this.text_align, this.text_color);
+        }
+    }
+}
+
 // Helper to draw a checkerboard pattern instead of a texture
 function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0) {
     for (let row = 0; row < height / checkerSize; row++) {
