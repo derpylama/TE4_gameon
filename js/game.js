@@ -53,6 +53,7 @@ const tileStone = new Texture("./assets/images/tiles/stone.png");
 //         // cellContext can be null or object with row and col where col/row can be null too
 //         if (cellContext !== null && cellContext.row && cellContext.col) {
 //             const above = gameGrid.getTile(cellContext.row - 1, cellContext.col);
+            
 //             // check if above is not null and above is instance of or instance of subclass of VoidTile
 //             if (above === null || above instanceof VoidTile) {
 //                 return tileNonVoidAbove;
