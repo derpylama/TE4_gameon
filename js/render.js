@@ -1,8 +1,10 @@
-// Provide handling for images, renderings things and rendering objects of the "GameObject" class.
+// The default size of each checker square
 const checkerSize = (800/10)/2;
 
-const borderOffset = [20, 20]; // Each txPx is 5* scrPx, we add 4 txPx offset in both directions
+// Define offset to account for border texture, each txPx is 5* scrPx, we add 4 txPx offset in both directions
+const borderOffset = [20, 20]; 
 
+// Main texture class ensuring they are loaded
 class Texture {
     constructor(texturePath) {
         this.image = new Image();
@@ -22,37 +24,164 @@ class Texture {
         return this.loaded;
     }
 
-    getImage() {
+    getImage(_) {
         return this.image;
     }
 }
 
-function drawCheckerboard(ctx, x, y, width, height, checkerSize) {
+// Animated texture class for handling frame-based animations
+class AnimatedTexture {
+    // Frames are an array of Texture objects or strings
+    constructor(frames, frameDuration) {
+        this.frames = frames.map(frame => {
+            if (typeof frame === 'string') {
+                return new Texture(frame);
+            } else {
+                return frame;
+            }
+        });
+
+        this.frameDuration = frameDuration; // in milliseconds
+        this.startTime = null;
+    }
+
+    isLoaded() {
+        return this.frames.every(frame => frame.isLoaded());
+    }
+
+    getImage(cellContext={"row":null, "col":null}) {
+        // First time call sets startTime
+        // Then we use elapsed time to determine current frame according to frameDuration
+        if (this.startTime === null) {
+            this.startTime = Date.now();
+        }
+        const elapsed = Date.now() - this.startTime;
+        const currentFrameIndex = Math.floor(elapsed / this.frameDuration) % this.frames.length;
+        return this.frames[currentFrameIndex].getImage(cellContext);
+    }
+}
+
+// Layered texture class for drawing multiple textures ontop of each other in order
+class LayeredTexture {
+    constructor(texturePaths) {
+        // this.textures is an array of Texture/AnimatedTexture objects but accepts strings as well
+        this.textures = texturePaths.map(path => {
+            if (typeof path === 'string') {
+                return new Texture(path);
+            } else {
+                return path;
+            }
+        });
+    }
+
+    isLoaded() {
+        return this.textures.every(texture => texture.isLoaded());
+    }
+
+    getImage(cellContext={"row":null, "col":null}) {
+        // return array of images
+        return this.textures.map(texture => texture.getImage(cellContext));
+    }
+}
+
+// DataDrivenTexture has `selector(selectBetween, cellContext) => <Texture/AnimatedTexture/LayeredTexture>`
+//                   and [selectBetween] which is all textures to be selected between (given to ensure isLoaded safety)
+class DataDrivenTexture {
+    constructor(textureSelector, selectedBetween = []) {
+        this.textureSelector = textureSelector;
+        this.selectedBetween = selectedBetween;
+    }
+
+    isLoaded() {
+        return this.selectedBetween.every(texture => texture.isLoaded());
+    }
+
+    getImage(cellContext={"row":null, "col":null}) {
+        const selectedTexture = this.textureSelector(this.selectedBetween, cellContext);
+        if (selectedTexture === null || selectedTexture === undefined) {
+            return MissingTexture.getImage();
+        }
+        return selectedTexture.getImage();
+    }
+}
+
+// Define needed internal textures
+const MissingTexture = new Texture("./assets/images/missing.png");
+
+function renderText(ctx, x, y, text, text_font, text_align, text_color="#ffffff") {
+    ctx.fillStyle = text_color;
+    ctx.font = text_font;
+    ctx.textAlign = text_align;
+    ctx.fillText(text, x, y);
+}
+
+class Text {
+    constructor(x, y, text, text_font, text_align, text_color="#ffffff") {
+        this.pos = new Position(x,y);
+        this.text = text;
+        this.text_font = text_font;
+        this.text_align = text_align;
+        this.text_color = text_color;
+        this.active = true;
+    }
+    
+    render(ctx) {
+        if (this.active) {
+            renderText(ctx, this.pos.x, this.pos.y, this.text, this.text_font, this.text_align, this.text_color);
+        }
+    }
+}
+
+// Helper to draw a checkerboard pattern instead of a texture
+function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0) {
     for (let row = 0; row < height / checkerSize; row++) {
         for (let col = 0; col < width / checkerSize; col++) {
             if ((row + col) % 2 === 0) {
-                ctx.fillStyle = "#800080"; // Purple
+                ctx.fillStyle = `rgba(128, 0, 128, ${opacity})`; // Purple
             } else {
-                ctx.fillStyle = "#000000"; // Black
+                ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`; // Black
             }
-            ctx.fillRect(x + col * checkerSize, y + row * checkerSize, checkerSize, checkerSize);
+
+            let calcX = x + col * checkerSize;
+            let calcY = y + row * checkerSize;
+
+            calcX += borderOffset[0];
+            calcY += borderOffset[1];
+
+            ctx.fillRect(calcX, calcY, checkerSize, checkerSize);
         }
     }
 }
 
 // Handles if not loaded show purple/black checkerboard
-function renderTexture(ctx, texture, x, y, width, height) {
-    x += borderOffset[0];
-    y += borderOffset[1];
+function renderTexture(ctx, texture, x, y, width, height, cellContext={"row":null, "col":null}) {
     if (texture.isLoaded()) {
+        drawX = x + borderOffset[0];
+        drawY = y + borderOffset[1];
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(texture.getImage(), x, y, width, height);
+
+        let textures = [];
+        if (texture instanceof LayeredTexture) {
+            textures = texture.getImage(cellContext);
+        } else {
+            textures.push(texture.getImage(cellContext));
+        }
+
+        for (const img of textures) {
+            try {
+                ctx.drawImage(img, drawX, drawY, width, height);
+            } catch (e) {
+                // If error drawing image, draw checkerboard instead
+                drawCheckerboard(ctx, x, y, width, height, checkerSize);
+            }
+        }
     } else {
         // Draw purple/black checkerboard
         drawCheckerboard(ctx, x, y, width, height, checkerSize);
     }
 }
 
+// Function to render a grid object
 function renderGrid(gridObj) {
     const gridData = gridObj.getGrid();
     const gaps = gridObj.getGaps();
@@ -64,33 +193,58 @@ function renderGrid(gridObj) {
 
             const calculatedOffset = gridObj.getOffset(r, c);
 
-            if (gameObj != null) {
+            let x = (c * gridObj.getTileSize()) + (c * gaps[0]) + calculatedOffset[0]
+            let y = (r * gridObj.getTileSize()) + (r * gaps[1]) + calculatedOffset[1]
+
+            if (gameObj !== null) {
                 const texture = gameObj.texture;
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                renderTexture(ctx, texture, (c * gridObj.getTileSize())+(c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize())+(r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize());
-            } else {
-                // Draw purple/black checkerboard for empty tiles
-                drawCheckerboard(ctx, (c * gridObj.getTileSize())+(c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize())+(r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize(), checkerSize);
+                const cellContext = {"row": r, "col": c};
+                renderTexture(ctx, texture, x, y, gridObj.getTileSize(), gridObj.getTileSize(), cellContext);
             }
 
             // If debug mode draw a border inside the tile
             if (DEBUG) {
+
+                // Null => Checkerboard
+                if (gameObj === null) {
+                    // Draw purple/black checkerboard for empty tiles
+                    drawCheckerboard(ctx, x, y, gridObj.getTileSize(), gridObj.getTileSize(), checkerSize, 0.35);
+                }
+
+                // Outlines
                 ctx.strokeStyle = "red";
                 ctx.lineWidth = 1;
-                ctx.strokeRect((c * gridObj.getTileSize()) + borderOffset[0] + (c * gaps[0]) + calculatedOffset[0], (r * gridObj.getTileSize()) + borderOffset[1] + (r * gaps[1]) + calculatedOffset[1], gridObj.getTileSize(), gridObj.getTileSize());
+                ctx.strokeRect(
+                    (c * gridObj.getTileSize()) + borderOffset[0] + (c * gaps[0]) + calculatedOffset[0],
+                    (r * gridObj.getTileSize()) + borderOffset[1] + (r * gaps[1]) + calculatedOffset[1],
+                    gridObj.getTileSize(),
+                    gridObj.getTileSize()
+                );
             }
         }
     }
 }
 
+// Helper function to render overlays if set
+function renderOverlays(ctx) {
+    const currentOverlay = overlayer.getCurrentOverlay();
+    if (currentOverlay !== null) {
+        renderTexture(ctx, currentOverlay, borderOffset[0], borderOffset[1], 800, 800);
+    }
+}
+
+
+// Main render function (called in loop)
 function Render(ctx, gridObj) {
 
     // Render backgrounds
     renderTexture(ctx, gridBackgroundImg, 0, 0, 800, 800);
     renderTexture(ctx, invBackgroundImg, 800, 0, 480, 800);
 
+    // Render grid
     renderGrid(gridObj);
 
     // Render border
@@ -103,6 +257,9 @@ function Render(ctx, gridObj) {
         ctx.strokeRect(borderOffset[0], borderOffset[1], 800, 800);
         ctx.strokeRect(800 + borderOffset[0], borderOffset[1], 480, 800);
     }
+
+    // If overlay render it on top
+    renderOverlays(ctx);
 }
 
 

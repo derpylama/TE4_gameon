@@ -1,3 +1,4 @@
+// Helper to map linear slider value (0-100) to logarithmic volume (0.0-1.0), for correct volume perception
 function mapSliderToVolume(value) {
     // Clamp
     if (value < 0) value = 0;
@@ -11,6 +12,7 @@ function mapSliderToVolume(value) {
     return Math.exp(minv + scale * (value - minp));
 }
 
+// Main sound handler class
 class SoundHandler {
     constructor(masterVolume = 1.0) {
         this._disAllowNewPlays = false;
@@ -18,6 +20,7 @@ class SoundHandler {
         this.masterVolume = mapSliderToVolume(masterVolume);
     }
 
+    // Setter for volume that also applies the log-correction
     setMasterVolume(linearVolume) {
         this.masterVolume = mapSliderToVolume(linearVolume);
 
@@ -33,14 +36,17 @@ class SoundHandler {
         }
     }
 
+    // Disable starting new plays (used internally in mute/unmute logic)
     disAllowNewPlays() {
         this._disAllowNewPlays = true;
     }
 
+    // Re-enable starting new plays
     allowNewPlays() {
         this._disAllowNewPlays = false;
     }
 
+    // Add a playlist of songs, songs is array of Audio() objects or URL-strings/filepath-strings
     addPlaylist(strid, songs, loop = false, delay = 0) {
         // Throw if type of songs is not list
         if (!Array.isArray(songs)) {
@@ -212,6 +218,7 @@ class SoundHandler {
         }
     }
 
+    // Sound methods are aliases but for single sound-playlists
     addSound(strid, song, loop, delay = 0) {
         // If song is not string or Audio object throw
         if (typeof song !== "string" && !(song instanceof Audio)) {

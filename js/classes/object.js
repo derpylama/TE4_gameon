@@ -1,3 +1,4 @@
+// Each GameObject have a unique id they exists in bellow set
 const assignedIds = new Set();
 
 class GameObject {
@@ -23,56 +24,69 @@ class GameObject {
     }
 }
 
-
-
 class GameTile extends GameObject {
-    constructor(texture, isGoal, isDeath) {
+    constructor(texture, isGoal = false, isDeath = false) {
         super(texture);
         this.isGoal = isGoal;
         this.isDeath = isDeath;
     }
+
+    getReff() {
+        return gameGrid.getPosOfObj(this.self)
+    }
+
+    moveBy(rowDelta, colDelta) {
+        const objCurrentPos = this.getReff();
+
+        const newObjPosCheck = grid.getRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta);
+        
+        if (newObjPosCheck != false){
+            grid.setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this.self);
+            grid.clearTile(objCurrentPos[0], objCurrentPos[1]);
+        }
+    }
 }
 
-class VoidTile extends GameObject {
-    constructor(texture) {
-        super(texture);
+class VoidTile extends GameTile {
+    constructor() {
+        super("./assets/images/tiles/void.png");
     }
 }
 
 class DisabledVoidTile extends VoidTile {
-    constructor(texture) {
-        super(texture);
+    constructor() {
+        super(tileVoid);
     }
 }
 
 class DisabledVoidTile_NonVoidAbove extends VoidTile {
-    constructor(texture) {
-        super(texture);
+    constructor() {
+        super(tileNonVoidAbove);
     }
 }
 
-class BeePlayerTile extends GameObject {
-    constructor(texture, direction) {
-        super(texture);
+class BeePlayerTile extends GameTile {
+    constructor(direction) {
+        super(tilePlayerBee);
         this.direction = direction;
     }
 }
 
-class BeehiveTile extends GameObject {
-    constructor(texture) {
-        super(texture);
+class BeehiveTile extends GameTile {
+    constructor() {
+        super(tileBeeHive);
     }
 }
 
-class LavaTile extends GameObject {
-    constructor(texture) {
-        super(texture);
+class LavaTile extends GameTile {
+    constructor() {
+        super(tileLava);
     }
 }
 
 // inte sten weman
-class StoneTile extends GameObject {
-    constructor(texture) {
-        super(texture);
+class StoneTile extends GameTile {
+    constructor() {
+        super(tileStone);
     }
 }
