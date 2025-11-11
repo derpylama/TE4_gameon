@@ -1,3 +1,4 @@
+import { ActionRegistry } from "./actionRegistry.js";
 class CodeBlock extends GameObject {
     constructor(texture, value) {
         super(texture);
@@ -53,4 +54,12 @@ class CodeBlockAction extends CodeBlock {
         const [leftType, rightType] = this.adjacentCodeBlocksCanBe;
         return isValid(left, leftType) && isValid(right, rightType);
     }
+        execute(left, right, context) {
+            const handler = ActionRegistry[this.value];
+            if (handler) {
+                handler(left, right, context);
+            } else {
+                console.warn(`No action handler registered for '${this.value}'`);
+            }
+        }
 }
