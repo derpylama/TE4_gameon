@@ -55,13 +55,25 @@ const resetButton = new UIButton(
     
         // Reset overlays
         overlayer.hideOverlay();
-    
+
+        inputHooksDisabled = true;
+
+        if(animateLevelReset(interpreter, currentGrids, playerObj, 500)){
+            inputHooksDisabled = false;
+        }
+
+        
+    /*
         // Get current player position
         let pos = currentGrids[0].getPosOfObj(playerObj);
     
         // Reload current level    MARK:HERE
+        console.log("Resetting level...");
         currentGrids = levels.setLoadAndRunLevel(levels.getCurrentLevel());
     
+
+
+
         // Is there something there already die?
         const existingTile = currentGrids[0].getTile(pos[0], pos[1]);
         if (existingTile !== null && !(existingTile instanceof BeePlayerTile)) {
@@ -70,6 +82,7 @@ const resetButton = new UIButton(
     
         // Reset player position
         playerObj.moveTo(pos[0], pos[1]);
+        */
     },
     true // Works with overlay open
 );
