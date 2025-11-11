@@ -43,23 +43,38 @@ const overlayWonImg = new Texture("./assets/images/overlays/won.png");
 const tileVoid = new Texture("./assets/images/tiles/void.png");
 const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
 const tilePlayerBee = new Texture("./assets/images/tiles/bee.png");
+const tilePlayerBee2 = new Texture("./assets/images/tiles/bee2.png");
+const tilePlayerBee3 = new Texture("./assets/images/tiles/bee3.png");
+const tilePlayerBee4 = new Texture("./assets/images/tiles/bee4.png");
+const tilePlayerBee5 = new Texture("./assets/images/tiles/bee5.png");
 const tileBeeHive = new Texture("./assets/images/tiles/hive.png");
 const tileLava = new Texture("./assets/images/tiles/lava.png");
 const tileStone = new Texture("./assets/images/tiles/stone.png");
 
 //MARK: Test
-// const tileAnimTest = new AnimatedTexture(
-//     [
-//         "./assets/images/tiles/void.png",
-//         tileNonVoidAbove
-//     ],
-//     500 // Switch every 500ms
-// )
+const tileAnimTest = new AnimatedTexture(
+    [
+        //"./assets/images/tiles/void.png",
+        "./assets/images/tiles/bee.png",
+        "./assets/images/tiles/bee2.png",
+        "./assets/images/tiles/bee3.png",
+        "./assets/images/tiles/bee4.png",
+        "./assets/images/tiles/bee5.png",
+        "./assets/images/tiles/bee4.png",
+        "./assets/images/tiles/bee3.png",
+        "./assets/images/tiles/bee2.png",
+        "./assets/images/tiles/bee.png",
+        //tileNonVoidAbove
+    ],
+    200 // Switch every 500ms
+)
 
-// const tileLayeredTest = new LayeredTexture([
-//     tileAnimTest,
-//     "./assets/images/tiles/bee.png"
-// ]);
+const tileLayeredTest = new LayeredTexture([
+    tileAnimTest,
+    "./assets/images/tiles/bee.png",
+    "./assets/images/tiles/bee2.png",
+    "./assets/images/tiles/bee3.png"
+]);
 
 // const tileDatadrivenTest = new DataDrivenTexture(
 //     (_, cellContext) => {
@@ -139,12 +154,38 @@ const codeGrid = new Grid(
     hexagonOffsetMakerLeft // Func to generate offsets per tile [txpx, txpx], can be set null
 );
 
+
+
+
+//MARK: Test codeblocks
+codeBlockEntity1 = new CodeBlockObject("stone");
+codeBlockEntity2 = new CodeBlockModifier("left");
+codeBlockAction1 = new CodeBlockAction("move.to", ["object", "modifier"]); //also acceps "any"
+gameGrid.setTile(1, 1, codeBlockEntity1);
+gameGrid.setTile(1, 2, codeBlockAction1);
+gameGrid.setTile(1, 3, codeBlockEntity2);
+
+
+//test the code interpreter
+const interpreter = new CodeInterpreter(gameGrid);
+
+interpreter.executeAllRows({
+    gameGrid
+});
+
+//MARK: End test codeblocks
+
+
 // gameGrid.setTile(5,5, new GameTile(tileLayeredTest)); //MARK: Test
 
 // gameGrid.setTile(1,4, new GameTile(tileDatadrivenTest)); //MARK: Test
 // gameGrid.setTile(2,4, new GameTile(tileDatadrivenTest)); //
 // gameGrid.setTile(2,3, new GameTile(tileDatadrivenTest)); //
 // gameGrid.setTile(3,3, new GameTile(tileDatadrivenTest)); //
+
+const playerObj = new BeePlayerTile(tilePlayerBee);
+
+gameGrid.setTile(3,3, playerObj)
 
 // Define loops
 function GameLoop(gameGrid) {
