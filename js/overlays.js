@@ -2,6 +2,34 @@ class Overlay {
     constructor(texture, clickAreas = null) { // clickAreas are [[[x, y, width, height],function(x,y,type)],...]
         this.texture = texture;
         this.clickAreas = clickAreas;
+        this.texts = {};
+    }
+
+    getTexture() {
+        return this.texture;
+    }
+
+    getClickAreas() {
+        return this.clickAreas;
+    }
+
+    setText(key, text) {
+        this.texts[key] = text;
+    }
+
+    additionalRenders(ctx) {
+        if (this.texts.hasOwnProperty("reason")) {
+            let textX = 430;
+            let textY = 560;
+            let fontSize = 20;
+            let font = "Arial";
+            let align = "center";
+            let color = "#ff0000";
+
+            let text = this.texts["reason"] || "";
+
+            renderText(ctx, textX, textY, text, `${fontSize}px ${font}`, align, color);
+        }
     }
 }
 
@@ -24,9 +52,10 @@ class OverlayHandler {
     }
 
     // Do note overlays are automatically offset by borderOffset when handling clicks and in rendering
-    showOverlay(texture, clickAreas = null) { // clickAreas are [[[x, y, width, height],function(x,y,type)],...]
-        this.overlay = texture;
+    showOverlayObj(overlay) { // clickAreas are [[[x, y, width, height],function(x,y,type)],...]
+        this.overlay = overlay;
 
+        let clickAreas = overlay.getClickAreas();
         this.handler = (x,y,type)=>{
             if (clickAreas !== null) {
                 for (const area of clickAreas) {
@@ -49,10 +78,6 @@ class OverlayHandler {
         inputHooksDisabled = true;
 
         registerClickHook(this.handler);
-    }
-
-    showOverlayObj(overlay) {
-        this.showOverlay(overlay.texture, overlay.clickAreas);
     }
 
     hideOverlay() {

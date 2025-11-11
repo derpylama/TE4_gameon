@@ -218,4 +218,18 @@ class Grid {
         }
         return [...this.grid[row]];
     }
+
+    getPosOfObjById(strid) {
+        // ensure they have the same id attribute
+        for (let r = 0; r < this.grid.length; r++) {
+            for (let c = 0; c < this.grid[r].length; c++) {
+                const cellObj = this.grid[r][c];
+                if (cellObj && cellObj.getId() === strid) {
+                    return [r, c];
+                }
+            }
+        }
+
+        return null;
+    }
 }
