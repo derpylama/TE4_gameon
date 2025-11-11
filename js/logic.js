@@ -83,14 +83,18 @@ function triggerGameOver(reason = null) {
     overlayer.showOverlayObj(overlayGameOver);
 }
 
+function triggerGameWon() {
+    audio.playSound("sfx.win");
+    gameWon = true;
+    overlayer.showOverlayObj(overlayWon);
+}
+
 function checkTile(tile) {
     if (tile.isWalkable) {
         return "walk";
     }
     else if (tile.isGoal){
-        audio.playSound("sfx.win");
-        gameWon = true;
-        overlayer.showOverlayObj(overlayWon);
+        triggerGameWon();
         return "goal";
     }
     else if (tile.isDeath) {

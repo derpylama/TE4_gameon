@@ -1,6 +1,8 @@
 const DEBUG = window.location.search.includes("debug");
 const GLOSSY = window.location.search.includes("glossy");
+var MEME = window.location.search.includes("meme");
 
+const CAN_MOVE_ACTION_INTO_ANY_WALKABLE = false;
 
 // Defines
 let lastTime = performance.now();
@@ -9,8 +11,8 @@ let frameCount = 0;
 var currentGrids = [null, null, null]; // [gameGrid, codeGrid, inventoryGrid]
 var interpreter = null; // CodeInterpreter
 var resetAnimStarted = null;
-var gameWon = false
-var gameOver = false
+var gameWon = false;
+var gameOver = false;
 
 function getTimeParams() {
     const now = performance.now();
@@ -36,6 +38,27 @@ const overlayer = new OverlayHandler();
 const levels = new LevelHandler();
 
 // UI Elements
+const onGameReset = (x=0,y=0,type=0) => {
+    resetAnimStarted = Date.now();
+
+    // Reset overlays
+    overlayer.hideOverlay();
+
+    // Get current player position
+    let pos = currentGrids[0].getPosOfObj(playerObj);
+
+    // Reload current level
+    currentGrids = levels.setLoadAndRunLevel(levels.getCurrentLevel());
+
+    // Is there something there already die?
+    const existingTile = currentGrids[0].getTile(pos[0], pos[1]);
+    if (existingTile !== null && !(existingTile instanceof BeePlayerTile)) {
+        triggerGameOver("Crushed, stood where reality reset!");
+    }
+
+    // Reset player position
+    playerObj.moveTo(pos[0], pos[1]);
+}
 const iconTrash = new Texture("./assets/images/icons/trash.png");
 const iconTrashActive = new Texture("./assets/images/icons/trash_active.png");
 const resetButton = new UIButton(
@@ -53,27 +76,7 @@ const resetButton = new UIButton(
         }
     ),
     {"text": "Reset", "fontSize": 15, "yOffset": 13, "color": "#FFFFFF"},
-    (x,y,type) => {
-        resetAnimStarted = Date.now();
-    
-        // Reset overlays
-        overlayer.hideOverlay();
-    
-        // Get current player position
-        let pos = currentGrids[0].getPosOfObj(playerObj);
-    
-        // Reload current level
-        currentGrids = levels.setLoadAndRunLevel(levels.getCurrentLevel());
-    
-        // Is there something there already die?
-        const existingTile = currentGrids[0].getTile(pos[0], pos[1]);
-        if (existingTile !== null && !(existingTile instanceof BeePlayerTile)) {
-            triggerGameOver("Crushed, stood where reality reset!");
-        }
-    
-        // Reset player position
-        playerObj.moveTo(pos[0], pos[1]);
-    },
+    onGameReset,
     true // Works with overlay open
 );
 
@@ -98,7 +101,8 @@ const tilePlayerBee3 = new Texture("./assets/images/tiles/bee3.png");
 const tilePlayerBee4 = new Texture("./assets/images/tiles/bee4.png");
 const tilePlayerBee5 = new Texture("./assets/images/tiles/bee5.png");
 const tilePlayerBee5Blink = new Texture("./assets/images/tiles/bee5_blink.png");
-const tileBeeHive = new Texture("./assets/images/tiles/hive.png");
+const tileBeeHiveTx = new Texture("./assets/images/tiles/hive.png");
+const tileBeeHiveMemeTx = new Texture("./assets/images/tiles/trash.png");
 const tileLava = new Texture("./assets/images/tiles/lava.png");
 const tileLava2 = new Texture("./assets/images/tiles/lava2.png");
 const tileLava3 = new Texture("./assets/images/tiles/lava3.png");
@@ -107,7 +111,8 @@ const tileLava5 = new Texture("./assets/images/tiles/lava5.png");
 const tileLava6 = new Texture("./assets/images/tiles/lava6.png");
 const tileLava7 = new Texture("./assets/images/tiles/lava7.png");
 const tileLava8 = new Texture("./assets/images/tiles/lava7.png");
-const tileStone = new Texture("./assets/images/tiles/stone.png");
+const tileStoneTx = new Texture("./assets/images/tiles/stone.png");
+const tileStoneMemeTx = new Texture("./assets/images/tiles/sten_the_weman.png");
 
 const tileCodeblockSelectedTx = new Texture("./assets/images/codeblocks/selected.png");
 const tileCodeblockIgnoredTx = new Texture("./assets/images/codeblocks/ignored.png");
@@ -188,6 +193,18 @@ const tileCodeblockOverlay = new DataDrivenTexture(
         } else {
             return tileCodeblockEmptyTx;
         }
+    }
+);
+
+const tileStone = new DataDrivenTexture(
+    (_, cellContext) => {
+        return MEME ? tileStoneMemeTx : tileStoneTx;
+    }
+);
+
+const tileBeeHive = new DataDrivenTexture(
+    (_, cellContext) => {
+        return MEME ? tileBeeHiveMemeTx : tileBeeHiveTx;
     }
 );
 
@@ -292,6 +309,8 @@ levels.registerLevel(testLevel);
 levels.registerLevel(level1);
 levels.registerLevel(level2);
 
+let startLevel = testLevel;
+
 // Define loops
 function GameLoop() {
     const [gameGrid, codeGrid, inventoryGrid] = currentGrids;
@@ -305,7 +324,7 @@ function GameLoop() {
     Render(ctx, gameGrid);
 
     const [frameDelta, deltaTime, FPS, elapsed, avgFPS] = getTimeParams();
-    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st | lvl ${levels.getCurrentLevelStrid()} (${levels.getCurrentLevelIndex()})`, "12px monospace", "left", "#00ff00");
+    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st | Modes Enabled: ${MEME ? "Meme; " : ""}${GLOSSY ? "Glossy; " : ""}| MoveActToAnyWalkable: ${CAN_MOVE_ACTION_INTO_ANY_WALKABLE ? "YES" : "NO"}`, "12px monospace", "left", "#00ff00");
 
     // Schedule the next frame
     requestAnimationFrame(
@@ -376,7 +395,7 @@ if (gameCanvas) {
         renderStartMenu(ctx);
 
         const [frameDelta, deltaTime, FPS, elapsed, avgFPS] = getTimeParams();
-        if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st`, "12px monospace", "left", "#00ff00");
+        if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st | Modes Enabled: ${MEME ? "Meme; " : ""}${GLOSSY ? "Glossy; " : ""}| MoveActToAnyWalkable: ${CAN_MOVE_ACTION_INTO_ANY_WALKABLE ? "YES" : "NO"}`, "12px monospace", "left", "#00ff00");
         
         requestAnimationFrame(startMenuLoop);
     }

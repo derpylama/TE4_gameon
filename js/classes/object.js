@@ -81,6 +81,18 @@ class GameTile extends GameObject {
         }
     }
 
+    getIsGoal() {
+        return this.isGoal;
+    }
+
+    getIsDeath() {
+        return this.isDeath;
+    }
+
+    getIsWalkable() {
+        return this.isWalkable;
+    }
+
     setIsGoal(isGoal) {
         this.isGoal = isGoal;
     }
@@ -127,7 +139,7 @@ class BeePlayerTile extends GameTile {
 
 class BeehiveTile extends GameTile {
     constructor() {
-        super(tileBeeHive, true);
+        super(tileBeeHive, true, false, false);
     }
 }
 
