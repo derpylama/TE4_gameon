@@ -82,6 +82,8 @@ class SoundHandler {
         };
     }
 
+
+
     removePlaylist(strid) {
         const playlist = this.playLists[strid];
         if (!playlist) return;

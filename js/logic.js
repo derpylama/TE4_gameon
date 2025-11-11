@@ -83,11 +83,12 @@ var movedDown = false;
 // Main update function (called in loop)
 function Update(ctx, grid) {
     const isPressingW = pressedInputs.includes("w");
-    const isPressingS = pressedInputs.includes("s")
-    const isPressingD = pressedInputs.includes("d")
-    const isPressingA = pressedInputs.includes("a")
+    const isPressingS = pressedInputs.includes("s");
+    const isPressingD = pressedInputs.includes("d");
+    const isPressingA = pressedInputs.includes("a");
 
     if (isPressingW && !movedUpward) {
+        maybePlayBeeSound();
         // Move once when key is first pressed
         const currentPlayerPos = grid.getPosOfObj(playerObj);
         const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0);
@@ -112,6 +113,7 @@ function Update(ctx, grid) {
     }
 
     if (isPressingS && !movedDown) {
+        maybePlayBeeSound();
         // Move once when key is first pressed
         const currentPlayerPos = grid.getPosOfObj(playerObj);
         const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0);
@@ -135,6 +137,7 @@ function Update(ctx, grid) {
     }
 
     if (isPressingA && !movedLeft) {
+        maybePlayBeeSound();
         // Move once when key is first pressed
         const currentPlayerPos = grid.getPosOfObj(playerObj);
         const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1);
@@ -160,6 +163,7 @@ function Update(ctx, grid) {
     }
 
     if (isPressingD && !movedRight) {
+        maybePlayBeeSound();
         // Move once when key is first pressed
         const currentPlayerPos = grid.getPosOfObj(playerObj);
         const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1);
