@@ -33,8 +33,8 @@ function unregisterClickHook(hook) {
 // Register event listeners
 window.addEventListener("load", () => {
     document.addEventListener("keydown", (event) => {
-        if (!pressedInputs.includes(event.key)) {
-            pressedInputs.push(event.key);
+        if (!pressedInputs.includes(event.key.toLowerCase())) {
+            pressedInputs.push(event.key.toLowerCase());
 
             // Call input hooks
             for (const hook of inputHooks) {
@@ -47,7 +47,7 @@ window.addEventListener("load", () => {
     });
 
     document.addEventListener("keyup", (event) => {
-        const index = pressedInputs.indexOf(event.key);
+        const index = pressedInputs.indexOf(event.key.toLowerCase());
         if (index > -1) {
             pressedInputs.splice(index, 1);
 
