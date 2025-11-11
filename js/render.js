@@ -183,6 +183,7 @@ function renderTexture(ctx, texture, x, y, width, height, cellContext={"row":nul
 
 // Function to render a grid object
 function renderGrid(gridObj) {
+    const pos = gridObj.getPos();
     const gridData = gridObj.getGrid();
     const gaps = gridObj.getGaps();
 
@@ -193,8 +194,8 @@ function renderGrid(gridObj) {
 
             const calculatedOffset = gridObj.getOffset(r, c);
 
-            let x = (c * gridObj.getTileSize()) + (c * gaps[0]) + calculatedOffset[0]
-            let y = (r * gridObj.getTileSize()) + (r * gaps[1]) + calculatedOffset[1]
+            let x = pos[0] + (c * gridObj.getTileSize()) + (c * gaps[0]) + calculatedOffset[0]
+            let y = pos[1] + (r * gridObj.getTileSize()) + (r * gaps[1]) + calculatedOffset[1]
 
             if (gameObj !== null) {
                 const texture = gameObj.texture;
@@ -211,15 +212,15 @@ function renderGrid(gridObj) {
                 // Null => Checkerboard
                 if (gameObj === null) {
                     // Draw purple/black checkerboard for empty tiles
-                    drawCheckerboard(ctx, x, y, gridObj.getTileSize(), gridObj.getTileSize(), checkerSize, 0.35);
+                    drawCheckerboard(ctx, x, y, gridObj.getTileSize(), gridObj.getTileSize(), checkerSize, 0.5); // Should be 0.35
                 }
 
                 // Outlines
                 ctx.strokeStyle = "red";
                 ctx.lineWidth = 1;
                 ctx.strokeRect(
-                    (c * gridObj.getTileSize()) + borderOffset[0] + (c * gaps[0]) + calculatedOffset[0],
-                    (r * gridObj.getTileSize()) + borderOffset[1] + (r * gaps[1]) + calculatedOffset[1],
+                    x+borderOffset[0],
+                    y+borderOffset[1],
                     gridObj.getTileSize(),
                     gridObj.getTileSize()
                 );
@@ -238,14 +239,16 @@ function renderOverlays(ctx) {
 
 
 // Main render function (called in loop)
-function Render(ctx, gridObj) {
+function Render(ctx) {
 
     // Render backgrounds
     renderTexture(ctx, gridBackgroundImg, 0, 0, 800, 800);
     renderTexture(ctx, invBackgroundImg, 800, 0, 480, 800);
 
     // Render grid
-    renderGrid(gridObj);
+    renderGrid(gameGrid);
+    renderGrid(inventoryGrid);
+    renderGrid(codeGrid);
 
     // Render border
     renderTexture(ctx, borderImg, 0-borderOffset[0], 0-borderOffset[1], 1320, 840);

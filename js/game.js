@@ -101,23 +101,43 @@ audio.addSound("test.1", "./assets/audio/toot.mp3", false);
 audio.addPlaylist("bg.music", ["./assets/audio/backgroundMusic.wav", "./assets/audio/spring-in-my-step.wav"], true, 0);
 
 // Instantiate
-// let hexagonOffsetMaker = (row, col) => {
-//     return [(row % 2 === 0 ? 0 : -((800/10)/2)), 0];
-// };
+let hexagonOffsetMakerRight = (row, _) => {
+    rowOffset = (row % 2 === 0 ? 0 : ((800/10)/2) + 8);
+    return [rowOffset, (-7*row)+(-1*row)];
+};
+let hexagonOffsetMakerLeft = (row, _) => {
+    rowOffset = (row % 2 === 0 ? 0 : -((800/10)/2) - 8);
+    return [rowOffset, (-7*row)+(-1*row)];
+};
 
 // let generateVoids = (row, col) => {
 //     return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));
 // };
 
 const gameGrid = new Grid(
+    0, 0,   // Position in scrPx
     10, 10, // Rows x Cols
     800/10, // Tile Size, scrPx size of a cell
     null, // Func to generate default tiles, can be set null
     0, 0,   // Gaps in scrPx
     null // Func to generate offsets per tile [txpx, txpx], can be set null
 );
-const inventoryGrid = new Grid(4, 4, 800/10, null);
-const codeGrid = new Grid(4, 5, 800/10, null);
+const inventoryGrid = new Grid(
+    846, 32.5,   // Position in scrPx
+    4, 4, // Rows x Cols
+    800/10, // Tile Size, scrPx size of a cell
+    null, // Func to generate default tiles, can be set null
+    16, 0,   // Gaps in scrPx
+    hexagonOffsetMakerRight // Func to generate offsets per tile [txpx, txpx], can be set null
+);
+const codeGrid = new Grid(
+    893, 393,   // Position in scrPx
+    5, 4, // Rows x Cols
+    800/10, // Tile Size, scrPx size of a cell
+    null, // Func to generate default tiles, can be set null
+    16, 0,   // Gaps in scrPx
+    hexagonOffsetMakerLeft // Func to generate offsets per tile [txpx, txpx], can be set null
+);
 
 // gameGrid.setTile(5,5, new GameTile(tileLayeredTest)); //MARK: Test
 
