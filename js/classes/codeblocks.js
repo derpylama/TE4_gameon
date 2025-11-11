@@ -87,6 +87,9 @@ class CodeBlockAction extends CodeBlock {
             console.warn(`No action handler registered for '${this.value}'`);
         }
     }
+    isexecuted(){
+        return this.executed;
+    }
 }
 
 //left is the codeblock on the left of the action block   
@@ -124,6 +127,39 @@ const ActionRegistry = {
             }
         }
     },
+    "is": (left, right, context) => {
+        console.log("is action called with:", left, right, context);
+
+        const gridData = context.gameGrid.getGrid();
+
+        for (let r = 0; r < gridData.length; r++) {
+            for (let c = 0; c < gridData[r].length; c++) {
+                const block = gridData[r][c];
+                if (block && block instanceof left.linkedClass) {
+                    if (left instanceof CodeBlockObject && right instanceof CodeBlockObject) {
+                        let pos=context.gameGrid.getPosOfObj(block);
+
+                        context.gameGrid.setTile(pos[0], pos[1], new right.linkedClass()); 
+                    }
+                    else{
+                        switch(right.value) {
+                            case "win":
+
+                                break;
+
+                            default:
+                                console.warn(`Invalid direction '${right.value}' for move.to action.`);
+                                return false;
+                        }
+                    }
+                }
+            }
+        }
+
+    },
+
+
+
 };
 
 //IMPORTANT theses are not Available Actions theses are just for example to see how to use them
