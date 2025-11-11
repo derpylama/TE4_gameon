@@ -52,23 +52,28 @@ const resetButton = new UIButton(
     {"text": "Reset", "fontSize": 15, "yOffset": 13, "color": "#FFFFFF"},
     (x,y,type) => {
         resetAnimStarted = Date.now();
-
+    
+        // Reset overlays
+        overlayer.hideOverlay();
+    
         // Get current player position
         let pos = currentGrids[0].getPosOfObj(playerObj);
-
+    
         // Reload current level
         currentGrids = levels.setLoadAndRunLevel(levels.getCurrentLevel());
-
+    
         // Is there something there already die?
         const existingTile = currentGrids[0].getTile(pos[0], pos[1]);
         if (existingTile !== null && !(existingTile instanceof BeePlayerTile)) {
             triggerGameOver("Crushed, stood where reality reset!");
         }
-
+    
         // Reset player position
         playerObj.moveTo(pos[0], pos[1]);
-    }
+    },
+    true // Works with overlay open
 );
+console.log(inputHooksDisableExclusions);
 
 // Textures
 const startBackgroundImg = new Texture("./assets/images/startmenu.png");

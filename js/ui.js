@@ -1,7 +1,7 @@
 const existingUiElements = [];
 
 class UIButton {
-    constructor(x,y, width,height, texture, text, onClick) {
+    constructor(x,y, width,height, texture, text, onClick, worksWhenOverlay = false) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -10,6 +10,7 @@ class UIButton {
         this.text = text;
         this.onClick = onClick;
         this.clickHandler = null;
+        this.worksWhenOverlay = worksWhenOverlay;
 
         this.renderedState = null; // [x,y,width,height] of last render
 
@@ -34,6 +35,10 @@ class UIButton {
         };
 
         registerClickHook(this.clickHandler);
+
+        if (this.worksWhenOverlay) {
+            inputHooksDisableExclusions.push(this.clickHandler);
+        }
     }
 
     _unregisterClick() {
