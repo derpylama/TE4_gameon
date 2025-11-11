@@ -30,7 +30,7 @@ class CodeInterpreter {
                         break;
                     case "invalid":
                         console.log(`Invalid blocks for action ${block.value}.`);
-                        overlayer.showOverlayObj(overlayRealityIsWrong);
+                        //overlayer.showOverlayObj(overlayRealityIsWrong);
                         break;
                     default:
                         console.warn(`Unknown validation result '${valid}' for action ${block.value}. Skipping.`);
