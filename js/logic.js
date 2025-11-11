@@ -105,9 +105,10 @@ function checkTile(tile) {
         var gameGrid = currentGrids[0];
         var freeSpace = inventoryGrid.getFirstEmptyCell();
 
-        if (!inventoryGrid.gridContains(tile)) {
-            inventoryGrid.setTile(freeSpace[0], freeSpace[1], tile)
-        }
+        // if (!inventoryGrid.gridContains(tile)) {
+        //     inventoryGrid.setTile(freeSpace[0], freeSpace[1], tile)
+        // }
+        inventoryGrid.setTile(freeSpace[0], freeSpace[1], tile)
 
         var tilePos = gameGrid.getPosOfObj(tile);
         gameGrid.clearTile(tilePos[0], tilePos[1]);

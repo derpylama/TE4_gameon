@@ -204,9 +204,13 @@ const tileCodeblockAction = new LayeredTexture([
 //     }
 // )
 
+var gameWon = false
+var gameOver = false
 
 // Overlays (rendered using `overlayer.showOverlayObj(<overlayObj>)`)
-const onOverlayGameOverClickRestart = () => {window.location.reload();};
+const onOverlayGameOverClickRestart = () => {
+    window.location.reload();
+};
 const overlayGameOver = new Overlay(
     // Texture,         [ [ [x,y,width,height], function(x,y,type) ], ... ]
     overlayGameOverImg, [ [ [300,455, 200,50], onOverlayGameOverClickRestart ] ] // 100x100 button centered
@@ -216,7 +220,11 @@ const overlayRealityIsWrong = new Overlay(
     overlayRealityIsWrongImg, []
 );
 
-const onOverlayWonClickContinue = (x,y,type) => {levels.setLoadAndRunNextLevel()};
+const onOverlayWonClickContinue = (x,y,type) => {
+    currentGrids = levels.setLoadAndRunLevel(level2);
+    overlayer.hideOverlay();
+    gameWon = false;
+};
 const overlayWon = new Overlay(
     // Texture,    [ [ [x,y,width,height], function(x,y,type) ], ... ]
     overlayWonImg, [ [ [300,455, 200,50], onOverlayWonClickContinue ] ] // 100x100 button centered

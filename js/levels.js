@@ -104,6 +104,7 @@ class LevelHandler {
     }
 
     setLoadAndRunNextLevel() {
+        
         if ((this.currentIndex + 1) in this.levels) {
             this.setLoadAndRunLevelByIndex( this.currentIndex +1 );
         }
