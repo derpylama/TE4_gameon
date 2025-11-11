@@ -33,7 +33,7 @@ class GameTile extends GameObject {
     }
 
     getReff() {
-        return gameGrid.getPosOfObj(this);
+        return currentGrids[0].getPosOfObj(this);
         
     }
 
