@@ -8,6 +8,8 @@ let frameCount = 0;
 var currentGrids = [null, null, null]; // [gameGrid, codeGrid, inventoryGrid]
 var interpreter = null; // CodeInterpreter
 var resetAnimStarted = null;
+var gameWon = false
+var gameOver = false
 
 function getTimeParams() {
     const now = performance.now();
@@ -159,8 +161,13 @@ const tileAnimLava = new AnimatedTexture(
 )
 
 const tileCodeblockOverlay = new DataDrivenTexture(
+    //MARK: Maybe this can always use inventory grid? (currentGrids[2])
     (_, cellContext) => {
         const codeBlock = cellContext.grid.getTile(cellContext.row, cellContext.col);
+        if (codeBlock === null || codeBlock === undefined || codeBlock === false) {
+            return tileCodeblockEmptyTx;
+        }
+
         //console.log("Checking: [" + cellContext.row + ", " + cellContext.col + "] -> " + codeBlock.constructor.name + "@" + codeBlock.getId() + " (selected=" + codeBlock.isSelected() + ")");
 
         if (codeBlock.isSelected() === true) {
@@ -185,32 +192,6 @@ const tileCodeblockAction = new LayeredTexture([
     tileCodeblockActionTx,
     tileCodeblockOverlay
 ]);
-
-// const tileLayeredTest = new LayeredTexture([
-//     tileAnimBee,
-//     "./assets/images/tiles/bee.png",
-//     "./assets/images/tiles/bee2.png",
-//     "./assets/images/tiles/bee3.png"
-// ]);
-
-// const tileDatadrivenTest = new DataDrivenTexture(
-//     (_, cellContext) => {
-//         // cellContext can be null or object with row and col where col/row can be null too
-//         if (cellContext !== null && cellContext.row && cellContext.col) {
-//             const above = gameGrid.getTile(cellContext.row - 1, cellContext.col);
-            
-//             // check if above is not null and above is instance of or instance of subclass of VoidTile
-//             if (above === null || above instanceof VoidTile) {
-//                 return tileNonVoidAbove;
-//             } else {
-//                 return tileVoid;
-//             }
-//         }
-//     }
-// )
-
-var gameWon = false
-var gameOver = false
 
 // Overlays (rendered using `overlayer.showOverlayObj(<overlayObj>)`)
 const onOverlayGameOverClickRestart = () => {
@@ -246,6 +227,49 @@ audio.addSound("sfx.lavaDeath", "./assets/audio/lava_death.wav");
 audio.addPlaylist("sfx.win", ["./assets/audio/win_1.mp3", "./assets/audio/win_2.mp3", "./assets/audio/win_3.mp3"]);
 audio.addSound("sfx.death", "./assets/audio/game_die_1.mp3");
 audio.addPlaylist("sfx.bee", ["./assets/audio/bee_1.wav", "./assets/audio/bee_2.wav"]);
+
+// Helpers for levels
+function instantiateGrids() {
+    let hexagonOffsetMakerRight = (row, _) => {
+        rowOffset = (row % 2 === 0 ? 0 : ((800/10)/2) + 8);
+        return [rowOffset, (-7*row)+(-1*row)];
+    };
+    let hexagonOffsetMakerLeft = (row, _) => {
+        rowOffset = (row % 2 === 0 ? 0 : -((800/10)/2) - 8);
+        return [rowOffset, (-7*row)+(-1*row)];
+    };
+
+    // let generateVoids = (row, col) => {
+    //     return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));
+    // };
+
+    const _gameGrid = new Grid(
+        0, 0,   // Position in scrPx
+        10, 10, // Rows x Cols
+        800/10, // Tile Size, scrPx size of a cell
+        null, // Func to generate default tiles, can be set null
+        0, 0,   // Gaps in scrPx
+        null // Func to generate offsets per tile [txpx, txpx], can be set null
+    );
+    const _inventoryGrid = new Grid(
+        846, 32.5,   // Position in scrPx
+        4, 4, // Rows x Cols
+        800/10, // Tile Size, scrPx size of a cell
+        null, // Func to generate default tiles, can be set null
+        16, 0,   // Gaps in scrPx
+        hexagonOffsetMakerRight // Func to generate offsets per tile [txpx, txpx], can be set null
+    );
+    const _codeGrid = new Grid(
+        893, 393,   // Position in scrPx
+        5, 4, // Rows x Cols
+        800/10, // Tile Size, scrPx size of a cell
+        null, // Func to generate default tiles, can be set null
+        16, 0,   // Gaps in scrPx
+        hexagonOffsetMakerLeft // Func to generate offsets per tile [txpx, txpx], can be set null
+    );
+
+    return [_gameGrid, _codeGrid, _inventoryGrid];
+}
 
 // Register levels
 const playerObj = new BeePlayerTile(tilePlayerBee);
@@ -292,20 +316,6 @@ function StartGame(level) {
 
     currentGrids = levels.setLoadAndRunLevel(level);
 
-    // console.log every single id in everysingle grid
-    // currentGrids.forEach((grid, index) => {
-    //     console.log(`Grid ${index} contents:`);
-    //     const gridData = grid.getGrid();
-    //     for (let r = 0; r < gridData.length; r++) {
-    //         for (let c = 0; c < gridData[r].length; c++) {
-    //             const tile = gridData[r][c];
-    //             if (tile !== null) {
-    //                 console.log(tile.constructor.name + "@" + tile.getId());
-    //             }
-    //         }
-    //     }
-    // });
-
     // Code interpreter
     interpreter = new CodeInterpreter(currentGrids[1]); // codeGrid
 
@@ -338,7 +348,7 @@ if (gameCanvas) {
                 // Start game
                 inStartMenu = false;
                 unregisterClickHook(startMenuClickHook);
-                StartGame(testLevel);
+                StartGame(level1);
             }
         }
     }

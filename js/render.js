@@ -181,44 +181,55 @@ function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0, te
 }
 
 // Handles if not loaded show purple/black checkerboard
-function renderTexture(ctx, texture, x, y, width, height, cellContext={"row":null, "col":null}) {
+function renderTexture(ctx, texture, x, y, width, height, unclonedCellContext={"row":null, "col":null}) {
+
+    const cellContext = { ...unclonedCellContext };
+    // if (cellContext.className === "CodeBlockObject") console.log("  CodeBlockObject@" + cellContext.id + " at [" + x + "," + y + "]");
 
     // Does cellContext have "className" property?
     let className = (cellContext && cellContext !== null && (cellContext.className ?? false)) ? (cellContext.className + " ") : "";
 
     if (texture.isLoaded()) {
-        drawX = x + borderOffset[0];
-        drawY = y + borderOffset[1];
+        const drawX = x + borderOffset[0];
+        const drawY = y + borderOffset[1];
         ctx.imageSmoothingEnabled = false;
 
-        var textures = [];
+        const textures = [];
         if (texture instanceof LayeredTexture) {
-            textures = texture.getImage(cellContext);
+            //textures = texture.getImage(cellContext);
+            for (const newTx of texture.getImage(cellContext)) {
+                textures.push(newTx);
+            }
         } else {
-            let proposed = texture.getImage(cellContext);
+            const proposed = texture.getImage(cellContext);
             if (proposed instanceof LayeredTexture) {
-                textures = proposed.getImage(cellContext);
+                for (const newTx of proposed.getImage(cellContext)) {
+                    textures.push(newTx);
+                }
             } else if (Array.isArray(proposed)) {
-                textures = proposed;
+                for (const newTx of proposed) {
+                    textures.push(newTx);
+                }
             } else {
+                // if (cellContext.className === "CodeBlockObject") console.log("  CodeBlockObject@" + cellContext.id + " at [" + x + "," + y + "]", proposed);
                 textures.push(proposed);
             }
         }
 
         for (const img of textures) {
-            let $valid = true;
+            let valid = true;
             if (img !== null) {
                 try {
                     ctx.drawImage(img, drawX, drawY, width, height);
                 } catch (e) {
-                    $valid = false;
+                    valid = false;
                 }
             } else {
-                $valid = false;
+                valid = false;
             }
 
             // If error drawing image, draw checkerboard instead
-            if (!$valid) drawCheckerboard(ctx, x, y, width, height, checkerSize, 1.0, className + (DEBUG ? "Error": ""));
+            if (!valid) drawCheckerboard(ctx, x, y, width, height, checkerSize, 1.0, className + (DEBUG ? "Error": ""));
         }
     } else {
         // Draw purple/black checkerboard
@@ -245,7 +256,8 @@ function renderGrid(gridObj) {
             gridObj.cellRenderStates.set([r,c],[x, y, gridObj.getTileSize(), gridObj.getTileSize()]);
 
             if (gameObj !== null) {
-                const texture = gameObj.texture;
+
+                const texture = gameObj.getTexture();
 
                 try {
                     gameObj.setRenderedState([x, y, gridObj.getTileSize(), gridObj.getTileSize()]);
@@ -253,7 +265,7 @@ function renderGrid(gridObj) {
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                const cellContext = {"row": r, "col": c, "className": gameObj.constructor.name, "grid": gridObj};
+                const cellContext = {"row": r, "col": c, "className": gameObj.constructor.name, "grid": gridObj, "id": gameObj.getId()};
                 renderTexture(ctx, texture, x, y, gridObj.getTileSize(), gridObj.getTileSize(), cellContext);
             }
 
@@ -362,9 +374,9 @@ function Render(ctx) {
     }
 
     // Render UI elements
-    existingUiElements.forEach(uiElement => {
+    for (const uiElement of existingUiElements) {
         uiElement.render(ctx);
-    });
+    }
 
     // If overlay render it on top
     renderOverlays(ctx);

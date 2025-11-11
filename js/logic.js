@@ -76,9 +76,6 @@ window.addEventListener("load", () => {
     });
 });
 
-var gameWon = false
-var gameOver = false
-
 function triggerGameOver(reason = null) {
     audio.playSound("sfx.death");
     gameOver = true;
@@ -140,8 +137,9 @@ function Update(ctx, grid) {
                 var tile = checkTile(newPlayerPosCheck)
 
                 if (tile == "walk") {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(-1,0);
                     
                     movedUpward = true; // prevent another move until key is released
                 }
@@ -150,8 +148,9 @@ function Update(ctx, grid) {
                 }
             } else {
                 if (newPlayerPosCheck != false) {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(-1,0);
                     
                     movedUpward = true; // prevent another move until key is released
                 }
@@ -174,15 +173,17 @@ function Update(ctx, grid) {
                 var tile = checkTile(newPlayerPosCheck)
 
                 if (tile == "walk") {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(-1,0);
                     
                     movedUpward = true; // prevent another move until key is released
                 }
             }else {
                 if (newPlayerPosCheck != false) {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(1,0);
                     
                     movedDown = true; // prevent another move until key is released
                 }
@@ -205,16 +206,18 @@ function Update(ctx, grid) {
                 var tile = checkTile(newPlayerPosCheck)
 
                 if (tile == "walk") {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(-1,0);
                     
                     movedUpward = true; // prevent another move until key is released
                 }
             }else{
 
                 if (newPlayerPosCheck != false){
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(0,-1);
                     
                     movedLeft = true; // prevent another move until key is released
                 }
@@ -238,15 +241,17 @@ function Update(ctx, grid) {
                 var tile = checkTile(newPlayerPosCheck)
 
                 if (tile == "walk") {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(-1,0);
                     
                     movedUpward = true; // prevent another move until key is released
                 }
             } else {
                 if (newPlayerPosCheck != false) {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(0,1);
                     
                     movedRight = true; // prevent another move until key is released
                     

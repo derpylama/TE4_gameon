@@ -37,6 +37,10 @@ class GameObject {
     resetRenderedState() {
         this.renderedState = null;
     }
+
+    getTexture() {
+        return this.texture;
+    }
 }
 
 class GameTile extends GameObject {
@@ -60,8 +64,9 @@ class GameTile extends GameObject {
         let validBounds = currentGrids[0].getTile(newObjectPos[0], newObjectPos[1]) != false;
 
         if (validBounds !== null && validBounds !== false && !(objCurrentPos[0] == newObjectPos[0] && objCurrentPos[1] == newObjectPos[1])) {
-            currentGrids[0].setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this);
-            currentGrids[0].clearTile(objCurrentPos[0], objCurrentPos[1]);
+            // currentGrids[0].setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this);
+            // currentGrids[0].clearTile(objCurrentPos[0], objCurrentPos[1]);
+            this.moveTo(newObjectPos[0], newObjectPos[1]);
         }
     }
 
@@ -71,8 +76,8 @@ class GameTile extends GameObject {
         const newObjPosCheck = currentGrids[0].getTile(newRow, newCol);
         
         if (newObjPosCheck != false && !(objCurrentPos[0] == newRow && objCurrentPos[1] == newCol)) {
-            currentGrids[0].setTile(newRow, newCol, this);
             currentGrids[0].clearTile(objCurrentPos[0], objCurrentPos[1]);
+            currentGrids[0].setTile(newRow, newCol, this);
         }
     }
 

@@ -144,18 +144,32 @@ class Grid {
         const newRow = row + rowDelta;
         const newCol = col + colDelta;
 
-        // Check bounds
-        if (newRow < 0 || newRow >= this.grid.length || newCol < 0 || newCol >= this.grid[0].length) {
-            return false; // Out of bounds
-        }
-
-        this.grid[newRow][newCol] = null;
+        this.clearTile(newRow, newCol);
 
         return true;
     }
 
+    // Checks if a gameObj exists in the grid
+    gridContains(gameObj) {
+        for (let r = 0; r < this.grid.length; r++) {
+            for (let c = 0; c < this.grid[r].length; c++) {
+                if (this.grid[r][c] === gameObj) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // Overwrites the tile at (row, col) with gameObj
     setTile(row, col, gameObj) {
+        // Check that gameObj is not currently in the grid
+        if (gameObj !== null) {
+            if (this.gridContains(gameObj)) {
+                throw new Error("Grid.setTile: gameObj is already in the grid");
+            }
+        }
+
         this.grid[row][col] = gameObj;
     }
 
@@ -172,14 +186,15 @@ class Grid {
         }
 
 
-        this.grid[newRow][newCol] = gameObj;
+        this.setTile(newRow, newCol, gameObj);
     }
 
     // Clears the entire grid, filling with default tiles or null
     clearGrid() {
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
-                this.grid[r][c] = this.defaultTileMaker === null ? null : this.defaultTileMaker(r,c);
+                //this.grid[r][c] = this.defaultTileMaker === null ? null : this.defaultTileMaker(r,c);
+                this.setTile(r, c, this.defaultTileMaker === null ? null : this.defaultTileMaker(r,c));
             }
         }
     }
