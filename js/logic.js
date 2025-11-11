@@ -93,6 +93,9 @@ function checkTile(tile){
         overlayer.showOverlayObj(overlayGameOver);
         return "death";
     }
+    else if (tile instanceof CodeBlockAction || tile instanceof CodeBlockEntity || tile instanceof CodeBlockModifier){
+        console.log("ye")
+    }
 }
 
 

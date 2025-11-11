@@ -229,6 +229,7 @@ gameGrid.setTile(3,3, playerObj);
 
 gameGrid.setTile(2,3, new BeehiveTile())
 gameGrid.setTile(4,4, new LavaTile())
+gameGrid.setTile(6,6, new CodeBlockObject())
 
 const stone = new StoneTile();
 gameGrid.setTile(3,6, stone);
