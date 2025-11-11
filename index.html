@@ -33,7 +33,13 @@
 <body>
     <!-- Each texture pixel is 5 screenpixels, we add four txPx around canvas, i.e + 2*(4*5) -->
     <!-- Non offset size is: 1280x800 -->
-    <canvas id="canvas" width="1320" height="840"></canvas>
+    <main>
+        <canvas id="canvas" width="1320" height="840"></canvas>
+        <aside>
+            <h2>Your goal is to get back to the beehive,<br>use codeblocks to bend reality to your advantage.</h2>
+            <img src="./assets/images/controls.png" alt="Controls" id="controlsUiImage">
+        </aside>
+    </main>
     <footer>
         <i>Made by toalettpojkarna (Te4)</i>
         <!-- Known issue: pressing pause before audio is declared then later resuming it fails to play until paused/played again -->
