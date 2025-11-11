@@ -166,7 +166,7 @@ const tileCodeblockAction = new LayeredTexture([
 
 
 // Overlays (rendered using `overlayer.showOverlayObj(<overlayObj>)`)
-const onOverlayGameOverClickRestart = (x,y,type) => {console.log(x,y,type)};
+const onOverlayGameOverClickRestart = () => {window.location.reload();};
 const overlayGameOver = new Overlay(
     // Texture,         [ [ [x,y,width,height], function(x,y,type) ], ... ]
     overlayGameOverImg, [ [ [300,455, 200,50], onOverlayGameOverClickRestart ] ] // 100x100 button centered
