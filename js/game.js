@@ -223,12 +223,25 @@ function GameLoop() {
     );
 }
 
+const inLevelClickHook = (x,y,type)=>{
+    console.log("CLICKED INSIDE ACTIVE LEVEL");
+}
+
 // Function to start the game
 function StartGame(level) {
     frameCount = 0;
     startTime = performance.now();
 
     audio.playSound("bg.music");
+
+    levels.registerLoadHook((_) => {
+        registerClickHook(inLevelClickHook);
+    });
+
+    levels.registerUnloadHook((_) => {
+        unregisterClickHook(inLevelClickHook);
+    });
+
 
     currentGrids = levels.setLoadAndRunLevel(level1);
 
