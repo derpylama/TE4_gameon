@@ -98,7 +98,13 @@ const overlayWon = new Overlay(
 audio.addSound("test.1", "./assets/audio/toot.mp3", false);
 // audio.addSound("bg.music.1", "./assets/audio/backgroundMusic.wav", true, 0);
 // audio.addSound("bg.music.2", "./assets/audio/spring-in-my-step.wav", true, 0);
-audio.addPlaylist("bg.music", ["./assets/audio/backgroundMusic.wav", "./assets/audio/spring-in-my-step.wav"], true, 0);
+audio.addPlaylist("bg.music", ["./assets/audio/arvids_fina_bakrundsmusik.mp3", "./assets/audio/into_the_tempel.mp3"], true,);
+audio.addPlaylist("sfx.stone", ["./assets/audio/stone_1.wav", "./assets/audio/stone_2.wav", "./assets/audio/stone_3.wav", "./assets/audio/stone_4.wav"]);
+audio.addSound("sfx.lavaDeath", "./assets/audio/lava_death.wav");
+audio.addPlaylist("sfx.win", ["./assets/audio/win_1.mp3", "./assets/audio/win_2.mp3", "./assets/audio/win_3.mp3"]);
+audio.addSound("sfx.death", "./assets/audio/game_die_1.mp3");
+audio.addPlaylist("sfx.bee", ["./assets/audio/bee_1.wav", "./assets/audio/bee_2.wav"]);
+
 
 // Instantiate
 // let hexagonOffsetMaker = (row, col) => {
