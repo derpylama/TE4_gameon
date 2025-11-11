@@ -20,13 +20,23 @@ class CodeInterpreter {
             if (block instanceof CodeBlockAction) {
                 const left = blocks[i - 1] ?? null;
                 const right = blocks[i + 1] ?? null;
-
-                if (!block.validate([left, right])) {
-                    console.log(`Invalid syntax near ${block.value} or already executed. Skipping.`);
-                    continue;
+                const valid=block.validate([left, right]);
+                switch(valid) {
+                    case "valid":
+                        block.execute(left, right, context);
+                        break; //all good
+                    case "executed":
+                        console.log(`already executed action ${block.value}. Skipping.`);
+                        break;
+                    case "invalid":
+                        console.log(`Invalid blocks for action ${block.value}.`);
+                        overlayer.showOverlayObj(overlayRealityIsWrong);
+                        break;
+                    default:
+                        console.warn(`Unknown validation result '${valid}' for action ${block.value}. Skipping.`);
+                        break;
+                    
                 }
-
-                block.execute(left, right, context);
             }
         }
     }

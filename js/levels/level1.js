@@ -53,9 +53,6 @@ level1 = new Level("level1", () => {
         {"text": "MoveTo", "fontSizeOffset": -4, "color": "#ffde2c"},
         ["object", "modifier"]
     ); //also acceps "any"
-    codeGrid.setTile(0, 0, codeBlockEntity1);
-    codeGrid.setTile(0, 1, codeBlockAction1);
-    codeGrid.setTile(0, 2, codeBlockEntity2);
 
     //MARK: End test codeblocks
 
@@ -87,6 +84,7 @@ level1 = new Level("level1", () => {
     gameGrid.setTile(3,0, codeBlockEntity1);
     gameGrid.setTile(3,6, codeBlockEntity2);
     gameGrid.setTile(6,5, codeBlockAction1);
+    
 
 
 
