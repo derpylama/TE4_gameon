@@ -125,7 +125,7 @@ const ActionRegistry = {
                     if (left instanceof CodeBlockObject && right instanceof CodeBlockObject) {
                         let pos=context.gameGrid.getPosOfObj(block);
 
-                        setTile(pos[0], pos[1], new right.linkedClass()); 
+                        context.gameGrid.setTile(pos[0], pos[1], new right.linkedClass()); 
                     }
                     else{
                         switch(right.value) {
