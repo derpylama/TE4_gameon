@@ -53,7 +53,7 @@ class LevelHandler {
     loadAndRunLevel() {
         const level = this.levels[this.currentIndex];
         if (level) {
-            res = level.loadAndRun();
+            let res = level.loadAndRun();
             this._callLoadHooks();
             return res;
         }
