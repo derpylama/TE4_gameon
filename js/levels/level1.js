@@ -87,6 +87,7 @@ level1 = new Level("level1", () => {
     gameGrid.setTile(3,0, codeBlockEntity1);
     gameGrid.setTile(3,6, codeBlockEntity2);
     gameGrid.setTile(6,5, codeBlockAction1);
+    
 
 
 

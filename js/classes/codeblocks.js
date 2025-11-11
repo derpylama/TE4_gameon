@@ -51,7 +51,7 @@ class CodeBlockAction extends CodeBlock {
 
     validate(adjacentBlocks) {
         if(this.executed){
-            return false; //already executed
+            return "executed"; //already executed
         }
 
         const [left, right] = adjacentBlocks;
@@ -72,7 +72,12 @@ class CodeBlockAction extends CodeBlock {
         };
 
         const [leftType, rightType] = this.adjacentCodeBlocksCanBe;
-        return isValid(left, leftType) && isValid(right, rightType);
+        if (isValid(left, leftType) && isValid(right, rightType)) {
+            return "valid";
+        }
+        else{
+            return "invalid";
+        }
     }
 
     execute(left, right, context) {
@@ -120,6 +125,7 @@ const ActionRegistry = {
                             block.moveBy(0, 1);
                             break;
                         default:
+                            overlayer.showOverlayObj(overlayRealityIsWrong);
                             console.warn(`Invalid direction '${right.value}' for move.to action.`);
                             return false;
                     }
@@ -148,6 +154,7 @@ const ActionRegistry = {
                                 break;
 
                             default:
+                                overlayer.showOverlayObj(overlayRealityIsWrong);
                                 console.warn(`Invalid direction '${right.value}' for move.to action.`);
                                 return false;
                         }
@@ -157,8 +164,6 @@ const ActionRegistry = {
         }
 
     },
-
-
 
 };
 
