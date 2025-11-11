@@ -71,7 +71,7 @@ level2 = new Level("level2", () => {
 
     gameGrid.setTile(5,4, playerObj)
 
-    gameGrid.setTile(8,9, new DisabledVoidTile_NonVoidAbove());
+    gameGrid.setTile(8,9, new DisabledVoidTile_NonVoidAboveBellowLeft());
     gameGrid.setTile(8,8, new LavaTile());
     gameGrid.setTile(9,8, new LavaTile());
 
