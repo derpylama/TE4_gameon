@@ -25,10 +25,11 @@ class GameObject {
 }
 
 class GameTile extends GameObject {
-    constructor(texture, isGoal = false, isDeath = false) {
+    constructor(texture, isGoal = false, isDeath = false, isWalkable = false) {
         super(texture);
         this.isGoal = isGoal;
         this.isDeath = isDeath;
+        this.isWalkable = isWalkable
     }
 
     getReff() {
@@ -67,7 +68,7 @@ class DisabledVoidTile_NonVoidAbove extends VoidTile {
 
 class BeePlayerTile extends GameTile {
     constructor(direction) {
-        super(tileAnimTest);
+        super(tileAnimBee);
         this.direction = direction;
     }
 }
@@ -80,13 +81,13 @@ class BeehiveTile extends GameTile {
 
 class LavaTile extends GameTile {
     constructor() {
-        super(tileLava);
+        super(tileAnimLava);
     }
 }
 
 // inte sten weman
 class StoneTile extends GameTile {
     constructor() {
-        super(tileStone);
+        super(tileStone, false, false, false);
     }
 }

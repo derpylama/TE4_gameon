@@ -92,11 +92,16 @@ function Update(ctx, grid) {
         const currentPlayerPos = grid.getPosOfObj(playerObj);
         const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0);
 
-        if (newPlayerPosCheck != false) {
-            grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-            grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
-            
-            movedUpward = true; // prevent another move until key is released
+
+        if (newPlayerPosCheck) {
+            return;
+        } else {
+            if (newPlayerPosCheck != false) {
+                grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                
+                movedUpward = true; // prevent another move until key is released
+            }
         }
 
     } 
@@ -111,12 +116,17 @@ function Update(ctx, grid) {
         const currentPlayerPos = grid.getPosOfObj(playerObj);
         const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0);
 
-        if (newPlayerPosCheck != false) {
-            grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0, playerObj);
-            grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
-            
-            movedDown = true; // prevent another move until key is released
+        if (newPlayerPosCheck) {
+            return;
+        }else {
+            if (newPlayerPosCheck != false) {
+                grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0, playerObj);
+                grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                
+                movedDown = true; // prevent another move until key is released
+            }
         }
+
     } 
     
     // Reset when key is released
@@ -128,13 +138,20 @@ function Update(ctx, grid) {
         // Move once when key is first pressed
         const currentPlayerPos = grid.getPosOfObj(playerObj);
         const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1);
-        
-        if (newPlayerPosCheck != false){
-            grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1, playerObj);
-            grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
-            
-            movedLeft = true; // prevent another move until key is released
+
+        if (newPlayerPosCheck) {
+            return;
+        }else{
+
+            if (newPlayerPosCheck != false){
+                grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1, playerObj);
+                grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                
+                movedLeft = true; // prevent another move until key is released
+            }
         }
+
+        
     } 
     
     // Reset when key is released
@@ -147,12 +164,18 @@ function Update(ctx, grid) {
         const currentPlayerPos = grid.getPosOfObj(playerObj);
         const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1);
 
-        if (newPlayerPosCheck != false) {
-            grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1, playerObj);
-            grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
-            
-            movedRight = true; // prevent another move until key is released
+        if (newPlayerPosCheck) {
+            return;
+        } else {
+            if (newPlayerPosCheck != false) {
+                grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1, playerObj);
+                grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                
+                movedRight = true; // prevent another move until key is released
+                   
+            }
         }
+
     } 
     
     // Reset when key is released
