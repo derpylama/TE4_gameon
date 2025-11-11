@@ -7,6 +7,7 @@ class CodeInterpreter {
 
     executeAllRows(context) { //context is what it needs to interect with the game ex it pretty much always needs the gamegrid to find objects to move/attack  (maybe needs ex "stones and gamegrid" if we say stone-attack-left)
         // Context includes the game grid and anything else (player, world, etc.)
+        console.log("Executing all rows in code grid...");
         for (let r = 0; r < this.codeGrid.getGrid().length; r++) {
             const row = this.codeGrid.getRow(r);
             this.executeRow(row, context);
@@ -21,7 +22,7 @@ class CodeInterpreter {
                 const right = blocks[i + 1] ?? null;
 
                 if (!block.validate([left, right])) {
-                    console.warn(`Invalid syntax near ${block.value}`);
+                    console.log(`Invalid syntax near ${block.value}`);
                     continue;
                 }
 
