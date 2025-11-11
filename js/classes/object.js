@@ -47,6 +47,18 @@ class GameTile extends GameObject {
             currentGrids[0].clearTile(objCurrentPos[0], objCurrentPos[1]);
         }
     }
+
+    setIsGoal(isGoal) {
+        this.isGoal = isGoal;
+    }
+
+    setIsDeath(isDeath) {
+        this.isDeath = isDeath;
+    }
+
+    setIsWalkable(isWalkable) {
+        this.isWalkable = isWalkable;
+    }
 }
 
 class VoidTile extends GameTile {
