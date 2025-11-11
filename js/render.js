@@ -289,9 +289,9 @@ function Render(ctx) {
     renderTexture(ctx, invBackgroundImg, 800, 0, 480, 800);
 
     // Render grid
-    renderGrid(gameGrid);
-    renderGrid(inventoryGrid);
-    renderGrid(codeGrid);
+    for (const gridObj of currentGrids) {
+        renderGrid(gridObj);
+    }
 
     // Render border
     renderTexture(ctx, borderImg, 0-borderOffset[0], 0-borderOffset[1], 1320, 840);

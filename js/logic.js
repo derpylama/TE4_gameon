@@ -84,11 +84,13 @@ function checkTile(tile){
         return "walk";
     }
     else if (tile.isGoal){
+        audio.playSound("sfx.win");
         gameWon = true;
         overlayer.showOverlayObj(overlayWon);
         return "goal";
     }
     else if (tile.isDeath){
+        audio.playSound("sfx.death");
         gameOver = true;
         overlayer.showOverlayObj(overlayGameOver);
         return "death";
@@ -103,6 +105,7 @@ var movedUpward = false;
 var movedLeft = false;
 var movedRight = false;
 var movedDown = false;
+
 // Main update function (called in loop)
 function Update(ctx, grid) {
     const isPressingW = pressedInputs.includes("w");
@@ -238,4 +241,10 @@ function Update(ctx, grid) {
             movedRight = false;
         }
     }
+}
+
+function executeInterpreter() {
+    interpreter.executeAllRows(currentGrids[1], { //execute code on updates  //move to only trigger when a codeblock is moved
+        "gameGrid": currentGrids[0],
+    });    
 }
