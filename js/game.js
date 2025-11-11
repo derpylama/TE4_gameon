@@ -119,6 +119,28 @@ const gameGrid = new Grid(
 const inventoryGrid = new Grid(4, 4, 800/10, null);
 const codeGrid = new Grid(4, 5, 800/10, null);
 
+
+
+
+//MARK: Test codeblocks
+codeBlockEntity1 = new CodeBlockObject("stone");
+codeBlockEntity2 = new CodeBlockModifier("left");
+codeBlockAction1 = new CodeBlockAction("move.to", ["object", "modifier"]); //also acceps "any"
+gameGrid.setTile(1, 1, codeBlockEntity1);
+gameGrid.setTile(1, 2, codeBlockAction1);
+gameGrid.setTile(1, 3, codeBlockEntity2);
+
+
+//test the code interpreter
+const interpreter = new CodeInterpreter(gameGrid);
+
+interpreter.executeAllRows({
+    gameGrid
+});
+
+//MARK: End test codeblocks
+
+
 // gameGrid.setTile(5,5, new GameTile(tileLayeredTest)); //MARK: Test
 
 // gameGrid.setTile(1,4, new GameTile(tileDatadrivenTest)); //MARK: Test

@@ -11,6 +11,7 @@ class CodeBlockEntity extends CodeBlock {
     }
 }
 
+
 class CodeBlockObject extends CodeBlockEntity {
     constructor(value) {
         super("./assets/images/codeblocks/object.png", value);
@@ -23,16 +24,77 @@ class CodeBlockModifier extends CodeBlockEntity {
     }
 }
 
+
+
 class CodeBlockAction extends CodeBlock {
-    constructor(value) {
+    constructor(value, adjacentCodeBlocksCanBe = ["any", "any"]) {
         super("./assets/images/codeblocks/action.png", value);
+        this.adjacentCodeBlocksCanBe = adjacentCodeBlocksCanBe; // e.g., ["object", "modifier"]   what left and rigth codeblocks can be 
     }
-    
-    validate(adjacentBlocks) { //array of two blocks  left, right    each action needs to be between two entities  ex:  (entity - action - entity), (stone - moveto - left)
+
+    validate(adjacentBlocks) {
         const [left, right] = adjacentBlocks;
-        return (
-            left instanceof CodeBlockEntity &&
-            right instanceof CodeBlockEntity
-        );
+
+        // helper function to check one side
+        const isValid = (block, expectedType) => {
+            if (expectedType === "any") {
+                return block instanceof CodeBlockEntity;
+            }
+            if (expectedType === "object") {
+                return block instanceof CodeBlockObject;
+            }
+            if (expectedType === "modifier") {
+                return block instanceof CodeBlockModifier;
+            }
+            console.warn("Unknown expected type in CodeBlockAction validation:", expectedType);
+            return false; // unknown type keyword
+        };
+
+        const [leftType, rightType] = this.adjacentCodeBlocksCanBe;
+        return isValid(left, leftType) && isValid(right, rightType);
     }
+        execute(left, right, context) {
+            const handler = ActionRegistry[this.value];
+            if (handler) {
+                handler(left, right, context);
+            } else {
+                console.warn(`No action handler registered for '${this.value}'`);
+            }
+        }
 }
+
+//left is the codeblock on the left of the action block   
+//right is the one on the right
+//context is what it needs to interect with the game ex it pretty much always needs the gamegrid to find objects to move/attack  (maybe needs ex "stones and gamegrid" if we say stone-attack-left)
+ const ActionRegistry = {  
+    "move.to": (left, right, context) => {
+        console.log("move.to action called with:", left, right, context);
+    },
+    "attack": (left, right, context) => {
+        if (left && right) {
+            left.attack(right, context);
+        }
+    },
+};
+
+//IMPORTANT theses are not Available Actions theses are just for example to see how to use them
+//Not done yet
+//You need to make the actual actions and add them to the registry for them to work
+//Also you need to make sure the codeblock action values match the registry keys
+
+/*
+//Example usage:
+"move.to": (left, right, context) => {
+    const { gameGrid } = context;
+
+    if (left && right && left.canMove) {
+        const direction = right.value;
+        left.move(direction, gameGrid); // update position in the *game grid*
+    }
+},
+"attack": (left, right, context) => {
+    if (left && right) {
+        left.attack(right, context);
+    }
+},
+*/

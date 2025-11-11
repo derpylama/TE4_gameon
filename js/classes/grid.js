@@ -145,4 +145,11 @@ class Grid {
     getGrid() {
         return this.grid;
     }
+
+    getRow(row) { //test for validator might change later
+        if (row < 0 || row >= this.grid.length) {
+            return null; // or null, if you prefer signaling an invalid row
+        }
+        return [...this.grid[row]];
+    }
 }
