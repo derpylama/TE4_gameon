@@ -151,6 +151,9 @@ interpreter.executeAllRows({
 const playerObj = new BeePlayerTile(tilePlayerBee);
 gameGrid.setTile(3,3, playerObj)
 
+const stone = new StoneTile();
+gameGrid.setTile(3,2, stone);
+
 // Define loops
 function GameLoop(gameGrid) {
 

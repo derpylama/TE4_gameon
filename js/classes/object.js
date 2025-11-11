@@ -25,10 +25,11 @@ class GameObject {
 }
 
 class GameTile extends GameObject {
-    constructor(texture, isGoal = false, isDeath = false) {
+    constructor(texture, isGoal = false, isDeath = false, isWalkable = false) {
         super(texture);
         this.isGoal = isGoal;
         this.isDeath = isDeath;
+        this.isWalkable = isWalkable
     }
 
     getReff() {
@@ -87,6 +88,6 @@ class LavaTile extends GameTile {
 // inte sten weman
 class StoneTile extends GameTile {
     constructor() {
-        super(tileStone);
+        super(tileStone, false, false, false);
     }
 }
