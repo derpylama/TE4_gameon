@@ -225,6 +225,23 @@ function renderGrid(gridObj) {
                     gridObj.getTileSize()
                 );
             }
+
+            // If gameObj is instance of or instance of descendant of CodeBlock, render its .text
+            if (gameObj instanceof CodeBlock) {
+                const fontSize = Math.floor(gridObj.getTileSize() / 4);
+                const textX = x + borderOffset[0] + gridObj.getTileSize() / 2;
+                const textY = y + borderOffset[1] + gridObj.getTileSize() / 2 + fontSize / 2; // Centered vertically
+
+                renderText(
+                    ctx,
+                    textX,
+                    textY,
+                    gameObj.text,
+                    `${fontSize}px Arial`,
+                    "center",
+                    "#ffffff"
+                );
+            }
         }
     }
 }

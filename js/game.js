@@ -124,9 +124,11 @@ const overlayGameOver = new Overlay(
     // Texture,         [ [ [x,y,width,height], function(x,y,type) ], ... ]
     overlayGameOverImg, [ [ [400-50,400-50,50,50], onOverlayGameOverClickRestart ] ] // 100x100 button centered
 );
+
 const overlayRealityIsWrong = new Overlay(
     overlayRealityIsWrongImg, []
 );
+
 const onOverlayWonClickContinue = (x,y,type) => {console.log(x,y,type)};
 const overlayWon = new Overlay(
     // Texture,    [ [ [x,y,width,height], function(x,y,type) ], ... ]
@@ -183,12 +185,12 @@ const codeGrid = new Grid(
 const interpreter = new CodeInterpreter(codeGrid);
 
 //MARK: Test codeblocks
-// codeBlockEntity1 = new CodeBlockObject("stone", "Stone", StoneTile);
-// codeBlockEntity2 = new CodeBlockModifier("left", "Left");
-// codeBlockAction1 = new CodeBlockAction("move.to", "MoveTo", ["object", "modifier"]); //also acceps "any"
-// codeGrid.setTile(0, 0, codeBlockEntity1);
-// codeGrid.setTile(0, 1, codeBlockAction1);
-// codeGrid.setTile(0, 2, codeBlockEntity2);
+codeBlockEntity1 = new CodeBlockObject("stone", "Stone", StoneTile);
+codeBlockEntity2 = new CodeBlockModifier("left", "Left");
+codeBlockAction1 = new CodeBlockAction("move.to", "MoveTo", ["object", "modifier"]); //also acceps "any"
+codeGrid.setTile(0, 0, codeBlockEntity1);
+codeGrid.setTile(0, 1, codeBlockAction1);
+codeGrid.setTile(0, 2, codeBlockEntity2);
 
 interpreter.executeAllRows({
     "gameGrid": gameGrid
