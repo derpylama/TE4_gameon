@@ -1,4 +1,4 @@
-class CodeInterpreter {
+class CodeInterpreterOLD {
     constructor(codeGrid) {
         this.codeGrid = codeGrid; // grid with code blocks
     }
