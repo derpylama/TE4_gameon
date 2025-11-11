@@ -231,8 +231,14 @@ function renderGrid(gridObj) {
             let x = pos[0] + (c * gridObj.getTileSize()) + (c * gaps[0]) + calculatedOffset[0]
             let y = pos[1] + (r * gridObj.getTileSize()) + (r * gaps[1]) + calculatedOffset[1]
 
+            gridObj.cellRenderStates.set([r,c],[x, y, gridObj.getTileSize(), gridObj.getTileSize()]);
+
             if (gameObj !== null) {
                 const texture = gameObj.texture;
+
+                try {
+                    gameObj.setRenderedState([x, y, gridObj.getTileSize(), gridObj.getTileSize()]);
+                } catch {}
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;

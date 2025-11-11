@@ -224,7 +224,103 @@ function GameLoop() {
 }
 
 const inLevelClickHook = (x,y,type)=>{
-    console.log("CLICKED INSIDE ACTIVE LEVEL");
+    // Did we click on a Block inside the inventoryGrid?
+    const inventoryGrid = currentGrids[2];
+    const gridData = inventoryGrid.getGrid();
+
+    x -= borderOffset[0];
+    y -= borderOffset[1];
+
+    // get canvas coords to adjust x,y
+    const canvasBounds = gameCanvas.getBoundingClientRect();
+    x -= canvasBounds.left;
+    y -= canvasBounds.top;
+
+    // Inventory select
+    for (let r = 0; r < gridData.length; r++) {
+        for (let c = 0; c < gridData[r].length; c++) {
+            
+            const block = gridData[r][c];
+
+            if (block === null) continue;
+
+            let renderedState = block.getRenderedState(); // [x,y,width,height]
+
+            if (renderedState === null) continue;
+
+            renderedState = renderedState[0]; //MARK: WHYYY????
+
+            if (renderedState === null) continue;
+
+            // Bounds check
+            if (x >= renderedState[0] && x <= renderedState[0] + renderedState[2] &&
+                y >= renderedState[1] && y <= renderedState[1] + renderedState[3]) {
+                // Click is inside this block
+                if (block instanceof CodeBlock) {
+                    block.select();
+
+                    // Unselect all other codeblocks in the codeGrid
+                    for (let r2 = 0; r2 < gridData.length; r2++) {
+                        for (let c2 = 0; c2 < gridData[r2].length; c2++) {
+                            const otherBlock = gridData[r2][c2];
+                            if (otherBlock !== null && otherBlock !== block && otherBlock instanceof CodeBlock) {
+                                otherBlock.deselect();
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    // Codeblock grid click
+    const codeGrid = currentGrids[1];
+    const codeGridData = codeGrid.getGrid();
+    for (let r3 = 0; r3 < codeGridData.length; r3++) {
+        for (let c3 = 0; c3 < codeGridData[r3].length; c3++) {
+            
+            // Check for cellRenderStates([r3,c3])
+            if (
+                codeGrid.cellRenderStates.has([r3, c3])
+            ) {
+                const renderedState = codeGrid.cellRenderStates.get([r3, c3]); // [x,y,width,height]
+
+                // Bounds check
+                if (x >= renderedState[0] && x <= renderedState[0] + renderedState[2] &&
+                    y >= renderedState[1] && y <= renderedState[1] + renderedState[3]) {
+                    
+                    // Click is inside this cell
+                    // Get the first block in the inventory that is selected
+                    for (let r4 = 0; r4 < gridData.length; r4++) {
+                        for (let c4 = 0; c4 < gridData[r4].length; c4++) {
+                            const invBlock = gridData[r4][c4];
+                            if (invBlock !== null && invBlock instanceof CodeBlock && invBlock.isSelected() === true) {
+                                
+                                // console.log that we attempt a move of invBlock at [r4,c4] to codeGrid at [r3,c3]
+                                //console.log(`Attempting to move block from inventory [${r4},${c4}] to codeGrid [${r3},${c3}]`);
+
+                                // Attempt to move the block
+                                const toMoveTile = inventoryGrid.getTile(r4, c4);
+
+                                toMoveTile.deselect();
+                                toMoveTile.executed = false;
+
+                                inventoryGrid.clearTile(r4, c4);
+
+                                codeGrid.setTile(r3, c3, toMoveTile);
+
+
+                                // Interpret
+                                executeInterpreter();
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
 }
 
 // Function to start the game
