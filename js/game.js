@@ -162,6 +162,7 @@ audio.addSound("sfx.death", "./assets/audio/game_die_1.mp3");
 audio.addPlaylist("sfx.bee", ["./assets/audio/bee_1.wav", "./assets/audio/bee_2.wav"]);
 
 // Register levels
+const playerObj = new BeePlayerTile(tilePlayerBee);
 levels.registerLevel(testLevel);
 levels.registerLevel(level1);
 

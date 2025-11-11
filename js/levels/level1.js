@@ -56,12 +56,28 @@ level1 = new Level("level1", () => {
     // gameGrid.setTile(2,3, new GameTile(tileDatadrivenTest)); //
     // gameGrid.setTile(3,3, new GameTile(tileDatadrivenTest)); //
 
-    gameGrid.setTile(3,3, new BeePlayerTile(tilePlayerBee))
+    // gameGrid.setTile(3,3, new BeePlayerTile(tilePlayerBee))
 
-    gameGrid.setTile(2,3, new BeehiveTile())
-    gameGrid.setTile(4,4, new LavaTile())
+    // gameGrid.setTile(2,3, new BeehiveTile())
+    // gameGrid.setTile(4,4, new LavaTile())
 
-    gameGrid.setTile(3,2, new StoneTile());
+    // gameGrid.setTile(3,2, new StoneTile());
+
+
+    gameGrid.setTile(4,0, playerObj)
+
+    gameGrid.setTile(4,8, new StoneTile());
+
+    gameGrid.setTile(3,9, new VoidTile());
+    gameGrid.setTile(5,9, new VoidTile());
+
+    gameGrid.setTile(4,9, new BeehiveTile());
+
+    gameGrid.setTile(3,0, codeBlockEntity1);
+    gameGrid.setTile(3,6, codeBlockEntity2);
+    gameGrid.setTile(6,5, codeBlockAction1);
+
+
 
     return [gameGrid, codeGrid, inventoryGrid];
 });
