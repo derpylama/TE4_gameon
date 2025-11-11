@@ -310,6 +310,7 @@ function StartGame(level) {
     interpreter = new CodeInterpreter(currentGrids[1]); // codeGrid
 
     executeInterpreter();
+    interpreter.initRecordState(currentGrids[0]); //record state 
 
     GameLoop();
 }
