@@ -126,6 +126,9 @@ const codeGrid = new Grid(4, 5, 800/10, null);
 // gameGrid.setTile(2,3, new GameTile(tileDatadrivenTest)); //
 // gameGrid.setTile(3,3, new GameTile(tileDatadrivenTest)); //
 
+const playerObj = new BeePlayerTile(tilePlayerBee);
+gameGrid.setTile(3,3, playerObj)
+
 // Define loops
 function GameLoop(gameGrid) {
 

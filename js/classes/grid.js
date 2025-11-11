@@ -56,10 +56,11 @@ class Grid {
     }
 
     // Get the tile at (row, col) or null for OOB or empty
+    // If the tile is out of bounds return false
     getTile(row, col) {
         // Check bounds
         if (row < 0 || row >= this.grid.length || col < 0 || col >= this.grid[0].length) {
-            return null; // Out of bounds
+            return false; // Out of bounds
         }
 
         return this.grid[row][col];
@@ -67,19 +68,22 @@ class Grid {
 
     // Gets the tile at a relative position, returns null for OOB or empty
     // To check the tile one above 0,0 call (0,0, -1, 0)
+    // If the tile is out of bounds return false
     getRelationalTile(row, col, rowDelta = 0, colDelta = 0) {
         const newRow = row + rowDelta;
         const newCol = col + colDelta;
 
+        
         // Check bounds
         if (newRow < 0 || newRow >= this.grid.length || newCol < 0 || newCol >= this.grid[0].length) {
-            return null; // Out of bounds
+            return false; // Out of bounds
         }
-
+        
         return this.getTile(newRow, newCol);
     }
 
     // Clears the tile at (row, col) returning true if successful, false if OOB
+    // If the tile is out of bounds return false
     clearTile(row, col) {
         // Check bounds
         if (row < 0 || row >= this.grid.length || col < 0 || col >= this.grid[0].length) {
@@ -113,6 +117,7 @@ class Grid {
     }
 
     // Overwrites the tile at a relative position
+    // returns false if the position is out of bounds
     // To set the tile one above 0,0 call (0,0, -1, 0)
     setRelationalTile(row, col, rowDelta = 0, colDelta = 0, gameObj) {
         const newRow = row + rowDelta;
@@ -120,8 +125,9 @@ class Grid {
 
         // Check bounds
         if (newRow < 0 || newRow >= this.grid.length || newCol < 0 || newCol >= this.grid[0].length) {
-            return; // Out of bounds
+            return false; // Out of bounds
         }
+
 
         this.grid[newRow][newCol] = gameObj;
     }
