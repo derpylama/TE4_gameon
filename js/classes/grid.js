@@ -148,6 +148,27 @@ class Grid {
         }
     }
 
+    getFirstEmptyCell() {
+        for (let r = 0; r < this.grid.length; r++) {
+            for (let c = 0; c < this.grid[r].length; c++) {
+                if (this.grid[r][c] == null) {
+                    return [r, c]
+                }
+            }
+        }
+    }
+
+    gridContains(obj) {
+        for (let r = 0; r < this.grid.length; r++) {
+            for (let c = 0; c < this.grid[r].length; c++) {
+                if (this.grid[r][c] == obj) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // Getter for the entire grid as 2D array
     getGrid() {
         return this.grid;

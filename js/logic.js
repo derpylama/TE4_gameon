@@ -96,7 +96,18 @@ function checkTile(tile){
         return "death";
     }
     else if (tile instanceof CodeBlockAction || tile instanceof CodeBlockEntity || tile instanceof CodeBlockModifier){
-        console.log("ye")
+        var inventoryGrid = currentGrids[2];
+        var gameGrid = currentGrids[0];
+        var freeSpace = inventoryGrid.getFirstEmptyCell();
+
+        if (!inventoryGrid.gridContains(tile)) {
+            inventoryGrid.setTile(freeSpace[0], freeSpace[1], tile)
+        }
+
+        var tilePos = gameGrid.getPosOfObj(tile);
+        gameGrid.clearTile(tilePos[0], tilePos[1]);
+        
+
     }
 }
 
