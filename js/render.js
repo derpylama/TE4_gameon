@@ -302,7 +302,7 @@ function renderGrid(gridObj) {
 function renderOverlays(ctx) {
     const currentOverlay = overlayer.getCurrentOverlay();
     if (currentOverlay !== null) {
-        renderTexture(ctx, currentOverlay, borderOffset[0], borderOffset[1], 800, 800);
+        renderTexture(ctx, currentOverlay, 0, 0, 800, 800);
     }
 }
 
