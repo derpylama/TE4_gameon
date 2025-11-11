@@ -40,11 +40,11 @@ class GameTile extends GameObject {
     moveBy(rowDelta, colDelta) {
         const objCurrentPos = this.getReff();
 
-        const newObjPosCheck = gameGrid.getRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta);
+        const newObjPosCheck = currentGrids[0].getRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta);
         
         if (newObjPosCheck != false){
-            gameGrid.setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this);
-            gameGrid.clearTile(objCurrentPos[0], objCurrentPos[1]);
+            currentGrids[0].setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this);
+            currentGrids[0].clearTile(objCurrentPos[0], objCurrentPos[1]);
         }
     }
 }
@@ -76,13 +76,13 @@ class BeePlayerTile extends GameTile {
 
 class BeehiveTile extends GameTile {
     constructor() {
-        super(tileBeeHive);
+        super(tileBeeHive, true);
     }
 }
 
 class LavaTile extends GameTile {
     constructor() {
-        super(tileAnimLava);
+        super(tileAnimLava, false, true);
     }
 }
 

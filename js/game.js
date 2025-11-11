@@ -5,6 +5,8 @@ const DEBUG = window.location.search.includes("debug");
 let lastTime = performance.now();
 let startTime = lastTime;
 let frameCount = 0;
+var currentGrids = [null, null, null]; // [gameGrid, codeGrid, inventoryGrid]
+var interpreter = null; // CodeInterpreter
 
 function getTimeParams() {
     const now = performance.now();
@@ -27,6 +29,7 @@ const ctx = gameCanvas ? gameCanvas.getContext("2d") : null;
 const _volumeSlider = document.getElementById("volumeSlider");
 const audio = new SoundHandler(parseInt(_volumeSlider.value, 10));
 const overlayer = new OverlayHandler();
+const levels = new LevelHandler();
 
 // Textures
 const startBackgroundImg = new Texture("./assets/images/startmenu.png");
@@ -158,97 +161,47 @@ audio.addPlaylist("sfx.win", ["./assets/audio/win_1.mp3", "./assets/audio/win_2.
 audio.addSound("sfx.death", "./assets/audio/game_die_1.mp3");
 audio.addPlaylist("sfx.bee", ["./assets/audio/bee_1.wav", "./assets/audio/bee_2.wav"]);
 
-
-// Instantiate
-let hexagonOffsetMakerRight = (row, _) => {
-    rowOffset = (row % 2 === 0 ? 0 : ((800/10)/2) + 8);
-    return [rowOffset, (-7*row)+(-1*row)];
-};
-let hexagonOffsetMakerLeft = (row, _) => {
-    rowOffset = (row % 2 === 0 ? 0 : -((800/10)/2) - 8);
-    return [rowOffset, (-7*row)+(-1*row)];
-};
-
-// let generateVoids = (row, col) => {
-//     return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));
-// };
-
-const gameGrid = new Grid(
-    0, 0,   // Position in scrPx
-    10, 10, // Rows x Cols
-    800/10, // Tile Size, scrPx size of a cell
-    null, // Func to generate default tiles, can be set null
-    0, 0,   // Gaps in scrPx
-    null // Func to generate offsets per tile [txpx, txpx], can be set null
-);
-const inventoryGrid = new Grid(
-    846, 32.5,   // Position in scrPx
-    4, 4, // Rows x Cols
-    800/10, // Tile Size, scrPx size of a cell
-    null, // Func to generate default tiles, can be set null
-    16, 0,   // Gaps in scrPx
-    hexagonOffsetMakerRight // Func to generate offsets per tile [txpx, txpx], can be set null
-);
-const codeGrid = new Grid(
-    893, 393,   // Position in scrPx
-    5, 4, // Rows x Cols
-    800/10, // Tile Size, scrPx size of a cell
-    null, // Func to generate default tiles, can be set null
-    16, 0,   // Gaps in scrPx
-    hexagonOffsetMakerLeft // Func to generate offsets per tile [txpx, txpx], can be set null
-);
-
-// Code interpreter
-const interpreter = new CodeInterpreter(codeGrid);
-
-//MARK: Test codeblocks
-codeBlockEntity1 = new CodeBlockObject("stone", "Stone", StoneTile);
-codeBlockEntity2 = new CodeBlockModifier("left", "Left");
-codeBlockAction1 = new CodeBlockAction("move.to", "MoveTo", ["object", "modifier"]); //also acceps "any"
-codeGrid.setTile(0, 0, codeBlockEntity1);
-codeGrid.setTile(0, 1, codeBlockAction1);
-codeGrid.setTile(0, 2, codeBlockEntity2);
-
-interpreter.executeAllRows(codeGrid,{ //execute code on updates  //move to only trigger when a codeblock is moved
-    "gameGrid": gameGrid
-});
-
-//MARK: End test codeblocks
-
-
-// gameGrid.setTile(5,5, new GameTile(tileLayeredTest)); //MARK: Test
-
-// gameGrid.setTile(1,4, new GameTile(tileDatadrivenTest)); //MARK: Test
-// gameGrid.setTile(2,4, new GameTile(tileDatadrivenTest)); //
-// gameGrid.setTile(2,3, new GameTile(tileDatadrivenTest)); //
-// gameGrid.setTile(3,3, new GameTile(tileDatadrivenTest)); //
-
+// Register levels
 const playerObj = new BeePlayerTile(tilePlayerBee);
-
-gameGrid.setTile(3,3, playerObj);
-
-const stone = new StoneTile();
-gameGrid.setTile(3,6, stone);
+levels.registerLevel(testLevel);
+levels.registerLevel(level1);
 
 // Define loops
-function GameLoop(gameGrid) {
+function GameLoop() {
+    const [gameGrid, codeGrid, inventoryGrid] = currentGrids;
+
+    if (!gameGrid || !codeGrid || !inventoryGrid) {
+        console.error("GameLoop: One or more grids are null.");
+        return;
+    }
 
     Update(ctx, gameGrid);
     Render(ctx, gameGrid);
 
     const [frameDelta, deltaTime, FPS, elapsed, avgFPS] = getTimeParams();
-    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st`, "12px monospace", "left", "#00ff00");
+    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st | lvl ${levels.getCurrentLevelStrid()} (${levels.getCurrentLevelIndex()})`, "12px monospace", "left", "#00ff00");
 
     // Schedule the next frame
     requestAnimationFrame(
-        () => GameLoop(gameGrid)
+        () => GameLoop()
     );
 }
 
 // Function to start the game
-function StartGame(gameGrid) {
+function StartGame(level) {
+    frameCount = 0;
+    startTime = performance.now();
+
     audio.playSound("bg.music");
-    GameLoop(gameGrid);
+
+    currentGrids = levels.setLoadAndRunLevel(level);
+
+    // Code interpreter
+    interpreter = new CodeInterpreter(currentGrids[1]); // codeGrid
+
+    executeInterpreter();
+
+    GameLoop();
 }
 
 function maybePlayBeeSound() {
@@ -275,7 +228,7 @@ if (gameCanvas) {
                 // Start game
                 inStartMenu = false;
                 unregisterClickHook(startMenuClickHook);
-                StartGame(gameGrid);
+                StartGame(level1);
             }
         }
     }

@@ -76,10 +76,36 @@ window.addEventListener("load", () => {
     });
 });
 
+var gameWon = false
+var gameOver = false
+
+function checkTile(tile){
+    if (tile.isWalkable) {
+        return "walk";
+    }
+    else if (tile.isGoal){
+        audio.playSound("sfx.win");
+        gameWon = true;
+        overlayer.showOverlayObj(overlayWon);
+        return "goal";
+    }
+    else if (tile.isDeath){
+        audio.playSound("sfx.death");
+        gameOver = true;
+        overlayer.showOverlayObj(overlayGameOver);
+        return "death";
+    }
+    else if (tile instanceof CodeBlockAction || tile instanceof CodeBlockEntity || tile instanceof CodeBlockModifier){
+        console.log("ye")
+    }
+}
+
+
 var movedUpward = false;
 var movedLeft = false;
 var movedRight = false;
 var movedDown = false;
+
 // Main update function (called in loop)
 function Update(ctx, grid) {
     const isPressingW = pressedInputs.includes("w");
@@ -87,103 +113,138 @@ function Update(ctx, grid) {
     const isPressingD = pressedInputs.includes("d");
     const isPressingA = pressedInputs.includes("a");
 
-    if (isPressingW && !movedUpward) {
-        maybePlayBeeSound();
-        // Move once when key is first pressed
-        const currentPlayerPos = grid.getPosOfObj(playerObj);
-        const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0);
+    if (!gameOver && !gameWon) {
+        if (isPressingW && !movedUpward) {
+            // Move once when key is first pressed
+            const currentPlayerPos = grid.getPosOfObj(playerObj);
+            const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0);
 
 
-        if (newPlayerPosCheck) {
-            return;
-        } else {
-            if (newPlayerPosCheck != false) {
-                grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
-                
-                movedUpward = true; // prevent another move until key is released
+            if (newPlayerPosCheck) {
+                var tile = checkTile(newPlayerPosCheck)
+
+                if (tile == "walk") {
+                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    
+                    movedUpward = true; // prevent another move until key is released
+                }
+                else {
+                    return;
+                }
+            } else {
+                if (newPlayerPosCheck != false) {
+                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    
+                    movedUpward = true; // prevent another move until key is released
+                }
             }
-        }
 
-    } 
-    
-    // Reset when key is released
-    if (!isPressingW) {
-        movedUpward = false;
-    }
-
-    if (isPressingS && !movedDown) {
-        maybePlayBeeSound();
-        // Move once when key is first pressed
-        const currentPlayerPos = grid.getPosOfObj(playerObj);
-        const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0);
-
-        if (newPlayerPosCheck) {
-            return;
-        }else {
-            if (newPlayerPosCheck != false) {
-                grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0, playerObj);
-                grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
-                
-                movedDown = true; // prevent another move until key is released
-            }
-        }
-
-    } 
-    
-    // Reset when key is released
-    if (!isPressingS) {
-        movedDown = false;
-    }
-
-    if (isPressingA && !movedLeft) {
-        maybePlayBeeSound();
-        // Move once when key is first pressed
-        const currentPlayerPos = grid.getPosOfObj(playerObj);
-        const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1);
-
-        if (newPlayerPosCheck) {
-            return;
-        }else{
-
-            if (newPlayerPosCheck != false){
-                grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1, playerObj);
-                grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
-                
-                movedLeft = true; // prevent another move until key is released
-            }
-        }
-
+        } 
         
-    } 
-    
-    // Reset when key is released
-    if (!isPressingA) {
-        movedLeft = false;
-    }
-
-    if (isPressingD && !movedRight) {
-        maybePlayBeeSound();
-        // Move once when key is first pressed
-        const currentPlayerPos = grid.getPosOfObj(playerObj);
-        const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1);
-
-        if (newPlayerPosCheck) {
-            return;
-        } else {
-            if (newPlayerPosCheck != false) {
-                grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1, playerObj);
-                grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
-                
-                movedRight = true; // prevent another move until key is released
-                   
-            }
+        // Reset when key is released
+        if (!isPressingW) {
+            movedUpward = false;
         }
 
-    } 
-    
-    // Reset when key is released
-    if (!isPressingD) {
-        movedRight = false;
+        if (isPressingS && !movedDown) {
+            // Move once when key is first pressed
+            const currentPlayerPos = grid.getPosOfObj(playerObj);
+            const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0);
+
+            if (newPlayerPosCheck) {
+                var tile = checkTile(newPlayerPosCheck)
+
+                if (tile == "walk") {
+                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    
+                    movedUpward = true; // prevent another move until key is released
+                }
+            }else {
+                if (newPlayerPosCheck != false) {
+                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0, playerObj);
+                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    
+                    movedDown = true; // prevent another move until key is released
+                }
+            }
+
+        } 
+        
+        // Reset when key is released
+        if (!isPressingS) {
+            movedDown = false;
+        }
+
+        if (isPressingA && !movedLeft) {
+            // Move once when key is first pressed
+            const currentPlayerPos = grid.getPosOfObj(playerObj);
+            const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1);
+
+            if (newPlayerPosCheck) {
+                var tile = checkTile(newPlayerPosCheck)
+
+                if (tile == "walk") {
+                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    
+                    movedUpward = true; // prevent another move until key is released
+                }
+            }else{
+
+                if (newPlayerPosCheck != false){
+                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1, playerObj);
+                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    
+                    movedLeft = true; // prevent another move until key is released
+                }
+            }
+
+            
+        } 
+        
+        // Reset when key is released
+        if (!isPressingA) {
+            movedLeft = false;
+        }
+
+        if (isPressingD && !movedRight) {
+            // Move once when key is first pressed
+            const currentPlayerPos = grid.getPosOfObj(playerObj);
+            const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1);
+
+            if (newPlayerPosCheck) {
+                var tile = checkTile(newPlayerPosCheck)
+
+                if (tile == "walk") {
+                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    
+                    movedUpward = true; // prevent another move until key is released
+                }
+            } else {
+                if (newPlayerPosCheck != false) {
+                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1, playerObj);
+                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    
+                    movedRight = true; // prevent another move until key is released
+                    
+                }
+            }
+
+        } 
+        
+        // Reset when key is released
+        if (!isPressingD) {
+            movedRight = false;
+        }
     }
+}
+
+function executeInterpreter() {
+    interpreter.executeAllRows(currentGrids[1], { //execute code on updates  //move to only trigger when a codeblock is moved
+        "gameGrid": currentGrids[0],
+    });    
 }
