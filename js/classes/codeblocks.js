@@ -40,6 +40,18 @@ class CodeBlockModifier extends CodeBlockEntity {
     }
 }
 
+class CodeBlockStateModifier extends CodeBlockModifier {
+    constructor(value, text) {
+        super(value, text);
+    }
+}
+
+class CodeBlockMoveModifier extends CodeBlockModifier {
+    constructor(value, text) {
+        super(value, text);
+    }
+}
+
 
 
 class CodeBlockAction extends CodeBlock {
@@ -70,6 +82,12 @@ class CodeBlockAction extends CodeBlock {
             }
             if (expectedType === "modifier") {
                 return block instanceof CodeBlockModifier;
+            }
+            if (expectedType === "state_modifier") {
+                return block instanceof CodeBlockStateModifier;
+            }
+            if (expectedType === "move_modifier") {
+                return block instanceof CodeBlockMoveModifier;
             }
             console.warn("Unknown expected type in CodeBlockAction validation:", expectedType);
             return false; // unknown type keyword
@@ -105,66 +123,215 @@ class CodeBlockAction extends CodeBlock {
 //right is the one on the right
 //context is what it needs to interect with the game ex it pretty much always needs the gamegrid to find objects to move/attack  (maybe needs ex "stones and gamegrid" if we say stone-attack-left)
 const ActionRegistry = {  
-    "move.to": (left, right, context) => {
-         console.log("move.to action called with:", left, right, context);
-        // return true;
-
+    "move": (left, right, context) => {
         const gridData = context.gameGrid.getGrid();
 
         for (let r = 0; r < gridData.length; r++) {
             for (let c = 0; c < gridData[r].length; c++) {
                 const block = gridData[r][c];
-                if (block && block instanceof left.linkedClass) {
+
+                let validBlock = false;
+                try {
+                    validBlock = block instanceof left.linkedClass;
+                } catch (e) {}
+
+                if (block && validBlock) {
+
+                    let deltas = [0,0]
+
                     switch(right.value) {
                         case "up":
-                            block.moveBy(-1, 0);
+                            deltas = [-1,0];
                             break;
                         case "down":
-                            block.moveBy(1, 0);
+                            deltas = [1,0];
                             break;
                         case "left":
-                            block.moveBy(0, -1);
+                            deltas = [0,-1];
                             break;
                         case "right":
-                            block.moveBy(0, 1);
+                            deltas = [0,1];
                             break;
                         default:
                             overlayer.showOverlayObj(overlayRealityIsWrong);
-                            console.warn(`Invalid direction '${right.value}' for move.to action.`);
+                            console.warn(`Invalid direction '${right.value}' for move action.`);
                             return false;
+                    }
+
+                    const existing = context.gameGrid.getRelationalTile(r, c, deltas[0], deltas[1]);
+
+                    let moveableInto = true;
+                    if (existing !== null && existing !== false && existing !== undefined) {
+                        moveableInto = (CAN_MOVE_ACTION_INTO_ANY_WALKABLE) ? existing.getIsWalkable() : !(existing instanceof VoidTile);
+                    }
+
+                    if (existing === null || moveableInto || existing instanceof BeehiveTile || existing === playerObj) {
+                        block.moveBy(deltas[0], deltas[1]);
+                    }
+
+                    if (existing !== null && existing === playerObj) {
+                        if (block instanceof StoneTile && MEME) {
+                            triggerGameOver("You where crushed by WEMAN!");
+                        } else {
+                            triggerGameOver("You where crushed!");
+                        }
+                    }
+                    if (existing !== null && existing instanceof BeehiveTile) {
+                        triggerGameOver("You killed everyone!");
                     }
                 }
             }
         }
     },
+    
     "is": (left, right, context) => {
-        console.log("is action called with:", left, right, context);
 
-        const gridData = context.gameGrid.getGrid();
+        let handled = false;
 
-        for (let r = 0; r < gridData.length; r++) {
-            for (let c = 0; c < gridData[r].length; c++) {
-                const block = gridData[r][c];
-                if (block && block instanceof left.linkedClass) {
-                    if (left instanceof CodeBlockObject && right instanceof CodeBlockObject) {
-                        let pos=context.gameGrid.getPosOfObj(block);
+        // Validate+Execute: Specials: Object to Modifier
+        if (left instanceof CodeBlockObject && right instanceof CodeBlockModifier) {
+            
+            let combinedValue = left.value + ";" + right.value;
+            switch(combinedValue) {
+                case "game;over":
+                    triggerGameOver("Bad game design!");
+                    handled = true;
+                    break;
 
-                        context.gameGrid.setTile(pos[0], pos[1], new right.linkedClass()); 
+                case "game;death":
+                    triggerGameOver("Bad game design!");
+                    handled = true;
+                    break;
+
+                case "game;won":
+                    triggerGameWon();
+                    handled = true;
+                    break;
+
+                case "game;win":
+                    triggerGameWon();
+                    handled = true;
+                    break;
+
+                case "game;reset":
+                    onGameReset();
+                    handled = true;
+                    break;
+
+                case "game;meme":
+                    if (MEME) {
+                        triggerGameOver("Too much meme!");
+                    } else {
+                        MEME = true;
                     }
-                    else{
-                        switch(right.value) {
-                            case "win":
+                    return true;
 
-                                break;
+                default:
+                    // Not handled
+                    break;
+            }
+        }
 
-                            default:
-                                overlayer.showOverlayObj(overlayRealityIsWrong);
-                                console.warn(`Invalid direction '${right.value}' for move.to action.`);
-                                return false;
+        // Validate: Object to Object
+        if (left instanceof CodeBlockObject && right instanceof CodeBlockObject) {
+            handled = true;
+        }
+
+        // Validate: Object to Modifier
+        if (left instanceof CodeBlockObject && right instanceof CodeBlockModifier) {
+            if ([
+                "win",
+                "won",
+                "not_win",
+                "death",
+                "over",
+                "safe",
+                "walkable",
+                "solid"
+            ].includes(right.value)) {
+                handled = true;
+            }
+        }
+
+        // Execute
+        if (handled) {
+
+            const gridData = context.gameGrid.getGrid();
+
+            for (let r = 0; r < gridData.length; r++) {
+                for (let c = 0; c < gridData[r].length; c++) {
+
+                    const block = gridData[r][c];
+
+                    let validBlock = false;
+
+                    try {
+                        validBlock = block instanceof left.linkedClass;
+                    } catch (e) {}
+
+
+                    // Since left is the affected make sure it matches
+                    if (block && validBlock) {
+
+                        // Execute: Object to Object
+                        if (left instanceof CodeBlockObject && right instanceof CodeBlockObject) {
+                            let pos = context.gameGrid.getPosOfObj(block);
+
+                            try {
+                                context.gameGrid.setTile(pos[0], pos[1], new right.linkedClass()); 
+                            } catch (e) {
+                                console.warn(`Failed to transform object: ${e}`);
+                            }
+                        }
+
+                        // Execute: Object to Modifier
+                        if (left instanceof CodeBlockObject && right instanceof CodeBlockModifier) {
+
+                            switch(right.value) {
+                                case "win":
+                                    block.setIsGoal(true);
+                                    break;
+
+                                case "won":
+                                    block.setIsGoal(true);
+                                    break;
+
+                                case "not_win":
+                                    block.setIsGoal(false);
+                                    break;
+                                
+                                case "death":
+                                    block.setIsDeath(true);
+                                    break;
+                                
+                                case "over":
+                                    context.gameGrid.setTile(r, c, new DisabledVoidTile());
+                                    break;
+                                
+                                case "safe":
+                                    block.setIsDeath(false);
+                                    break;
+                                
+                                case "walkable":
+                                    block.setIsWalkable(true);
+                                    break;
+
+                                case "solid":
+                                    block.setIsWalkable(false);
+                                    break;
+
+                                default:
+                                    // Not handled
+                                    break;
+                            }
                         }
                     }
                 }
             }
+
+        } else {
+            overlayer.showOverlayObj(overlayRealityIsWrong);
+            return false;
         }
 
     },
@@ -178,7 +345,7 @@ const ActionRegistry = {
 
 /*
 //Example usage:
-"move.to": (left, right, context) => {
+"move": (left, right, context) => {
     const { gameGrid } = context;
 
     if (left && right && left.canMove) {

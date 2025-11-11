@@ -28,6 +28,13 @@ level2 = new Level("level2", () => {
             {"text": "Left", "color": "#000000"},
         )
     );
+    inventoryGrid.setTile(
+        0, 3,
+        new CodeBlockModifier(
+            "right",
+            {"text": "Right", "color": "#000000"},
+        )
+    );
 
 
     // Open up code tiles
@@ -53,7 +60,7 @@ level2 = new Level("level2", () => {
         new CodeBlockAction(
             "is",
             {"text": "Is", "fontSizeOffset": -4, "color": "#ffde2c"},
-            ["object", "object"]
+            ["object", "any"]
         )
     );
     gameGrid.setTile(

@@ -38,6 +38,13 @@ level1 = new Level("level1", () => {
         )
     );
     gameGrid.setTile(
+        3, 7,
+        new CodeBlockModifier(
+            "right",
+            {"text": "Right", "color": "#000000"},
+        )
+    );
+    gameGrid.setTile(
         6, 5,
         new CodeBlockAction(
             "move",
