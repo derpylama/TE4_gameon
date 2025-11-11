@@ -166,6 +166,7 @@ audio.addPlaylist("sfx.bee", ["./assets/audio/bee_1.wav", "./assets/audio/bee_2.
 const playerObj = new BeePlayerTile(tilePlayerBee);
 levels.registerLevel(testLevel);
 levels.registerLevel(level1);
+levels.registerLevel(level2);
 
 // Define loops
 function GameLoop() {
@@ -195,7 +196,7 @@ function StartGame(level) {
 
     audio.playSound("bg.music");
 
-    currentGrids = levels.setLoadAndRunLevel(level);
+    currentGrids = levels.setLoadAndRunLevel(level2);
 
     // Code interpreter
     interpreter = new CodeInterpreter(currentGrids[1]); // codeGrid
