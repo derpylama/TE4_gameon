@@ -97,7 +97,7 @@ const overlayWon = new Overlay(
 // Sounds
 audio.addSound("test.1", "./assets/audio/toot.mp3", false);
 // audio.addSound("bg.music.1", "./assets/audio/backgroundMusic.wav", true, 0);
-// audio.addSound("bg.music.2", "./assets/audio/spring-in-my-step.wav", true, 0);
+audio.addSound("bg.realityIsWrong", "./assets/audio/spring-in-my-step.wav");
 audio.addPlaylist("bg.music", ["./assets/audio/arvids_fina_bakrundsmusik.mp3", "./assets/audio/into_the_tempel.mp3"], true,);
 audio.addPlaylist("sfx.stone", ["./assets/audio/stone_1.wav", "./assets/audio/stone_2.wav", "./assets/audio/stone_3.wav", "./assets/audio/stone_4.wav"]);
 audio.addSound("sfx.lavaDeath", "./assets/audio/lava_death.wav");
