@@ -30,6 +30,21 @@ class GameTile extends GameObject {
         this.isGoal = isGoal;
         this.isDeath = isDeath;
     }
+
+    getReff() {
+        return gameGrid.getPosOfObj(this.self)
+    }
+
+    moveBy(rowDelta, colDelta) {
+        const objCurrentPos = this.getReff();
+
+        const newObjPosCheck = grid.getRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta);
+        
+        if (newObjPosCheck != false){
+            grid.setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this.self);
+            grid.clearTile(objCurrentPos[0], objCurrentPos[1]);
+        }
+    }
 }
 
 class VoidTile extends GameTile {
