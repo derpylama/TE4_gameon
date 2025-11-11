@@ -54,6 +54,7 @@ const tileLava4 = new Texture("./assets/images/tiles/lava4.png");
 const tileLava5 = new Texture("./assets/images/tiles/lava5.png");
 const tileLava6 = new Texture("./assets/images/tiles/lava6.png");
 const tileLava7 = new Texture("./assets/images/tiles/lava7.png");
+const tileLava8 = new Texture("./assets/images/tiles/lava7.png");
 const tileStone = new Texture("./assets/images/tiles/stone.png");
 
 //MARK: Test
@@ -84,14 +85,11 @@ const tileAnimLava = new AnimatedTexture(
         "./assets/images/tiles/lava5.png",
         "./assets/images/tiles/lava6.png",
         "./assets/images/tiles/lava7.png",
-        "./assets/images/tiles/lava6.png",
-        "./assets/images/tiles/lava4.png",
-        "./assets/images/tiles/lava3.png",
-        "./assets/images/tiles/lava2.png",
-        "./assets/images/tiles/lava.png",
+        "./assets/images/tiles/lava8.png",
+
         //tileNonVoidAbove
     ],
-    300 // Switch every 500ms
+    800 // Switch every 500ms
 )
 
 // const tileLayeredTest = new LayeredTexture([
