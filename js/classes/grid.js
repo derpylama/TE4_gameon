@@ -4,7 +4,7 @@ class Grid {
     // defaultTileMaker is a function that takes (row, col) and returns a GameObject to fill the cell with, or null for empty when initing
     // xGap and yGap are in scrPx
     // offsetMaker is a function that takes (row, col) and returns [xOffset, yOffset] both in txpx
-    constructor(rows, cols, cellSize = 32, defaultTileMaker = null, xGap = 0, yGap = 0, offsetMaker = null) {
+    constructor(x, y, rows, cols, cellSize = 32, defaultTileMaker = null, xGap = 0, yGap = 0, offsetMaker = null) {
         // Initialize a 2D array to represent the grid
         this.grid = [];
         for (let r = 0; r < rows; r++) {
@@ -19,6 +19,13 @@ class Grid {
         this.xGap = xGap;
         this.yGap = yGap;
         this.offsetMaker = offsetMaker;
+        this.x = x;
+        this.y = y;
+    }
+
+    // Getter for [x, y] position of the grid in scrPx
+    getPos() {
+        return [this.x, this.y];
     }
 
     // Getter for [xGap, yGap] both in scrPx

@@ -43,23 +43,38 @@ const overlayWonImg = new Texture("./assets/images/overlays/won.png");
 const tileVoid = new Texture("./assets/images/tiles/void.png");
 const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
 const tilePlayerBee = new Texture("./assets/images/tiles/bee.png");
+const tilePlayerBee2 = new Texture("./assets/images/tiles/bee2.png");
+const tilePlayerBee3 = new Texture("./assets/images/tiles/bee3.png");
+const tilePlayerBee4 = new Texture("./assets/images/tiles/bee4.png");
+const tilePlayerBee5 = new Texture("./assets/images/tiles/bee5.png");
 const tileBeeHive = new Texture("./assets/images/tiles/hive.png");
 const tileLava = new Texture("./assets/images/tiles/lava.png");
 const tileStone = new Texture("./assets/images/tiles/stone.png");
 
 //MARK: Test
-// const tileAnimTest = new AnimatedTexture(
-//     [
-//         "./assets/images/tiles/void.png",
-//         tileNonVoidAbove
-//     ],
-//     500 // Switch every 500ms
-// )
+const tileAnimTest = new AnimatedTexture(
+    [
+        //"./assets/images/tiles/void.png",
+        "./assets/images/tiles/bee.png",
+        "./assets/images/tiles/bee2.png",
+        "./assets/images/tiles/bee3.png",
+        "./assets/images/tiles/bee4.png",
+        "./assets/images/tiles/bee5.png",
+        "./assets/images/tiles/bee4.png",
+        "./assets/images/tiles/bee3.png",
+        "./assets/images/tiles/bee2.png",
+        "./assets/images/tiles/bee.png",
+        //tileNonVoidAbove
+    ],
+    200 // Switch every 500ms
+)
 
-// const tileLayeredTest = new LayeredTexture([
-//     tileAnimTest,
-//     "./assets/images/tiles/bee.png"
-// ]);
+const tileLayeredTest = new LayeredTexture([
+    tileAnimTest,
+    "./assets/images/tiles/bee.png",
+    "./assets/images/tiles/bee2.png",
+    "./assets/images/tiles/bee3.png"
+]);
 
 // const tileDatadrivenTest = new DataDrivenTexture(
 //     (_, cellContext) => {
@@ -101,23 +116,43 @@ audio.addSound("test.1", "./assets/audio/toot.mp3", false);
 audio.addPlaylist("bg.music", ["./assets/audio/backgroundMusic.wav", "./assets/audio/spring-in-my-step.wav"], true, 0);
 
 // Instantiate
-// let hexagonOffsetMaker = (row, col) => {
-//     return [(row % 2 === 0 ? 0 : -((800/10)/2)), 0];
-// };
+let hexagonOffsetMakerRight = (row, _) => {
+    rowOffset = (row % 2 === 0 ? 0 : ((800/10)/2) + 8);
+    return [rowOffset, (-7*row)+(-1*row)];
+};
+let hexagonOffsetMakerLeft = (row, _) => {
+    rowOffset = (row % 2 === 0 ? 0 : -((800/10)/2) - 8);
+    return [rowOffset, (-7*row)+(-1*row)];
+};
 
 // let generateVoids = (row, col) => {
 //     return (row === 0 ? new DisabledVoidTile_NonVoidAbove(tileNonVoidAbove) : new DisabledVoidTile(tileVoid));
 // };
 
 const gameGrid = new Grid(
+    0, 0,   // Position in scrPx
     10, 10, // Rows x Cols
     800/10, // Tile Size, scrPx size of a cell
     null, // Func to generate default tiles, can be set null
     0, 0,   // Gaps in scrPx
     null // Func to generate offsets per tile [txpx, txpx], can be set null
 );
-const inventoryGrid = new Grid(4, 4, 800/10, null);
-const codeGrid = new Grid(4, 5, 800/10, null);
+const inventoryGrid = new Grid(
+    846, 32.5,   // Position in scrPx
+    4, 4, // Rows x Cols
+    800/10, // Tile Size, scrPx size of a cell
+    null, // Func to generate default tiles, can be set null
+    16, 0,   // Gaps in scrPx
+    hexagonOffsetMakerRight // Func to generate offsets per tile [txpx, txpx], can be set null
+);
+const codeGrid = new Grid(
+    893, 393,   // Position in scrPx
+    5, 4, // Rows x Cols
+    800/10, // Tile Size, scrPx size of a cell
+    null, // Func to generate default tiles, can be set null
+    16, 0,   // Gaps in scrPx
+    hexagonOffsetMakerLeft // Func to generate offsets per tile [txpx, txpx], can be set null
+);
 
 
 
@@ -149,6 +184,7 @@ interpreter.executeAllRows({
 // gameGrid.setTile(3,3, new GameTile(tileDatadrivenTest)); //
 
 const playerObj = new BeePlayerTile(tilePlayerBee);
+
 gameGrid.setTile(3,3, playerObj)
 
 const stone = new StoneTile();
