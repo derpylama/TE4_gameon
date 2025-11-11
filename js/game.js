@@ -213,8 +213,10 @@ interpreter.executeAllRows({
 // gameGrid.setTile(3,3, new GameTile(tileDatadrivenTest)); //
 
 const playerObj = new BeePlayerTile(tilePlayerBee);
-
 gameGrid.setTile(3,3, playerObj)
+
+gameGrid.setTile(2,3, new BeehiveTile())
+gameGrid.setTile(4,4, new LavaTile())
 
 const stone = new StoneTile();
 gameGrid.setTile(3,2, stone);

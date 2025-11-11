@@ -75,13 +75,13 @@ class BeePlayerTile extends GameTile {
 
 class BeehiveTile extends GameTile {
     constructor() {
-        super(tileBeeHive);
+        super(tileBeeHive, true);
     }
 }
 
 class LavaTile extends GameTile {
     constructor() {
-        super(tileAnimLava);
+        super(tileAnimLava, false, true);
     }
 }
 
