@@ -352,7 +352,7 @@ function StartGame(level) {
     interpreter = new CodeInterpreter(currentGrids[1]); // codeGrid
 
     executeInterpreter();
-    interpreter.recordState(currentGrids[0]); //record state before executing code
+    interpreter.initRecordState(currentGrids[0]); //record state 
 
     GameLoop();
 }

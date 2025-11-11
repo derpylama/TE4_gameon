@@ -51,6 +51,32 @@ class CodeInterpreter {
         }
     }
 
+    initRecordState(gameGrid) {
+        // Clear all previous history
+        this.history = [];
+        this.currentIndex = -1;
+
+        // Record the initial state
+        const snapshot = [];
+
+        const grid = gameGrid.getGrid();
+        for (let r = 0; r < grid.length; r++) {
+            for (let c = 0; c < grid[r].length; c++) {
+                const tile = grid[r][c];
+                if (tile && !(tile instanceof CodeBlock)) {
+                    snapshot.push({
+                        row: r,
+                        col: c,
+                        tile: this.cloneTile(tile)
+                    });
+                }
+            }
+        }
+
+        this.history.push(snapshot);
+        this.currentIndex = 0; // first snapshot is at index 0
+    }
+    
     recordState(gameGrid) {
         // Remove future states if we've undone
         if (this.currentIndex < this.history.length - 1) {
