@@ -254,18 +254,44 @@ function renderGrid(gridObj) {
 
             // If gameObj is instance of or instance of descendant of CodeBlock, render its .text
             if (gameObj instanceof CodeBlock) {
-                const fontSize = Math.floor(gridObj.getTileSize() / 4);
+                let text = gameObj.text;
+                let font = "Arial";
+                let align = "center";
+                let color = "#ffffff";
+                let fontSize = Math.floor(gridObj.getTileSize() / 4);
                 const textX = x + borderOffset[0] + (gridObj.getTileSize() / 2);
                 const textY = y + borderOffset[1] + (gridObj.getTileSize() / 2) + (fontSize / 4); // Centered vertically
+
+                // If text is object check for fontSize, font, color, align fields
+                if (typeof text === "object" && text !== null) {
+                    if (text.fontSize !== undefined) {
+                        fontSize = text.fontSize;
+                    }
+                    if (text.fontSizeOffset !== undefined) {
+                        fontSize += text.fontSizeOffset;
+                    }
+                    if (text.font !== undefined) {
+                        font = text.font;
+                    }
+                    if (text.color !== undefined) {
+                        color = text.color;
+                    }
+                    if (text.align !== undefined) {
+                        align = text.align;
+                    }
+                    if (text.text !== undefined) {
+                        text = text.text;
+                    }
+                }
 
                 renderText(
                     ctx,
                     textX,
                     textY,
-                    gameObj.text,
-                    `${fontSize}px Arial`,
-                    "center",
-                    "#ffffff"
+                    text,
+                    `${fontSize}px ${font}`,
+                    align,
+                    color
                 );
             }
         }

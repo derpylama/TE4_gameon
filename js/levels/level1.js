@@ -39,9 +39,20 @@ level1 = new Level("level1", () => {
     );
 
     //MARK: Test codeblocks
-    codeBlockEntity1 = new CodeBlockObject("stone", "Stone", StoneTile);
-    codeBlockEntity2 = new CodeBlockModifier("left", "Left");
-    codeBlockAction1 = new CodeBlockAction("move.to", "MoveTo", ["object", "modifier"]); //also acceps "any"
+    codeBlockEntity1 = new CodeBlockObject(
+        "stone",
+        {"text": "Stone", "color": "#ffde2c"},
+        StoneTile
+    );
+    codeBlockEntity2 = new CodeBlockModifier(
+        "left",
+        {"text": "Left", "color": "#000000"},
+    );
+    codeBlockAction1 = new CodeBlockAction(
+        "move.to",
+        {"text": "MoveTo", "fontSizeOffset": -4, "color": "#ffde2c"},
+        ["object", "modifier"]
+    ); //also acceps "any"
     codeGrid.setTile(0, 0, codeBlockEntity1);
     codeGrid.setTile(0, 1, codeBlockAction1);
     codeGrid.setTile(0, 2, codeBlockEntity2);
