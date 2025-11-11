@@ -60,6 +60,13 @@ const tileLava6 = new Texture("./assets/images/tiles/lava6.png");
 const tileLava7 = new Texture("./assets/images/tiles/lava7.png");
 const tileStone = new Texture("./assets/images/tiles/stone.png");
 
+const tileCodeblockSelectedTx = new Texture("./assets/images/codeblocks/selected.png");
+const tileCodeblockIgnoredTx = new Texture("./assets/images/codeblocks/ignored.png");
+const tileCodeblockEmptyTx = new Texture("./assets/images/codeblocks/empty.png");
+const tileCodeblockObjectTx = new Texture("./assets/images/codeblocks/object.png");
+const tileCodeblockModifierTx = new Texture("./assets/images/codeblocks/modifier.png");
+const tileCodeblockActionTx = new Texture("./assets/images/codeblocks/action.png");
+
 //MARK: Test
 const tileAnimBee = new AnimatedTexture(
     [
@@ -108,6 +115,38 @@ const tileAnimLava = new AnimatedTexture(
     ],
     300 // Switch every 500ms
 )
+
+const tileCodeblockOverlay = new DataDrivenTexture(
+    (_, cellContext) => {
+        if (cellContext !== null && cellContext.row && cellContext.row && cellContext.row !== null && cellContext.col !== null) {
+            const codeBlock = currentGrids[1].getTile(cellContext.row, cellContext.col);
+            if (codeBlock instanceof CodeBlock) {
+                if (codeBlock.isSelected() === true) {
+                    return tileCodeblockSelectedTx;
+                } else if (codeBlock instanceof CodeBlockAction && codeBlock.executed === true) {
+                    return tileCodeblockIgnoredTx;
+                }
+            } else {
+                return tileCodeblockEmptyTx;
+            }
+        } else {
+            return tileCodeblockEmptyTx;
+        }
+    }
+);
+
+const tileCodeblockObject = new LayeredTexture([
+    tileCodeblockObjectTx,
+    tileCodeblockOverlay
+]);
+const tileCodeblockModifier = new LayeredTexture([
+    tileCodeblockModifierTx,
+    tileCodeblockOverlay
+]);
+const tileCodeblockAction = new LayeredTexture([
+    tileCodeblockActionTx,
+    tileCodeblockOverlay
+]);
 
 // const tileLayeredTest = new LayeredTexture([
 //     tileAnimBee,

@@ -29,14 +29,14 @@ class CodeBlockEntity extends CodeBlock {
 
 class CodeBlockObject extends CodeBlockEntity {
     constructor(value, text, linkedClass) {
-        super("./assets/images/codeblocks/object.png", value, text);
+        super(tileCodeblockObject, value, text);
         this.linkedClass = linkedClass;
     }
 }
 
 class CodeBlockModifier extends CodeBlockEntity {
     constructor(value, text) {
-        super("./assets/images/codeblocks/modifier.png", value, text);
+        super(tileCodeblockModifier, value, text);
     }
 }
 
@@ -44,9 +44,9 @@ class CodeBlockModifier extends CodeBlockEntity {
 
 class CodeBlockAction extends CodeBlock {
     constructor(value, text, adjacentCodeBlocksCanBe = ["any", "any"]) {
-        super("./assets/images/codeblocks/action.png", value, text);
+        super(tileCodeblockAction, value, text);
         this.adjacentCodeBlocksCanBe = adjacentCodeBlocksCanBe; // e.g., ["object", "modifier"]   what left and rigth codeblocks can be 
-        this.executed=false;
+        this.executed = false;
     }
 
     validate(adjacentBlocks) {
