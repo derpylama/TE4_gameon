@@ -3,6 +3,20 @@ class CodeBlock extends GameObject {
         super(texture);
         this.text = text || "";
         this.value = value;
+
+        this.selected = false;
+    }
+
+    select() {
+        this.selected = true;
+    }
+
+    deselect() {
+        this.selected = false;
+    }
+
+    isSelected() {
+        return this.selected;
     }
 }
 
