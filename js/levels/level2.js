@@ -16,8 +16,8 @@ level2 = new Level("level2", () => {
     inventoryGrid.setTile(
         0, 1,
         new CodeBlockAction(
-            "move.to",
-            {"text": "MoveTo", "fontSizeOffset": -4, "color": "#ffde2c"},
+            "move",
+            {"text": "Move", "color": "#ffde2c"},
             ["object", "modifier"]
         )
     );

@@ -40,8 +40,8 @@ level1 = new Level("level1", () => {
     gameGrid.setTile(
         6, 5,
         new CodeBlockAction(
-            "move.to",
-            {"text": "MoveTo", "fontSizeOffset": -4, "color": "#ffde2c"},
+            "move",
+            {"text": "Move", "color": "#ffde2c"},
             ["object", "modifier"]
         )
     );
