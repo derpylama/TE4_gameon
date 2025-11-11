@@ -79,10 +79,11 @@ const resetButton = new UIButton(
 
 // Textures
 const startBackgroundImg = new Texture("./assets/images/startmenu.png");
-const playButtonImg = new Texture("./assets/images/play.png");
+const playButtonImg = new Texture("./assets/images/icons/play.png");
 const borderImg = new Texture("./assets/images/border.png");
 const gridBackgroundImg = new Texture("./assets/images/grid.png");
 const invBackgroundImg = new Texture("./assets/images/inventory.png");
+const invBackgroundImgLastDrawPass = new Texture("./assets/images/inventory_lastDrawPass.png");
 
 const overlayGameOverImg = new Texture("./assets/images/overlays/gameover.png");
 const overlayRealityIsWrongImg = new Texture("./assets/images/overlays/reality_is_wrong.png");
