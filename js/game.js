@@ -176,7 +176,7 @@ const overlayRealityIsWrong = new Overlay(
     overlayRealityIsWrongImg, []
 );
 
-const onOverlayWonClickContinue = (x,y,type) => {console.log(x,y,type)};
+const onOverlayWonClickContinue = (x,y,type) => {levels.setLoadAndRunNextLevel()};
 const overlayWon = new Overlay(
     // Texture,    [ [ [x,y,width,height], function(x,y,type) ], ... ]
     overlayWonImg, [ [ [300,455, 200,50], onOverlayWonClickContinue ] ] // 100x100 button centered
