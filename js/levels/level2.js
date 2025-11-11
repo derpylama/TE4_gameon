@@ -61,7 +61,7 @@ level2 = new Level("level2", () => {
     codeBlockEntity3 = new CodeBlockObject(
         "lava",
         {"text": "Lava", "color": "#ffde2c"},
-        ["object", "object"]
+        LavaTile
     );
     
 
