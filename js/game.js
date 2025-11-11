@@ -118,17 +118,12 @@ const tileAnimLava = new AnimatedTexture(
 
 const tileCodeblockOverlay = new DataDrivenTexture(
     (_, cellContext) => {
-        if (cellContext !== null && cellContext.row && cellContext.row && cellContext.row !== null && cellContext.col !== null) {
-            const codeBlock = currentGrids[1].getTile(cellContext.row, cellContext.col);
-            if (codeBlock instanceof CodeBlock) {
-                if (codeBlock.isSelected() === true) {
-                    return tileCodeblockSelectedTx;
-                } else if (codeBlock instanceof CodeBlockAction && codeBlock.executed === true) {
-                    return tileCodeblockIgnoredTx;
-                }
-            } else {
-                return tileCodeblockEmptyTx;
-            }
+        const codeBlock = cellContext.grid.getTile(cellContext.row, cellContext.col);
+
+        if (codeBlock.isSelected() === true) {
+            return tileCodeblockSelectedTx;
+        } else if (codeBlock instanceof CodeBlockAction && codeBlock.executed === true) {
+            return tileCodeblockIgnoredTx;
         } else {
             return tileCodeblockEmptyTx;
         }

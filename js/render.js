@@ -102,7 +102,7 @@ class DataDrivenTexture {
         if (selectedTexture === null || selectedTexture === undefined) {
             return null;
         }
-        return selectedTexture.getImage();
+        return selectedTexture.getImage(cellContext);
     }
 }
 
@@ -236,7 +236,7 @@ function renderGrid(gridObj) {
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                const cellContext = {"row": r, "col": c, "className": gameObj.constructor.name};
+                const cellContext = {"row": r, "col": c, "className": gameObj.constructor.name, "grid": gridObj};
                 renderTexture(ctx, texture, x, y, gridObj.getTileSize(), gridObj.getTileSize(), cellContext);
             }
 
@@ -314,6 +314,11 @@ function renderOverlays(ctx) {
     }
 }
 
+// Helper function to render a square
+function renderSquare(ctx, x, y, width, height, color="#ff00ff") {
+    ctx.fillStyle = color;
+    ctx.fillRect(x + borderOffset[0], y + borderOffset[1], width, height);
+}
 
 // Main render function (called in loop)
 function Render(ctx) {
