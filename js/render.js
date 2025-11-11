@@ -98,6 +98,7 @@ class DataDrivenTexture {
 
     getImage(cellContext={"row":null, "col":null}) {
         const selectedTexture = this.textureSelector(this.selectedBetween, cellContext);
+
         if (selectedTexture === null || selectedTexture === undefined) {
             return null;
         }
@@ -179,11 +180,18 @@ function renderTexture(ctx, texture, x, y, width, height, cellContext={"row":nul
         drawY = y + borderOffset[1];
         ctx.imageSmoothingEnabled = false;
 
-        let textures = [];
+        var textures = [];
         if (texture instanceof LayeredTexture) {
             textures = texture.getImage(cellContext);
         } else {
-            textures.push(texture.getImage(cellContext));
+            let proposed = texture.getImage(cellContext);
+            if (proposed instanceof LayeredTexture) {
+                textures = proposed.getImage(cellContext);
+            } else if (Array.isArray(proposed)) {
+                textures = proposed;
+            } else {
+                textures.push(proposed);
+            }
         }
 
         for (const img of textures) {
