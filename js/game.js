@@ -44,6 +44,7 @@ const overlayWonImg = new Texture("./assets/images/overlays/won.png");
 
 const tileVoid = new Texture("./assets/images/tiles/void.png");
 const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
+const tileNonVoidAboveBellowLeft = new Texture("./assets/images/tiles/void-dirt-3-sides.png");
 const tilePlayerBee = new Texture("./assets/images/tiles/bee.png");
 const tilePlayerBee2 = new Texture("./assets/images/tiles/bee2.png");
 const tilePlayerBee3 = new Texture("./assets/images/tiles/bee3.png");

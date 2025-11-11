@@ -77,8 +77,8 @@ class GameTile extends GameObject {
 }
 
 class VoidTile extends GameTile {
-    constructor() {
-        super("./assets/images/tiles/void.png");
+    constructor(texture) {
+        super(texture);
     }
 }
 
@@ -91,6 +91,12 @@ class DisabledVoidTile extends VoidTile {
 class DisabledVoidTile_NonVoidAbove extends VoidTile {
     constructor() {
         super(tileNonVoidAbove);
+    }
+}
+
+class DisabledVoidTile_NonVoidAboveBellowLeft extends VoidTile {
+    constructor() {
+        super(tileNonVoidAboveBellowLeft);
     }
 }
 
