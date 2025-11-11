@@ -198,7 +198,7 @@ codeGrid.setTile(0, 0, codeBlockEntity1);
 codeGrid.setTile(0, 1, codeBlockAction1);
 codeGrid.setTile(0, 2, codeBlockEntity2);
 
-interpreter.executeAllRows({
+interpreter.executeAllRows(codeGrid,{ //execute code on updates  //move to only trigger when a codeblock is moved
     "gameGrid": gameGrid
 });
 
@@ -217,7 +217,7 @@ const playerObj = new BeePlayerTile(tilePlayerBee);
 gameGrid.setTile(3,3, playerObj)
 
 const stone = new StoneTile();
-gameGrid.setTile(3,2, stone);
+gameGrid.setTile(3,6, stone);
 
 // Define loops
 function GameLoop(gameGrid) {
