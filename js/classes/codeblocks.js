@@ -1,34 +1,36 @@
 class CodeBlock extends GameObject {
-    constructor(texture, value) {
+    constructor(texture, value, text) {
         super(texture);
+        this.text = text || "";
         this.value = value;
     }
 }
 
 class CodeBlockEntity extends CodeBlock {
-    constructor(texture, value) {
-        super(texture, value);
+    constructor(texture, value, text) {
+        super(texture, value, text);
     }
 }
 
 
 class CodeBlockObject extends CodeBlockEntity {
-    constructor(value) {
-        super("./assets/images/codeblocks/object.png", value);
+    constructor(value, text, linkedClass) {
+        super("./assets/images/codeblocks/object.png", value, text);
+        this.linkedClass = linkedClass;
     }
 }
 
 class CodeBlockModifier extends CodeBlockEntity {
-    constructor(value) {
-        super("./assets/images/codeblocks/modifier.png", value);
+    constructor(value, text) {
+        super("./assets/images/codeblocks/modifier.png", value, text);
     }
 }
 
 
 
 class CodeBlockAction extends CodeBlock {
-    constructor(value, adjacentCodeBlocksCanBe = ["any", "any"]) {
-        super("./assets/images/codeblocks/action.png", value);
+    constructor(value, text, adjacentCodeBlocksCanBe = ["any", "any"]) {
+        super("./assets/images/codeblocks/action.png", value, text);
         this.adjacentCodeBlocksCanBe = adjacentCodeBlocksCanBe; // e.g., ["object", "modifier"]   what left and rigth codeblocks can be 
         this.executed=false;
     }
@@ -58,28 +60,28 @@ class CodeBlockAction extends CodeBlock {
         const [leftType, rightType] = this.adjacentCodeBlocksCanBe;
         return isValid(left, leftType) && isValid(right, rightType);
     }
-        execute(left, right, context) {
-            const handler = ActionRegistry[this.value];
-            if (handler) {
-                handler(left, right, context);
-                this.executed=true;
-            } else {
-                console.warn(`No action handler registered for '${this.value}'`);
+
+    execute(left, right, context) {
+        const handler = ActionRegistry[this.value];
+        if (handler) {
+            const result = handler(left, right, context);
+            if (result === false) {
+                console.warn(`Action '${this.value}' failed during execution.`);
             }
+            this.executed=true;
+        } else {
+            console.warn(`No action handler registered for '${this.value}'`);
         }
+    }
 }
 
 //left is the codeblock on the left of the action block   
 //right is the one on the right
 //context is what it needs to interect with the game ex it pretty much always needs the gamegrid to find objects to move/attack  (maybe needs ex "stones and gamegrid" if we say stone-attack-left)
- const ActionRegistry = {  
+const ActionRegistry = {  
     "move.to": (left, right, context) => {
         console.log("move.to action called with:", left, right, context);
-    },
-    "attack": (left, right, context) => {
-        if (left && right) {
-            left.attack(right, context);
-        }
+        return true;
     },
 };
 

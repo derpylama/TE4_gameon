@@ -1,5 +1,3 @@
-
-
 class CodeInterpreter {
     constructor(codeGrid) {
         this.codeGrid = codeGrid; // grid with code blocks
@@ -17,6 +15,7 @@ class CodeInterpreter {
     executeRow(blocks, context) {   //context is what it needs to interect with the game ex it pretty much always needs the gamegrid to find objects to move/attack  (maybe needs ex "stones and gamegrid" if we say stone-attack-left)  might also need ex "player" if we say player-attack-left
         for (let i = 0; i < blocks.length; i++) {
             const block = blocks[i];
+            
             if (block instanceof CodeBlockAction) {
                 const left = blocks[i - 1] ?? null;
                 const right = blocks[i + 1] ?? null;

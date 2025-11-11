@@ -28,7 +28,6 @@ const _volumeSlider = document.getElementById("volumeSlider");
 const audio = new SoundHandler(parseInt(_volumeSlider.value, 10));
 const overlayer = new OverlayHandler();
 
-
 // Textures
 const startBackgroundImg = new Texture("./assets/images/startmenu.png");
 const playButtonImg = new Texture("./assets/images/play.png");
@@ -154,23 +153,19 @@ const codeGrid = new Grid(
     hexagonOffsetMakerLeft // Func to generate offsets per tile [txpx, txpx], can be set null
 );
 
-
-
+// Code interpreter
+const interpreter = new CodeInterpreter(codeGrid);
 
 //MARK: Test codeblocks
-codeBlockEntity1 = new CodeBlockObject("stone");
-codeBlockEntity2 = new CodeBlockModifier("left");
-codeBlockAction1 = new CodeBlockAction("move.to", ["object", "modifier"]); //also acceps "any"
-gameGrid.setTile(1, 1, codeBlockEntity1);
-gameGrid.setTile(1, 2, codeBlockAction1);
-gameGrid.setTile(1, 3, codeBlockEntity2);
-
-
-//test the code interpreter
-const interpreter = new CodeInterpreter(gameGrid);
+// codeBlockEntity1 = new CodeBlockObject("stone", "Stone", StoneTile);
+// codeBlockEntity2 = new CodeBlockModifier("left", "Left");
+// codeBlockAction1 = new CodeBlockAction("move.to", "MoveTo", ["object", "modifier"]); //also acceps "any"
+// codeGrid.setTile(0, 0, codeBlockEntity1);
+// codeGrid.setTile(0, 1, codeBlockAction1);
+// codeGrid.setTile(0, 2, codeBlockEntity2);
 
 interpreter.executeAllRows({
-    gameGrid
+    "gameGrid": gameGrid
 });
 
 //MARK: End test codeblocks
