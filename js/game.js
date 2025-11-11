@@ -59,7 +59,7 @@ const resetButton = new UIButton(
         // Get current player position
         let pos = currentGrids[0].getPosOfObj(playerObj);
     
-        // Reload current level
+        // Reload current level    MARK:HERE
         currentGrids = levels.setLoadAndRunLevel(levels.getCurrentLevel());
     
         // Is there something there already die?
