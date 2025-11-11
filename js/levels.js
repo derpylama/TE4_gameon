@@ -4,6 +4,7 @@ class LevelHandler {
         this.currentIndex = -1;
 
         this.loadHooks = []; // Load hooks are functions taking (levelIndex) as argument
+        this.unloadHooks = []; // Unload hooks are functions taking (levelIndex) as argument
     }
 
     registerLoadHook(hook) {
@@ -14,6 +15,17 @@ class LevelHandler {
         const index = this.loadHooks.indexOf(hook);
         if (index > -1) {
             this.loadHooks.splice(index, 1);
+        }
+    }
+
+    registerUnloadHook(hook) {
+        this.unloadHooks.push(hook);
+    }
+
+    unregisterUnloadHook(hook) {
+        const index = this.unloadHooks.indexOf(hook);
+        if (index > -1) {
+            this.unloadHooks.splice(index, 1);
         }
     }
 
@@ -50,9 +62,16 @@ class LevelHandler {
         }
     }
 
+    _callUnloadHooks() {
+        for (const hook of this.unloadHooks) {
+            hook(this.currentIndex);
+        }
+    }
+
     loadAndRunLevel() {
         const level = this.levels[this.currentIndex];
         if (level) {
+            this._callUnloadHooks();
             let res = level.loadAndRun();
             this._callLoadHooks();
             return res;
