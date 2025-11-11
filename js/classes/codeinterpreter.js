@@ -3,8 +3,9 @@ class CodeInterpreter {
         this.codeGrid = codeGrid; // grid with code blocks
     }
 
-    executeAllRows(context) { //context is what it needs to interect with the game ex it pretty much always needs the gamegrid to find objects to move/attack  (maybe needs ex "stones and gamegrid" if we say stone-attack-left)
+    executeAllRows(newCodeGrid,context) { //context is what it needs to interect with the game ex it pretty much always needs the gamegrid to find objects to move/attack  (maybe needs ex "stones and gamegrid" if we say stone-attack-left)
         // Context includes the game grid and anything else (player, world, etc.)
+        this.updateCodeGrid(newCodeGrid) // update codegrid
         console.log("Executing all rows in code grid...");
         for (let r = 0; r < this.codeGrid.getGrid().length; r++) {
             const row = this.codeGrid.getRow(r);
@@ -28,6 +29,9 @@ class CodeInterpreter {
                 block.execute(left, right, context);
             }
         }
+    }
+    updateCodeGrid(newCodeGrid) {
+        this.codeGrid = newCodeGrid;
     }
 }
 
