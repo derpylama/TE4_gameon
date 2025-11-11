@@ -84,11 +84,13 @@ function checkTile(tile){
         return "walk";
     }
     else if (tile.isGoal){
+        audio.playSound("sfx.win");
         gameWon = true;
         overlayer.showOverlayObj(overlayWon);
         return "goal";
     }
     else if (tile.isDeath){
+        audio.playSound("sfx.death");
         gameOver = true;
         overlayer.showOverlayObj(overlayGameOver);
         return "death";
