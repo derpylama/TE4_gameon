@@ -58,6 +58,7 @@ const tileLava4 = new Texture("./assets/images/tiles/lava4.png");
 const tileLava5 = new Texture("./assets/images/tiles/lava5.png");
 const tileLava6 = new Texture("./assets/images/tiles/lava6.png");
 const tileLava7 = new Texture("./assets/images/tiles/lava7.png");
+const tileLava8 = new Texture("./assets/images/tiles/lava7.png");
 const tileStone = new Texture("./assets/images/tiles/stone.png");
 
 const tileCodeblockSelectedTx = new Texture("./assets/images/codeblocks/selected.png");
@@ -106,29 +107,21 @@ const tileAnimLava = new AnimatedTexture(
         "./assets/images/tiles/lava5.png",
         "./assets/images/tiles/lava6.png",
         "./assets/images/tiles/lava7.png",
-        "./assets/images/tiles/lava6.png",
-        "./assets/images/tiles/lava4.png",
-        "./assets/images/tiles/lava3.png",
-        "./assets/images/tiles/lava2.png",
-        "./assets/images/tiles/lava.png",
+        "./assets/images/tiles/lava8.png",
+
         //tileNonVoidAbove
     ],
-    300 // Switch every 500ms
+    800 // Switch every 500ms
 )
 
 const tileCodeblockOverlay = new DataDrivenTexture(
     (_, cellContext) => {
-        if (cellContext !== null && cellContext.row && cellContext.row && cellContext.row !== null && cellContext.col !== null) {
-            const codeBlock = currentGrids[1].getTile(cellContext.row, cellContext.col);
-            if (codeBlock instanceof CodeBlock) {
-                if (codeBlock.isSelected() === true) {
-                    return tileCodeblockSelectedTx;
-                } else if (codeBlock instanceof CodeBlockAction && codeBlock.executed === true) {
-                    return tileCodeblockIgnoredTx;
-                }
-            } else {
-                return tileCodeblockEmptyTx;
-            }
+        const codeBlock = cellContext.grid.getTile(cellContext.row, cellContext.col);
+
+        if (codeBlock.isSelected() === true) {
+            return tileCodeblockSelectedTx;
+        } else if (codeBlock instanceof CodeBlockAction && codeBlock.executed === true) {
+            return tileCodeblockIgnoredTx;
         } else {
             return tileCodeblockEmptyTx;
         }
@@ -173,10 +166,10 @@ const tileCodeblockAction = new LayeredTexture([
 
 
 // Overlays (rendered using `overlayer.showOverlayObj(<overlayObj>)`)
-const onOverlayGameOverClickRestart = (x,y,type) => {console.log(x,y,type)};
+const onOverlayGameOverClickRestart = () => {window.location.reload();};
 const overlayGameOver = new Overlay(
     // Texture,         [ [ [x,y,width,height], function(x,y,type) ], ... ]
-    overlayGameOverImg, [ [ [400-50,400-50,50,50], onOverlayGameOverClickRestart ] ] // 100x100 button centered
+    overlayGameOverImg, [ [ [300,455, 200,50], onOverlayGameOverClickRestart ] ] // 100x100 button centered
 );
 
 const overlayRealityIsWrong = new Overlay(
@@ -186,7 +179,7 @@ const overlayRealityIsWrong = new Overlay(
 const onOverlayWonClickContinue = (x,y,type) => {console.log(x,y,type)};
 const overlayWon = new Overlay(
     // Texture,    [ [ [x,y,width,height], function(x,y,type) ], ... ]
-    overlayWonImg, [ [ [400-50,400-50,50,50], onOverlayWonClickContinue ] ] // 100x100 button centered
+    overlayWonImg, [ [ [300,455, 200,50], onOverlayWonClickContinue ] ] // 100x100 button centered
 );
 
 
@@ -228,12 +221,25 @@ function GameLoop() {
     );
 }
 
+const inLevelClickHook = (x,y,type)=>{
+    console.log("CLICKED INSIDE ACTIVE LEVEL");
+}
+
 // Function to start the game
 function StartGame(level) {
     frameCount = 0;
     startTime = performance.now();
 
     audio.playSound("bg.music");
+
+    levels.registerLoadHook((_) => {
+        registerClickHook(inLevelClickHook);
+    });
+
+    levels.registerUnloadHook((_) => {
+        unregisterClickHook(inLevelClickHook);
+    });
+
 
     currentGrids = levels.setLoadAndRunLevel(level1);
 
