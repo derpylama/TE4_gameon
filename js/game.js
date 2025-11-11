@@ -171,7 +171,7 @@ const tileCodeblockAction = new LayeredTexture([
 const onOverlayGameOverClickRestart = (x,y,type) => {console.log(x,y,type)};
 const overlayGameOver = new Overlay(
     // Texture,         [ [ [x,y,width,height], function(x,y,type) ], ... ]
-    overlayGameOverImg, [ [ [400-50,400-50,50,50], onOverlayGameOverClickRestart ] ] // 100x100 button centered
+    overlayGameOverImg, [ [ [300,455, 200,50], onOverlayGameOverClickRestart ] ] // 100x100 button centered
 );
 
 const overlayRealityIsWrong = new Overlay(
@@ -181,7 +181,7 @@ const overlayRealityIsWrong = new Overlay(
 const onOverlayWonClickContinue = (x,y,type) => {console.log(x,y,type)};
 const overlayWon = new Overlay(
     // Texture,    [ [ [x,y,width,height], function(x,y,type) ], ... ]
-    overlayWonImg, [ [ [400-50,400-50,50,50], onOverlayWonClickContinue ] ] // 100x100 button centered
+    overlayWonImg, [ [ [300,455, 200,50], onOverlayWonClickContinue ] ] // 100x100 button centered
 );
 
 
