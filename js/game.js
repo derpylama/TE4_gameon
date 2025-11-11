@@ -39,7 +39,7 @@ const overlayGameOverImg = new Texture("./assets/images/overlays/gameover.png");
 const overlayRealityIsWrongImg = new Texture("./assets/images/overlays/reality_is_wrong.png");
 const overlayWonImg = new Texture("./assets/images/overlays/won.png");
 
-const tileVoid = new Texture("./assets/images/tiles/void.png");
+const tileVoid = new Texture("./assets/images/tiles/voidgr.png");
 const tileNonVoidAbove = new Texture("./assets/images/tiles/void-dirt.png");
 const tilePlayerBee = new Texture("./assets/images/tiles/bee.png");
 const tilePlayerBee2 = new Texture("./assets/images/tiles/bee2.png");
@@ -94,28 +94,28 @@ const tileAnimLava = new AnimatedTexture(
     300 // Switch every 500ms
 )
 
-const tileLayeredTest = new LayeredTexture([
-    tileAnimBee,
-    "./assets/images/tiles/bee.png",
-    "./assets/images/tiles/bee2.png",
-    "./assets/images/tiles/bee3.png"
-]);
+// const tileLayeredTest = new LayeredTexture([
+//     tileAnimBee,
+//     "./assets/images/tiles/bee.png",
+//     "./assets/images/tiles/bee2.png",
+//     "./assets/images/tiles/bee3.png"
+// ]);
 
-// const tileDatadrivenTest = new DataDrivenTexture(
-//     (_, cellContext) => {
-//         // cellContext can be null or object with row and col where col/row can be null too
-//         if (cellContext !== null && cellContext.row && cellContext.col) {
-//             const above = gameGrid.getTile(cellContext.row - 1, cellContext.col);
+const tileDatadrivenTest = new DataDrivenTexture(
+    (_, cellContext) => {
+        // cellContext can be null or object with row and col where col/row can be null too
+        if (cellContext !== null && cellContext.row && cellContext.col) {
+            const above = gameGrid.getTile(cellContext.row - 1, cellContext.col);
             
-//             // check if above is not null and above is instance of or instance of subclass of VoidTile
-//             if (above === null || above instanceof VoidTile) {
-//                 return tileNonVoidAbove;
-//             } else {
-//                 return tileVoid;
-//             }
-//         }
-//     }
-// )
+            // check if above is not null and above is instance of or instance of subclass of VoidTile
+            if (above === null || above instanceof VoidTile) {
+                return tileNonVoidAbove;
+            } else {
+                return tileVoid;
+            }
+        }
+    }
+)
 
 
 // Overlays (rendered using `overlayer.showOverlayObj(<overlayObj>)`)
@@ -207,10 +207,10 @@ interpreter.executeAllRows({
 
 // gameGrid.setTile(5,5, new GameTile(tileLayeredTest)); //MARK: Test
 
-// gameGrid.setTile(1,4, new GameTile(tileDatadrivenTest)); //MARK: Test
-// gameGrid.setTile(2,4, new GameTile(tileDatadrivenTest)); //
-// gameGrid.setTile(2,3, new GameTile(tileDatadrivenTest)); //
-// gameGrid.setTile(3,3, new GameTile(tileDatadrivenTest)); //
+gameGrid.setTile(1,4, new GameTile(tileDatadrivenTest)); //MARK: Test
+gameGrid.setTile(2,4, new GameTile(tileDatadrivenTest)); //
+gameGrid.setTile(2,3, new GameTile(tileDatadrivenTest)); //
+gameGrid.setTile(3,3, new GameTile(tileDatadrivenTest)); //
 
 const playerObj = new BeePlayerTile(tilePlayerBee);
 

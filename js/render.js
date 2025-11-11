@@ -99,14 +99,11 @@ class DataDrivenTexture {
     getImage(cellContext={"row":null, "col":null}) {
         const selectedTexture = this.textureSelector(this.selectedBetween, cellContext);
         if (selectedTexture === null || selectedTexture === undefined) {
-            return MissingTexture.getImage();
+            return null;
         }
         return selectedTexture.getImage();
     }
 }
-
-// Define needed internal textures
-const MissingTexture = new Texture("./assets/images/missing.png");
 
 function renderText(ctx, x, y, text, text_font, text_align, text_color="#ffffff") {
     ctx.fillStyle = text_color;
@@ -133,7 +130,7 @@ class Text {
 }
 
 // Helper to draw a checkerboard pattern instead of a texture
-function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0) {
+function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0, text=null) {
     for (let row = 0; row < height / checkerSize; row++) {
         for (let col = 0; col < width / checkerSize; col++) {
             if ((row + col) % 2 === 0) {
@@ -151,10 +148,32 @@ function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0) {
             ctx.fillRect(calcX, calcY, checkerSize, checkerSize);
         }
     }
+
+    // If text provided, render it centered in the area
+    if (text !== null) {
+        const fontSize = Math.floor(Math.min(width, height) / 8);
+        const textX = x + borderOffset[0] + (width / 2);
+        const textY = y + borderOffset[1] + (height / 2) + (fontSize / 4); // Centered vertically
+
+        renderText(
+            ctx,
+            textX,
+            textY,
+            text,
+            `${fontSize}px Arial`,
+            "center",
+            "#ffffff"
+        );
+    }
+
 }
 
 // Handles if not loaded show purple/black checkerboard
 function renderTexture(ctx, texture, x, y, width, height, cellContext={"row":null, "col":null}) {
+
+    // Does cellContext have "className" property?
+    let className = (cellContext && cellContext !== null && (cellContext.className ?? false)) ? (cellContext.className + " ") : "";
+
     if (texture.isLoaded()) {
         drawX = x + borderOffset[0];
         drawY = y + borderOffset[1];
@@ -168,16 +187,23 @@ function renderTexture(ctx, texture, x, y, width, height, cellContext={"row":nul
         }
 
         for (const img of textures) {
-            try {
-                ctx.drawImage(img, drawX, drawY, width, height);
-            } catch (e) {
-                // If error drawing image, draw checkerboard instead
-                drawCheckerboard(ctx, x, y, width, height, checkerSize);
+            let $valid = true;
+            if (img !== null) {
+                try {
+                    ctx.drawImage(img, drawX, drawY, width, height);
+                } catch (e) {
+                    $valid = false;
+                }
+            } else {
+                $valid = false;
             }
+
+            // If error drawing image, draw checkerboard instead
+            if (!$valid) drawCheckerboard(ctx, x, y, width, height, checkerSize, 1.0, className + (DEBUG ? "Error": ""));
         }
     } else {
         // Draw purple/black checkerboard
-        drawCheckerboard(ctx, x, y, width, height, checkerSize);
+        drawCheckerboard(ctx, x, y, width, height, checkerSize, 1.0, className + (DEBUG ? "Loading" : ""));
     }
 }
 
@@ -202,7 +228,7 @@ function renderGrid(gridObj) {
 
                 // Each image is 16x16 but should be scaled to gridObj.getTileSize() => int
                 ctx.imageSmoothingEnabled = false;
-                const cellContext = {"row": r, "col": c};
+                const cellContext = {"row": r, "col": c, "className": gameObj.constructor.name};
                 renderTexture(ctx, texture, x, y, gridObj.getTileSize(), gridObj.getTileSize(), cellContext);
             }
 
@@ -229,8 +255,8 @@ function renderGrid(gridObj) {
             // If gameObj is instance of or instance of descendant of CodeBlock, render its .text
             if (gameObj instanceof CodeBlock) {
                 const fontSize = Math.floor(gridObj.getTileSize() / 4);
-                const textX = x + borderOffset[0] + gridObj.getTileSize() / 2;
-                const textY = y + borderOffset[1] + gridObj.getTileSize() / 2 + fontSize / 2; // Centered vertically
+                const textX = x + borderOffset[0] + (gridObj.getTileSize() / 2);
+                const textY = y + borderOffset[1] + (gridObj.getTileSize() / 2) + (fontSize / 4); // Centered vertically
 
                 renderText(
                     ctx,
