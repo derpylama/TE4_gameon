@@ -148,6 +148,7 @@ class Grid {
         }
     }
 
+    // Returns the first row and column that is empty
     getFirstEmptyCell() {
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
@@ -158,6 +159,7 @@ class Grid {
         }
     }
 
+    // Return true if the current grid contains the object
     gridContains(obj) {
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
