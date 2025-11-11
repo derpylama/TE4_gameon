@@ -33,8 +33,8 @@ function unregisterClickHook(hook) {
 // Register event listeners
 window.addEventListener("load", () => {
     document.addEventListener("keydown", (event) => {
-        if (!pressedInputs.includes(event.key)) {
-            pressedInputs.push(event.key);
+        if (!pressedInputs.includes(event.key.toLowerCase())) {
+            pressedInputs.push(event.key.toLowerCase());
 
             // Call input hooks
             for (const hook of inputHooks) {
@@ -47,7 +47,7 @@ window.addEventListener("load", () => {
     });
 
     document.addEventListener("keyup", (event) => {
-        const index = pressedInputs.indexOf(event.key);
+        const index = pressedInputs.indexOf(event.key.toLowerCase());
         if (index > -1) {
             pressedInputs.splice(index, 1);
 
@@ -126,6 +126,7 @@ function Update(ctx, grid) {
 
     if (!gameOver && !gameWon) {
         if (isPressingW && !movedUpward) {
+            maybePlayBeeSound();
             // Move once when key is first pressed
             const currentPlayerPos = grid.getPosOfObj(playerObj);
             const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0);
@@ -160,6 +161,7 @@ function Update(ctx, grid) {
         }
 
         if (isPressingS && !movedDown) {
+            maybePlayBeeSound();
             // Move once when key is first pressed
             const currentPlayerPos = grid.getPosOfObj(playerObj);
             const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0);
@@ -190,6 +192,7 @@ function Update(ctx, grid) {
         }
 
         if (isPressingA && !movedLeft) {
+            maybePlayBeeSound();
             // Move once when key is first pressed
             const currentPlayerPos = grid.getPosOfObj(playerObj);
             const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1);
@@ -222,6 +225,7 @@ function Update(ctx, grid) {
         }
 
         if (isPressingD && !movedRight) {
+            maybePlayBeeSound();
             // Move once when key is first pressed
             const currentPlayerPos = grid.getPosOfObj(playerObj);
             const newPlayerPosCheck = grid.getRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1);

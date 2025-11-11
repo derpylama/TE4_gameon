@@ -317,6 +317,7 @@ function renderOverlays(ctx) {
     const currentOverlay = overlayer.getCurrentOverlay();
     if (currentOverlay !== null) {
         renderTexture(ctx, currentOverlay, 0, 0, 800, 800);
+        //renderSquare(ctx, 300,455, 200,50, "red")
     }
 }
 
