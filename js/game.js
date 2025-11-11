@@ -7,6 +7,7 @@ let startTime = lastTime;
 let frameCount = 0;
 var currentGrids = [null, null, null]; // [gameGrid, codeGrid, inventoryGrid]
 var interpreter = null; // CodeInterpreter
+var resetAnimStarted = null;
 
 function getTimeParams() {
     const now = performance.now();
@@ -30,6 +31,44 @@ const _volumeSlider = document.getElementById("volumeSlider");
 const audio = new SoundHandler(parseInt(_volumeSlider.value, 10));
 const overlayer = new OverlayHandler();
 const levels = new LevelHandler();
+
+// UI Elements
+const iconTrash = new Texture("./assets/images/icons/trash.png");
+const iconTrashActive = new Texture("./assets/images/icons/trash_active.png");
+const resetButton = new UIButton(
+    830, 740, 64, 64,
+    new DataDrivenTexture(
+        (_, cellContext) => {
+            // If resetAnimStarted is null set it to now else check if time has passed
+            const now = Date.now();
+            if (now - resetAnimStarted >= 500) {
+                resetAnimStarted = null;
+                return iconTrash;
+            }
+
+            return iconTrashActive;
+        }
+    ),
+    {"text": "Reset", "fontSize": 15, "yOffset": 13, "color": "#FFFFFF"},
+    (x,y,type) => {
+        resetAnimStarted = Date.now();
+
+        // Get current player position
+        let pos = currentGrids[0].getPosOfObj(playerObj);
+
+        // Reload current level
+        currentGrids = levels.setLoadAndRunLevel(levels.getCurrentLevel());
+
+        // Is there something there already die?
+        const existingTile = currentGrids[0].getTile(pos[0], pos[1]);
+        if (existingTile !== null && !(existingTile instanceof BeePlayerTile)) {
+            triggerGameOver("Crushed, stood where reality reset!");
+        }
+
+        // Reset player position
+        playerObj.moveTo(pos[0], pos[1]);
+    }
+);
 
 // Textures
 const startBackgroundImg = new Texture("./assets/images/startmenu.png");

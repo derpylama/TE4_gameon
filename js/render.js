@@ -145,8 +145,19 @@ function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0, te
 
             calcX += borderOffset[0];
             calcY += borderOffset[1];
+            
+            // clip to width/height
+            let checkerSizeWidth = checkerSize;
+            let checkerSizeHeight = checkerSize;
+            if (calcX + checkerSize > x + width + borderOffset[0]) {
+                checkerSizeWidth = (x + width + borderOffset[0]) - calcX;
+            }
+            if (calcY + checkerSize > y + height + borderOffset[1]) {
+                checkerSizeHeight = (y + height + borderOffset[1]) - calcY;
+            }
 
-            ctx.fillRect(calcX, calcY, checkerSize, checkerSize);
+
+            ctx.fillRect(calcX, calcY, checkerSizeWidth, checkerSizeHeight);
         }
     }
 
@@ -316,8 +327,8 @@ function renderGrid(gridObj) {
 function renderOverlays(ctx) {
     const currentOverlay = overlayer.getCurrentOverlay();
     if (currentOverlay !== null) {
-        renderTexture(ctx, currentOverlay, 0, 0, 800, 800);
-        //renderSquare(ctx, 300,455, 200,50, "red")
+        renderTexture(ctx, currentOverlay.getTexture(), 0, 0, 800, 800);
+        currentOverlay.additionalRenders(ctx);
     }
 }
 
@@ -349,6 +360,11 @@ function Render(ctx) {
         ctx.strokeRect(borderOffset[0], borderOffset[1], 800, 800);
         ctx.strokeRect(800 + borderOffset[0], borderOffset[1], 480, 800);
     }
+
+    // Render UI elements
+    existingUiElements.forEach(uiElement => {
+        uiElement.render(ctx);
+    });
 
     // If overlay render it on top
     renderOverlays(ctx);

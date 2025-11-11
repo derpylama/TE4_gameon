@@ -99,6 +99,10 @@ class LevelHandler {
         return level ? level.strid : "?";
     }
 
+    getCurrentLevel() {
+        return this.levels[this.currentIndex];
+    }
+
     setLoadAndRunNextLevel() {
         
         if ((this.currentIndex + 1) in this.levels) {

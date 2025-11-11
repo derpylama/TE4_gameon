@@ -47,18 +47,31 @@ class GameTile extends GameObject {
         this.isWalkable = isWalkable;
     }
 
-    getReff() {
+    getPos() {
         return currentGrids[0].getPosOfObj(this);
-        
     }
 
     moveBy(rowDelta, colDelta) {
-        const objCurrentPos = this.getReff();
+        const objCurrentPos = this.getPos();
 
-        const newObjPosCheck = currentGrids[0].getRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta);
-        
-        if (newObjPosCheck != false){
+        const newObjectPos = [objCurrentPos[0] + rowDelta, objCurrentPos[1] + colDelta];
+
+        // Bounds check
+        let validBounds = currentGrids[0].getTile(newObjectPos[0], newObjectPos[1]) != false;
+
+        if (validBounds !== null && validBounds !== false && !(objCurrentPos[0] == newObjectPos[0] && objCurrentPos[1] == newObjectPos[1])) {
             currentGrids[0].setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this);
+            currentGrids[0].clearTile(objCurrentPos[0], objCurrentPos[1]);
+        }
+    }
+
+    moveTo(newRow, newCol) {
+        const objCurrentPos = this.getPos();
+
+        const newObjPosCheck = currentGrids[0].getTile(newRow, newCol);
+        
+        if (newObjPosCheck != false && !(objCurrentPos[0] == newRow && objCurrentPos[1] == newCol)) {
+            currentGrids[0].setTile(newRow, newCol, this);
             currentGrids[0].clearTile(objCurrentPos[0], objCurrentPos[1]);
         }
     }

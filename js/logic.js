@@ -76,7 +76,17 @@ window.addEventListener("load", () => {
     });
 });
 
-function checkTile(tile){
+var gameWon = false
+var gameOver = false
+
+function triggerGameOver(reason = null) {
+    audio.playSound("sfx.death");
+    gameOver = true;
+    overlayGameOver.setText("reason", "Reason: " + reason);
+    overlayer.showOverlayObj(overlayGameOver);
+}
+
+function checkTile(tile) {
     if (tile.isWalkable) {
         return "walk";
     }
@@ -86,10 +96,8 @@ function checkTile(tile){
         overlayer.showOverlayObj(overlayWon);
         return "goal";
     }
-    else if (tile.isDeath){
-        audio.playSound("sfx.death");
-        gameOver = true;
-        overlayer.showOverlayObj(overlayGameOver);
+    else if (tile.isDeath) {
+        triggerGameOver("Your choices led to your demise.");
         return "death";
     }
     else if (tile instanceof CodeBlockAction || tile instanceof CodeBlockEntity || tile instanceof CodeBlockModifier){
