@@ -53,6 +53,10 @@ class CodeBlockAction extends CodeBlock {
         if(this.executed){
             return "executed"; //already executed
         }
+        if (adjacentBlocks.length !== 2 || adjacentBlocks.includes(null)) {
+            console.log("CodeBlockAction validation requires exactly two adjacent blocks.");
+            return "missing";
+        }
 
         const [left, right] = adjacentBlocks;
 
@@ -125,7 +129,7 @@ const ActionRegistry = {
                             block.moveBy(0, 1);
                             break;
                         default:
-                            //overlayer.showOverlayObj(overlayRealityIsWrong);
+                            overlayer.showOverlayObj(overlayRealityIsWrong);
                             console.warn(`Invalid direction '${right.value}' for move.to action.`);
                             return false;
                     }
@@ -154,7 +158,7 @@ const ActionRegistry = {
                                 break;
 
                             default:
-                                //overlayer.showOverlayObj(overlayRealityIsWrong);
+                                overlayer.showOverlayObj(overlayRealityIsWrong);
                                 console.warn(`Invalid direction '${right.value}' for move.to action.`);
                                 return false;
                         }

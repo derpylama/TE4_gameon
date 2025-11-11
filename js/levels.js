@@ -98,6 +98,15 @@ class LevelHandler {
         const level = this.levels[this.currentIndex];
         return level ? level.strid : "?";
     }
+
+    setLoadAndRunNextLevel() {
+        if ((this.currentIndex + 1) in this.levels) {
+            this.setLoadAndRunLevelByIndex( this.currentIndex +1 );
+        }
+        else{
+            window.location.reload();
+        }
+    }
 }
 
 class Level {
