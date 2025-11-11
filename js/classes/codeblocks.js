@@ -30,9 +30,14 @@ class CodeBlockAction extends CodeBlock {
     constructor(value, adjacentCodeBlocksCanBe = ["any", "any"]) {
         super("./assets/images/codeblocks/action.png", value);
         this.adjacentCodeBlocksCanBe = adjacentCodeBlocksCanBe; // e.g., ["object", "modifier"]   what left and rigth codeblocks can be 
+        this.executed=false;
     }
 
     validate(adjacentBlocks) {
+        if(this.executed){
+            return false; //already executed
+        }
+
         const [left, right] = adjacentBlocks;
 
         // helper function to check one side
@@ -57,6 +62,7 @@ class CodeBlockAction extends CodeBlock {
             const handler = ActionRegistry[this.value];
             if (handler) {
                 handler(left, right, context);
+                this.executed=true;
             } else {
                 console.warn(`No action handler registered for '${this.value}'`);
             }
