@@ -338,7 +338,7 @@ const onGameReset = (x=-1,y=-1,type=-1) => {
 const iconTrash = new Texture("./assets/images/icons/trash.png");
 const iconTrashActive = new Texture("./assets/images/icons/trash_active.png");
 const resetButton = new UIButton(
-    830, 740, 64, 64,
+    835, 740, 64, 64,
     new DataDrivenTexture(
         (_, cellContext) => {
 
