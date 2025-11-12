@@ -67,9 +67,9 @@ level3 = new Level("level3", () => {
     gameGrid.setTile(1,8, TileFactory("deco_stump"));
     gameGrid.setTile(1,9, TileFactory("lava"));
 
-    gameGrid.setTile(4,7, CodeBlockFactory("deco_stump"));
+    gameGrid.setTile(4,7, CodeBlockFactory("up"));
 
-    gameGrid.setTile(0,9, CodeBlockFactory("up"));
+    gameGrid.setTile(0,9, CodeBlockFactory("deco_stump"));
 
     gameGrid.setTile(5,7, CodeBlockFactory("walkable"));
 

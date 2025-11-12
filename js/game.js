@@ -318,6 +318,7 @@ levels.registerLevel(level3);
 levels.registerLevel(level4);
 
 let startLevel = DEBUGLEVEL ? testLevel : (LEVELINDEX ? LEVELINDEX : level1);
+// let startLevel = testLevel;
 
 
 
