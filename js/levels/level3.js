@@ -1,5 +1,5 @@
 // Instantiate, func should return [gameGrid, codeGrid, inventoryGrid]
-level2 = new Level("level2", () => {
+level3 = new Level("level3", () => {
     // Get grids
     const [gameGrid, codeGrid, inventoryGrid] = instantiateGrids();
 
@@ -21,6 +21,18 @@ level2 = new Level("level2", () => {
         0, 3,
         CodeBlockFactory("right")
     );
+    inventoryGrid.setTile(
+        1, 0,
+        CodeBlockFactory("lava")
+    );
+    inventoryGrid.setTile(
+        1, 1,
+        CodeBlockFactory("is")
+    );
+    inventoryGrid.setTile(
+        1, 2,
+        CodeBlockFactory("stone")
+    );
 
 
     // Open up code tiles
@@ -38,22 +50,16 @@ level2 = new Level("level2", () => {
 
     
     // Place level tiles
-    gameGrid.setTile(8,9, TileFactory("void_nonvoid_above_bellow_left"));
-    gameGrid.setTile(8,8, TileFactory("lava"));
-    gameGrid.setTile(9,8, TileFactory("lava"));
+    gameGrid.setTile(4,4, TileFactory("stone"));
     gameGrid.setTile(9,9, TileFactory("beehive"));
 
     gameGrid.setTile(
         0, 0,
-        CodeBlockFactory("is")
+        CodeBlockFactory("game")
     );
     gameGrid.setTile(
         9, 0,
-        CodeBlockFactory("stone")
-    );
-    gameGrid.setTile(
-        0, 9,
-        CodeBlockFactory("lava")
+        CodeBlockFactory("meme")
     );
 
 

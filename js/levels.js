@@ -74,6 +74,36 @@ class LevelHandler {
             this._callUnloadHooks();
             let res = level.loadAndRun();
             this._callLoadHooks();
+
+            // console.log every single id in everysingle grid
+            if (DEBUG) {
+                res.forEach((grid, index) => {
+                    switch (index) {
+                        case 0:
+                            var gridAssumedName = "Game Grid";
+                            break;
+                        case 1:
+                            var gridAssumedName = "Code Grid";
+                            break;
+                        case 2:
+                            var gridAssumedName = "Inventory Grid";
+                            break;
+                        default:
+                            var gridAssumedName = "Unknown Grid";
+                    }
+                    console.log(`Grid ${gridAssumedName} (${index}) contents:`);
+                    const gridData = grid.getGrid();
+                    for (let r = 0; r < gridData.length; r++) {
+                        for (let c = 0; c < gridData[r].length; c++) {
+                            const tile = gridData[r][c];
+                            if (tile !== null) {
+                                console.log("  " + tile.constructor.name + "@" + tile.getId());
+                            }
+                        }
+                    }
+                });
+            }
+
             return res;
         }
 

@@ -76,14 +76,27 @@ window.addEventListener("load", () => {
     });
 });
 
-var gameWon = false
-var gameOver = false
-
 function triggerGameOver(reason = null) {
     audio.playSound("sfx.death");
     gameOver = true;
-    overlayGameOver.setText("reason", "Reason: " + reason);
+
+    if (reason === null) {
+        reason = ""
+    } else {
+        if (typeof reason === "object") {
+            reason.text = "Reason: " + reason.text;
+        } else {
+            reason = "Reason: " + reason;
+        }
+    }
+    overlayGameOver.setText("reason", reason); 
     overlayer.showOverlayObj(overlayGameOver);
+}
+
+function triggerGameWon() {
+    audio.playSound("sfx.win");
+    gameWon = true;
+    overlayer.showOverlayObj(overlayWon);
 }
 
 function checkTile(tile) {
@@ -91,19 +104,25 @@ function checkTile(tile) {
         return "walk";
     }
     else if (tile.isGoal){
-        audio.playSound("sfx.win");
-        gameWon = true;
-        overlayer.showOverlayObj(overlayWon);
+        triggerGameWon();
         return "goal";
     }
     else if (tile.isDeath) {
-        triggerGameOver("Your choices led to your demise.");
+        triggerGameOver({
+            "text": "Your choices led to your demise.",
+            "fontSizeOffset": -2
+        });
         return "death";
     }
     else if (tile instanceof CodeBlockAction || tile instanceof CodeBlockEntity || tile instanceof CodeBlockModifier){
         var inventoryGrid = currentGrids[2];
         var gameGrid = currentGrids[0];
         var freeSpace = inventoryGrid.getFirstEmptyCell();
+
+        if (!freeSpace) {
+            // Inventory full
+            return "inventory_full";
+        }
 
         // if (!inventoryGrid.gridContains(tile)) {
         //     inventoryGrid.setTile(freeSpace[0], freeSpace[1], tile)
@@ -140,8 +159,9 @@ function Update(ctx, grid) {
                 var tile = checkTile(newPlayerPosCheck)
 
                 if (tile == "walk") {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(-1,0);
                     
                     movedUpward = true; // prevent another move until key is released
                 }
@@ -150,8 +170,9 @@ function Update(ctx, grid) {
                 }
             } else {
                 if (newPlayerPosCheck != false) {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(-1,0);
                     
                     movedUpward = true; // prevent another move until key is released
                 }
@@ -174,15 +195,17 @@ function Update(ctx, grid) {
                 var tile = checkTile(newPlayerPosCheck)
 
                 if (tile == "walk") {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(-1,0);
                     
                     movedUpward = true; // prevent another move until key is released
                 }
             }else {
                 if (newPlayerPosCheck != false) {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(1,0);
                     
                     movedDown = true; // prevent another move until key is released
                 }
@@ -205,16 +228,18 @@ function Update(ctx, grid) {
                 var tile = checkTile(newPlayerPosCheck)
 
                 if (tile == "walk") {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(-1,0);
                     
                     movedUpward = true; // prevent another move until key is released
                 }
             }else{
 
                 if (newPlayerPosCheck != false){
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, -1, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(0,-1);
                     
                     movedLeft = true; // prevent another move until key is released
                 }
@@ -238,15 +263,17 @@ function Update(ctx, grid) {
                 var tile = checkTile(newPlayerPosCheck)
 
                 if (tile == "walk") {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], -1, 0, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(-1,0);
                     
                     movedUpward = true; // prevent another move until key is released
                 }
             } else {
                 if (newPlayerPosCheck != false) {
-                    grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1, playerObj);
-                    grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    // grid.setRelationalTile(currentPlayerPos[0], currentPlayerPos[1], 0, 1, playerObj);
+                    // grid.clearTile(currentPlayerPos[0], currentPlayerPos[1]);
+                    playerObj.moveBy(0,1);
                     
                     movedRight = true; // prevent another move until key is released
                     
@@ -306,6 +333,9 @@ const inLevelClickHook = (x,y,type)=>{
                             // console.log("Selecting codeblock:", block);
                             block.select();
 
+                            audio.stopSound("ui.select");
+                            audio.playSound("ui.select");
+
                             // Unselect all other codeblocks in the codeGrid
                             for (let r2 = 0; r2 < gridData.length; r2++) {
                                 for (let c2 = 0; c2 < gridData[r2].length; c2++) {
@@ -336,6 +366,13 @@ const inLevelClickHook = (x,y,type)=>{
                 // Bounds check
                 if (x >= renderedState[0] && x <= renderedState[0] + renderedState[2] &&
                     y >= renderedState[1] && y <= renderedState[1] + renderedState[3]) {
+
+                    // Attempt to getTile on the codeGrid at this r,c and if not null, skip
+                    const codeGridTile = codeGrid.getTile(r3, c3);
+                    if (codeGridTile !== null) {
+                        // Cell occupied, skip
+                        continue;
+                    }
                     
                     // Click is inside this cell
                     // Get the first block in the inventory that is selected
@@ -352,6 +389,9 @@ const inLevelClickHook = (x,y,type)=>{
 
                                 toMoveTile.deselect();
                                 toMoveTile.executed = false;
+
+                                audio.stopSound("ui.moveCodeBlock");
+                                audio.playSound("ui.moveCodeBlock");
 
                                 inventoryGrid.clearTile(r4, c4);
 

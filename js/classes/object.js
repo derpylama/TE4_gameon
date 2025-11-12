@@ -37,6 +37,10 @@ class GameObject {
     resetRenderedState() {
         this.renderedState = null;
     }
+
+    getTexture() {
+        return this.texture;
+    }
 }
 
 class GameTile extends GameObject {
@@ -60,8 +64,9 @@ class GameTile extends GameObject {
         let validBounds = currentGrids[0].getTile(newObjectPos[0], newObjectPos[1]) != false;
 
         if (validBounds !== null && validBounds !== false && !(objCurrentPos[0] == newObjectPos[0] && objCurrentPos[1] == newObjectPos[1])) {
-            currentGrids[0].setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this);
-            currentGrids[0].clearTile(objCurrentPos[0], objCurrentPos[1]);
+            // currentGrids[0].setRelationalTile(objCurrentPos[0], objCurrentPos[1], rowDelta, colDelta, this);
+            // currentGrids[0].clearTile(objCurrentPos[0], objCurrentPos[1]);
+            this.moveTo(newObjectPos[0], newObjectPos[1]);
         }
     }
 
@@ -71,9 +76,21 @@ class GameTile extends GameObject {
         const newObjPosCheck = currentGrids[0].getTile(newRow, newCol);
         
         if (newObjPosCheck != false && !(objCurrentPos[0] == newRow && objCurrentPos[1] == newCol)) {
-            currentGrids[0].setTile(newRow, newCol, this);
             currentGrids[0].clearTile(objCurrentPos[0], objCurrentPos[1]);
+            currentGrids[0].setTile(newRow, newCol, this);
         }
+    }
+
+    getIsGoal() {
+        return this.isGoal;
+    }
+
+    getIsDeath() {
+        return this.isDeath;
+    }
+
+    getIsWalkable() {
+        return this.isWalkable;
     }
 
     setIsGoal(isGoal) {
@@ -122,7 +139,7 @@ class BeePlayerTile extends GameTile {
 
 class BeehiveTile extends GameTile {
     constructor() {
-        super(tileBeeHive, true);
+        super(tileBeeHive, true, false, false);
     }
 }
 
@@ -132,9 +149,51 @@ class LavaTile extends GameTile {
     }
 }
 
-// inte sten weman
 class StoneTile extends GameTile {
     constructor() {
         super(tileStone, false, false, false);
     }
+}
+
+class DecoTile extends GameTile {
+    constructor(texture, isWalkable = false) {
+        super(texture, false, false, isWalkable);
+    }
+}
+
+class SolidDecoTile extends DecoTile {
+    constructor(texture) {
+        super(texture, false);
+    }
+}
+
+class NonSolidDecoTile extends DecoTile {
+    constructor(texture) {
+        super(texture, true);
+    }
+}
+
+class DecoStumpTile extends SolidDecoTile {
+    constructor() { super(tileStump); }
+}
+class DecoTrashTile extends SolidDecoTile {
+    constructor() { super(tileTrash); }
+}
+class DecoRockTile extends SolidDecoTile {
+    constructor() { super(tileRock); }
+}
+class DecoRockAltTile extends SolidDecoTile {
+    constructor() { super(tileRockAlt); }
+}
+class DecoGrassTile extends SolidDecoTile {
+    constructor() { super(tileGrass); }
+}
+class DecoFlowerPatchTile extends NonSolidDecoTile {
+    constructor() { super(tileFlowerPatch); }
+}
+class DecoBushTile extends NonSolidDecoTile {
+    constructor() { super(tileBush); }
+}
+class DecoFlowerBushTile extends NonSolidDecoTile {
+    constructor() { super(tileFlowerBush); }
 }

@@ -2,8 +2,32 @@ canvas {
     border: none;
 }
 
-body {
+html {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: black;
+    color: white;
+}
+
+body, aside {
     display: grid;
     grid-template-rows: auto 1fr;
-    background-color: black;
+}
+
+aside {
+    margin-left: 2.5rem;
+    margin-top: 2.5rem;
+}
+
+main {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+#controlsUiImage {
+    width: 30rem;
+
+    margin-left: 0rem;
+    margin-top: 7rem;
+
+    height: auto;
 }
