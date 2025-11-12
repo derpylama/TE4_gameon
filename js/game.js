@@ -3,6 +3,17 @@ const GLOSSY = window.location.search.includes("glossy");
 const DEBUGLEVEL = window.location.search.includes("dglevel");
 var MEME = window.location.search.includes("meme");
 
+// Is ?lvlind exist get its value and set LEVELINDEX to it else undefined
+let LEVELINDEX = undefined;
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has("lvlind")) {
+    const lvlindParam = urlParams.get("lvlind");
+    const parsedIndex = parseInt(lvlindParam, 10);
+    if (!isNaN(parsedIndex)) {
+        LEVELINDEX = parsedIndex;
+    }
+}
+
 const CAN_MOVE_ACTION_INTO_ANY_WALKABLE = true;
 
 // Defines
@@ -304,8 +315,9 @@ levels.registerLevel(testLevel);
 levels.registerLevel(level1);
 levels.registerLevel(level2);
 levels.registerLevel(level3);
+levels.registerLevel(level4);
 
-let startLevel = DEBUGLEVEL ? testLevel : level1;
+let startLevel = DEBUGLEVEL ? testLevel : (LEVELINDEX ? LEVELINDEX : level1);
 
 
 // UI Elements
@@ -425,7 +437,11 @@ function StartGame(level) {
     });
 
 
-    currentGrids = levels.setLoadAndRunLevel(level);
+    if (LEVELINDEX) {
+        currentGrids = levels.setLoadAndRunLevelByIndex(parseInt(LEVELINDEX, 10));
+    } else {
+        currentGrids = levels.setLoadAndRunLevel(level);
+    }
 
     // Code interpreter
     interpreter = new CodeInterpreter(currentGrids[1]); // codeGrid
