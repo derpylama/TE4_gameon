@@ -22,7 +22,7 @@ class Overlay {
             let textX = 430;
             let textY = 560;
             let fontSize = 20;
-            let font = "Arial";
+            let font = getFont();
             let align = "center";
             let color = "#ff0000";
 

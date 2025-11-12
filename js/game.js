@@ -37,48 +37,6 @@ const audio = new SoundHandler(parseInt(_volumeSlider.value, 10));
 const overlayer = new OverlayHandler();
 const levels = new LevelHandler();
 
-// UI Elements
-const onGameReset = (x=0,y=0,type=0) => {
-    resetAnimStarted = Date.now();
-
-    // Reset overlays
-    overlayer.hideOverlay();
-
-    // Get current player position
-    let pos = currentGrids[0].getPosOfObj(playerObj);
-
-    // Reload current level
-    currentGrids = levels.setLoadAndRunLevel(levels.getCurrentLevel());
-
-    // Is there something there already die?
-    const existingTile = currentGrids[0].getTile(pos[0], pos[1]);
-    if (existingTile !== null && !(existingTile instanceof BeePlayerTile)) {
-        triggerGameOver("Crushed, stood where reality reset!");
-    }
-
-    // Reset player position
-    playerObj.moveTo(pos[0], pos[1]);
-}
-const iconTrash = new Texture("./assets/images/icons/trash.png");
-const iconTrashActive = new Texture("./assets/images/icons/trash_active.png");
-const resetButton = new UIButton(
-    830, 740, 64, 64,
-    new DataDrivenTexture(
-        (_, cellContext) => {
-            // If resetAnimStarted is null set it to now else check if time has passed
-            const now = Date.now();
-            if (now - resetAnimStarted >= 500) {
-                resetAnimStarted = null;
-                return iconTrash;
-            }
-
-            return iconTrashActive;
-        }
-    ),
-    {"text": "Reset", "fontSize": 15, "yOffset": 13, "color": "#FFFFFF"},
-    onGameReset,
-    true // Works with overlay open
-);
 
 // Textures
 const startBackgroundImg = new Texture("./assets/images/startmenu.png");
@@ -113,6 +71,15 @@ const tileLava7 = new Texture("./assets/images/tiles/lava7.png");
 const tileLava8 = new Texture("./assets/images/tiles/lava7.png");
 const tileStoneTx = new Texture("./assets/images/tiles/stone.png");
 const tileStoneMemeTx = new Texture("./assets/images/tiles/sten_the_weman.png");
+
+const tileStump = new Texture("./assets/images/tiles/stump.png");
+const tileTrash = new Texture("./assets/images/tiles/trash.png");
+const tileRock = new Texture("./assets/images/tiles/rock.png");
+const tileRockAlt = new Texture("./assets/images/tiles/rock_alt.png");
+const tileFlowerPatch = new Texture("./assets/images/tiles/flower_patch.png");
+const tileGrass = new Texture("./assets/images/tiles/grass.png");
+const tileBush = new Texture("./assets/images/tiles/bush.png");
+const tileFlowerBush = new Texture("./assets/images/tiles/bush_flower.png");
 
 const tileCodeblockSelectedTx = new Texture("./assets/images/codeblocks/selected.png");
 const tileCodeblockIgnoredTx = new Texture("./assets/images/codeblocks/ignored.png");
@@ -245,16 +212,42 @@ const overlayWon = new Overlay(
 );
 
 
+// Fonts
+let loadedFonts = [];
+async function loadFont(font) {
+    try {
+        await font.load();
+        document.fonts.add(font);
+        loadedFonts.push(font.family);
+        console.log(`Font "${font.family}" loaded successfully.`);
+    } catch (error) {
+        console.error(`Failed to load font "${font.family}":`, error);
+    }
+}
+function getFont() {
+    // Is yosterr loaded? if so return "Yosterr", else return "Arial"
+    return loadedFonts.includes("Yosterr") ? "Yosterr" : "Arial";
+}
+const fontYosterr = new FontFace("Yosterr", "url('./assets/font/yosterr/font.ttf')");
+loadFont(fontYosterr);
+
 // Sounds
 audio.addSound("test.1", "./assets/audio/toot.mp3", false);
 // audio.addSound("bg.music.1", "./assets/audio/backgroundMusic.wav", true, 0);
 audio.addSound("bg.realityIsWrong", "./assets/audio/spring-in-my-step.wav");
 audio.addPlaylist("bg.music", ["./assets/audio/arvids_fina_bakrundsmusik.mp3", "./assets/audio/into_the_tempel.mp3"], true,);
+
 audio.addPlaylist("sfx.stone", ["./assets/audio/stone_1.wav", "./assets/audio/stone_2.wav", "./assets/audio/stone_3.wav", "./assets/audio/stone_4.wav"]);
 audio.addSound("sfx.lavaDeath", "./assets/audio/lava_death.wav");
 audio.addPlaylist("sfx.win", ["./assets/audio/win_1.mp3", "./assets/audio/win_2.mp3", "./assets/audio/win_3.mp3"]);
 audio.addSound("sfx.death", "./assets/audio/game_die_1.mp3");
 audio.addPlaylist("sfx.bee", ["./assets/audio/bee_1.wav", "./assets/audio/bee_2.wav"]);
+
+audio.addSound("ui.moveCodeBlock", "./assets/audio/click.mp3");
+
+audio.addSound("ui.click", "./assets/audio/click.mp3");
+audio.addSound("ui.clickReset", "./assets/audio/click_reset.mp3");
+audio.addSound("ui.select", "./assets/audio/click.mp3");
 
 // Helpers for levels
 function instantiateGrids() {
@@ -303,6 +296,7 @@ function instantiateGrids() {
     return [_gameGrid, _codeGrid, _inventoryGrid];
 }
 
+
 // Register levels
 const playerObj = new BeePlayerTile(tilePlayerBee);
 levels.registerLevel(testLevel);
@@ -310,6 +304,81 @@ levels.registerLevel(level1);
 levels.registerLevel(level2);
 
 let startLevel = testLevel;
+
+
+// UI Elements
+const onGameReset = (x=-1,y=-1,type=-1) => {
+    if (type > -1) {
+        audio.stopSound("ui.clickReset");
+        audio.playSound("ui.clickReset")
+    };
+
+    MEME = window.location.search.includes("meme");
+
+    resetAnimStarted = Date.now();
+
+    // Reset overlays
+    overlayer.hideOverlay();
+
+    // Get current player position
+    let pos = currentGrids[0].getPosOfObj(playerObj);
+
+    // Reload current level
+    currentGrids = levels.setLoadAndRunLevel(levels.getCurrentLevel());
+
+    // Is there something there already die?
+    const existingTile = currentGrids[0].getTile(pos[0], pos[1]);
+    if (existingTile !== null && !(existingTile instanceof BeePlayerTile)) {
+        triggerGameOver("Crushed, stood where reality reset!");
+    }
+
+    // Reset player position
+    playerObj.moveTo(pos[0], pos[1]);
+}
+const iconTrash = new Texture("./assets/images/icons/trash.png");
+const iconTrashActive = new Texture("./assets/images/icons/trash_active.png");
+const resetButton = new UIButton(
+    830, 740, 64, 64,
+    new DataDrivenTexture(
+        (_, cellContext) => {
+
+            // If resetAnimStarted is null set it to now else check if time has passed
+            const now = Date.now();
+            if (now - resetAnimStarted >= 500) {
+                resetAnimStarted = null;
+                return iconTrash;
+            }
+
+            return iconTrashActive;
+        }
+    ),
+    {"text": "Reset", "fontSize": 15, "yOffset": 13, "color": "#FFFFFF"},
+    onGameReset,
+    true // Works with overlay open
+);
+
+let startMenuSize = 80;
+const startMenuButton = new UIButton(
+    // centered in canvas (1320x840)
+    (1320/2) - (startMenuSize/2), ((840/3)*2) - (startMenuSize/2), startMenuSize, startMenuSize,
+    playButtonImg,
+    null,
+    (x,y,type) => {
+
+        audio.playSound("ui.click");
+
+        if (type === 0) {
+            // Start game
+            startMenuButton._unregisterClick();
+            inStartMenu = false;
+            StartGame(startLevel);
+        }
+    },
+    true,
+    false,
+    false
+);
+
 
 // Define loops
 function GameLoop() {
@@ -324,7 +393,7 @@ function GameLoop() {
     Render(ctx, gameGrid);
 
     const [frameDelta, deltaTime, FPS, elapsed, avgFPS] = getTimeParams();
-    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st | Modes Enabled: ${MEME ? "Meme; " : ""}${GLOSSY ? "Glossy; " : ""}| MoveActToAnyWalkable: ${CAN_MOVE_ACTION_INTO_ANY_WALKABLE ? "YES" : "NO"}`, "12px monospace", "left", "#00ff00");
+    if (DEBUG) renderText(ctx, 30, 40, `FPS ${FPS.toFixed(1)} (avg: ${avgFPS.toFixed(1)}) | fΔ ${frameDelta.toFixed(2)}ms | Δt ${deltaTime.toFixed(3)}s | elap ${elapsed.toFixed(1)}s | frames ${frameCount}st | lvl ${levels.getCurrentLevelStrid()} (${levels.getCurrentLevelIndex()}) | Modes Enabled: ${MEME ? "Meme; " : ""}${GLOSSY ? "Glossy; " : ""}| MoveActToAnyWalkable: ${CAN_MOVE_ACTION_INTO_ANY_WALKABLE ? "YES" : "NO"}`, "12px monospace", "left", "#00ff00");
 
     // Schedule the next frame
     requestAnimationFrame(
@@ -372,22 +441,6 @@ if (gameCanvas) {
     // Start menu
     var inStartMenu = true;
 
-    // Click hook for start menu play button
-    let startMenuClickHook = (x,y,type) => {
-        if (type === 0) {
-            // Check if click is inside play button
-            const buttonX = (1320/2) - (64/2);
-            const buttonY = (840/2) - (64/2);
-            if (x >= buttonX && x <= buttonX + 64*1.33 && y >= buttonY && y <= buttonY + 64*1.33) {
-                // Start game
-                inStartMenu = false;
-                unregisterClickHook(startMenuClickHook);
-                StartGame(level1);
-            }
-        }
-    }
-    registerClickHook(startMenuClickHook);
-
     // Inner loop for start menu
     let startMenuLoop = () => {
         if (!inStartMenu) return;
@@ -399,5 +452,8 @@ if (gameCanvas) {
         
         requestAnimationFrame(startMenuLoop);
     }
+
+    startMenuButton._registerClick();
+
     requestAnimationFrame(startMenuLoop);
 }

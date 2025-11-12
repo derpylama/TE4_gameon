@@ -7,78 +7,114 @@ testLevel = new Level("test", () => {
     // Inventory
     inventoryGrid.setTile(
         0, 0,
-        new CodeBlockObject(
-            "stone",
-            {"text": "Stone", "color": "#ffde2c"},
-            StoneTile
-        )
+        CodeBlockFactory("bee")
     );
     inventoryGrid.setTile(
         0, 1,
-        new CodeBlockAction(
-            "move",
-            {"text": "Move", "color": "#ffde2c"},
-            ["object", "move_modifier"]
-        )
+        CodeBlockFactory("stone")
     );
     inventoryGrid.setTile(
         0, 2,
-        new CodeBlockMoveModifier(
-            "left",
-            {"text": "Left", "color": "#000000"},
-        )
+        CodeBlockFactory("lava")
     );
     inventoryGrid.setTile(
         0, 3,
-        new CodeBlockMoveModifier(
-            "right",
-            {"text": "Right", "color": "#000000"},
-        )
+        CodeBlockFactory("beehive")
     );
     inventoryGrid.setTile(
+        0, 4,
+        CodeBlockFactory("game")
+    );
+
+    // deco_stump D:Stump DecoStumpTile -7
+    // deco_trash D:Trash DecoTrashTile -7
+    // deco_rock D:Rock DecoRockTile -6
+    // deco_rock_alt D:RockAlt DecoRockAltTile -9
+    // deco_grass D:Grass DecoGrassTile -7
+    // deco_flower_patch D:FlowerPatch DecoFlowerPatchTile -13
+    // deco_bush D:Bush DecoBushTile -6
+    // deco_flower_bush D:FlowerBush DecoFlowerBushTile -12
+
+    inventoryGrid.setTile(
         1, 0,
-        new CodeBlockModifier(
-            "meme",
-            {"text": "Meme", "color": "#000000"},
-        )
+        CodeBlockFactory("move")
     );
     inventoryGrid.setTile(
         1, 1,
-        new CodeBlockObject(
-            "game",
-            {"text": "Game"},
-        )
+        CodeBlockFactory("is")
     );
     inventoryGrid.setTile(
         1, 2,
-        new CodeBlockStateModifier(
-            "reset",
-            {"text": "Reset", "color": "#000000"},
-        )
+        CodeBlockFactory("left")
     );
     inventoryGrid.setTile(
         1, 3,
-        new CodeBlockStateModifier(
-            "over",
-            {"text": "Over", "color": "#000000"},
-        )
+        CodeBlockFactory("right")
     );
     inventoryGrid.setTile(
         2, 0,
-        new CodeBlockStateModifier(
-            "won",
-            {"text": "Won", "color": "#000000"},
-        )
+        CodeBlockFactory("up")
     );
+    inventoryGrid.setTile(
+        2, 1,
+        CodeBlockFactory("down")
+    );
+    inventoryGrid.setTile(
+        2, 2,
+        CodeBlockFactory("win")
+    );
+    inventoryGrid.setTile(
+        2, 3,
+        CodeBlockFactory("death")
+    );
+    inventoryGrid.setTile(
+        2, 4,
+        CodeBlockFactory("meme")
+    );
+    inventoryGrid.setTile(
+        3, 0,
+        CodeBlockFactory("safe")
+    );
+    inventoryGrid.setTile(
+        3, 1,
+        CodeBlockFactory("walkable")
+    );
+    inventoryGrid.setTile(
+        3, 2,
+        CodeBlockFactory("reset")
+    );
+    inventoryGrid.setTile(
+        3, 3,
+        CodeBlockFactory("over")
+    );
+
+    // won Won # insta win wen game is else is alias to win
+    // not_win NotWin -3 # removes isGoal
+    // death Death -2
+    // safe Safe # removes isDeath
+    // solid Solid -2 # removes isWalkable
 
 
     // Open up code tiles
     codeGrid.setTile(0,0, null);
     codeGrid.setTile(0,1, null);
     codeGrid.setTile(0,2, null);
+    
     codeGrid.setTile(1,0, null);
     codeGrid.setTile(1,1, null);
     codeGrid.setTile(1,2, null);
+    
+    codeGrid.setTile(2,0, null);
+    codeGrid.setTile(2,1, null);
+    codeGrid.setTile(2,2, null);
+    
+    codeGrid.setTile(3,0, null);
+    codeGrid.setTile(3,1, null);
+    codeGrid.setTile(3,2, null);
+    
+    codeGrid.setTile(4,0, null);
+    codeGrid.setTile(4,1, null);
+    codeGrid.setTile(4,2, null);
 
 
     // Add the global player to this levels game grid
@@ -86,33 +122,19 @@ testLevel = new Level("test", () => {
 
     
     // Place level tiles
-    gameGrid.setTile(8,9, new DisabledVoidTile_NonVoidAboveBellowLeft());
-    gameGrid.setTile(8,8, new LavaTile());
-    gameGrid.setTile(9,8, new LavaTile());
-    gameGrid.setTile(3,3, new StoneTile());
+    gameGrid.setTile(8,9, TileFactory("void_nonvoid_above_bellow_left"));
+    gameGrid.setTile(8,8, TileFactory("lava"));
+    gameGrid.setTile(9,8, TileFactory("lava"));
+    gameGrid.setTile(3,3, TileFactory("stone"));
+    gameGrid.setTile(5,5, TileFactory("deco_stump"));
+    gameGrid.setTile(2,4, TileFactory("deco_rock"));
 
-    gameGrid.setTile(
-        0, 0,
-        new CodeBlockAction(
-            "is",
-            {"text": "Is", "fontSizeOffset": -4, "color": "#ffde2c"},
-            ["object", "any"]
-        )
-    );
     gameGrid.setTile(
         9, 0,
         new CodeBlockObject(
             "stone",
-            {"text": "Stone", "color": "#ffde2c"},
+            {"text": "Stone", "color": "#ffde2c", "fontSizeOffset": -2},
             StoneTile
-        )
-    );
-    gameGrid.setTile(
-        0, 9,
-        new CodeBlockObject(
-            "lava",
-            {"text": "Lava", "color": "#ffde2c"},
-            LavaTile
         )
     );
 

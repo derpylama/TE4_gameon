@@ -1,7 +1,7 @@
 const existingUiElements = [];
 
 class UIButton {
-    constructor(x,y, width,height, texture, text, onClick, worksWhenOverlay = false) {
+    constructor(x,y, width,height, texture, text, onClick, worksWhenOverlay = false, register=true, global=true) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -14,8 +14,8 @@ class UIButton {
 
         this.renderedState = null; // [x,y,width,height] of last render
 
-        this._registerClick();
-        existingUiElements.push(this);
+        if (register) this._registerClick();
+        if (global) existingUiElements.push(this);
     }
 
     _registerClick() {
@@ -48,50 +48,52 @@ class UIButton {
     render(ctx) {
         renderTexture(ctx, this.texture, this.x, this.y, this.width, this.height);
 
-        let text = this.text;
-        let font = "Arial";
-        let align = "center";
-        let color = "#ffffff";
-        let fontSize = Math.floor(this.height / 2);
-        let textX = this.x + (this.width / 2) + (fontSize/3)*2;
-        let textY = this.y + (this.height / 2) + fontSize;
+        if (this.text !== null) {
+            let text = this.text;
+            let font = getFont();
+            let align = "center";
+            let color = "#ffffff";
+            let fontSize = Math.floor(this.height / 2);
+            let textX = this.x + (this.width / 2) + (fontSize/3)*2;
+            let textY = this.y + (this.height / 2) + fontSize;
 
-        // If text is object check for fontSize, font, color, align fields
-        if (typeof text === "object" && text !== null) {
-            if (text.fontSize !== undefined) {
-                fontSize = text.fontSize;
+            // If text is object check for fontSize, font, color, align fields
+            if (typeof text === "object" && text !== null) {
+                if (text.fontSize !== undefined) {
+                    fontSize = text.fontSize;
+                }
+                if (text.fontSizeOffset !== undefined) {
+                    fontSize += text.fontSizeOffset;
+                }
+                if (text.font !== undefined) {
+                    font = text.font;
+                }
+                if (text.color !== undefined) {
+                    color = text.color;
+                }
+                if (text.align !== undefined) {
+                    align = text.align;
+                }
+                if (text.xOffset !== undefined) {
+                    textX += text.xOffset;
+                }
+                if (text.yOffset !== undefined) {
+                    textY += text.yOffset;
+                }
+                if (text.text !== undefined) {
+                    text = text.text;
+                }
             }
-            if (text.fontSizeOffset !== undefined) {
-                fontSize += text.fontSizeOffset;
-            }
-            if (text.font !== undefined) {
-                font = text.font;
-            }
-            if (text.color !== undefined) {
-                color = text.color;
-            }
-            if (text.align !== undefined) {
-                align = text.align;
-            }
-            if (text.xOffset !== undefined) {
-                textX += text.xOffset;
-            }
-            if (text.yOffset !== undefined) {
-                textY += text.yOffset;
-            }
-            if (text.text !== undefined) {
-                text = text.text;
-            }
+
+            renderText(
+                ctx,
+                textX,
+                textY,
+                text,
+                `${fontSize}px ${font}`,
+                align,
+                color
+            );
         }
-
-        renderText(
-            ctx,
-            textX,
-            textY,
-            text,
-            `${fontSize}px ${font}`,
-            align,
-            color
-        );
     }
 }

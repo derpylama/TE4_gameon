@@ -149,9 +149,51 @@ class LavaTile extends GameTile {
     }
 }
 
-// inte sten weman
 class StoneTile extends GameTile {
     constructor() {
         super(tileStone, false, false, false);
     }
+}
+
+class DecoTile extends GameTile {
+    constructor(texture, isWalkable = false) {
+        super(texture, false, false, isWalkable);
+    }
+}
+
+class SolidDecoTile extends DecoTile {
+    constructor(texture) {
+        super(texture, false);
+    }
+}
+
+class NonSolidDecoTile extends DecoTile {
+    constructor(texture) {
+        super(texture, true);
+    }
+}
+
+class DecoStumpTile extends SolidDecoTile {
+    constructor() { super(tileStump); }
+}
+class DecoTrashTile extends SolidDecoTile {
+    constructor() { super(tileTrash); }
+}
+class DecoRockTile extends SolidDecoTile {
+    constructor() { super(tileRock); }
+}
+class DecoRockAltTile extends SolidDecoTile {
+    constructor() { super(tileRockAlt); }
+}
+class DecoGrassTile extends SolidDecoTile {
+    constructor() { super(tileGrass); }
+}
+class DecoFlowerPatchTile extends NonSolidDecoTile {
+    constructor() { super(tileFlowerPatch); }
+}
+class DecoBushTile extends NonSolidDecoTile {
+    constructor() { super(tileBush); }
+}
+class DecoFlowerBushTile extends NonSolidDecoTile {
+    constructor() { super(tileFlowerBush); }
 }

@@ -315,6 +315,9 @@ const inLevelClickHook = (x,y,type)=>{
                             // console.log("Selecting codeblock:", block);
                             block.select();
 
+                            audio.stopSound("ui.select");
+                            audio.playSound("ui.select");
+
                             // Unselect all other codeblocks in the codeGrid
                             for (let r2 = 0; r2 < gridData.length; r2++) {
                                 for (let c2 = 0; c2 < gridData[r2].length; c2++) {
@@ -368,6 +371,9 @@ const inLevelClickHook = (x,y,type)=>{
 
                                 toMoveTile.deselect();
                                 toMoveTile.executed = false;
+
+                                audio.stopSound("ui.moveCodeBlock");
+                                audio.playSound("ui.moveCodeBlock");
 
                                 inventoryGrid.clearTile(r4, c4);
 

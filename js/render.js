@@ -172,7 +172,7 @@ function drawCheckerboard(ctx, x, y, width, height, checkerSize, opacity=1.0, te
             textX,
             textY,
             text,
-            `${fontSize}px Arial`,
+            `${fontSize}px ${getFont()}`,
             "center",
             "#ffffff"
         );
@@ -292,7 +292,7 @@ function renderGrid(gridObj) {
             // If gameObj is instance of or instance of descendant of CodeBlock, render its .text
             if (gameObj instanceof CodeBlock) {
                 let text = gameObj.text;
-                let font = "Arial";
+                let font = getFont();
                 let align = "center";
                 let color = "#ffffff";
                 let fontSize = Math.floor(gridObj.getTileSize() / 4);
@@ -390,6 +390,5 @@ function renderStartMenu(ctx) {
     // Render start menu background
     renderTexture(ctx, startBackgroundImg, 0, 0, 1320, 840);
 
-    // Render play button centered of playButtonImg (64x64) inside the canvas (1320x840)
-    renderTexture(ctx, playButtonImg, (1320/2)-(64/2), (840/2)-(64/2), 64, 64);
+    startMenuButton.render(ctx);
 }
