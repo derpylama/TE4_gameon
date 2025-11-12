@@ -39,7 +39,7 @@ function CodeBlockFactory(value) {
         case "deco_stump":
             return new CodeBlockObject(
                 "deco_stump",
-                {"text": "D:Stump", "color": "#8B4513", "fontSizeOffset": -7},
+                {"text": "Stump", "color": "#8B4513", "fontSizeOffset": -7},
                 DecoStumpTile
             );
         

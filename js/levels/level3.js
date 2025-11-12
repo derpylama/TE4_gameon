@@ -44,23 +44,36 @@ level3 = new Level("level3", () => {
     codeGrid.setTile(1,1, null);
     codeGrid.setTile(1,2, null);
 
+    codeGrid.setTile(2,0, null);
+    codeGrid.setTile(2,1, null);
+    codeGrid.setTile(2,2, null);
+
 
     // Add the global player to this levels game grid
-    gameGrid.setTile(5,4, playerObj)
+    gameGrid.setTile(0,2, playerObj)
 
     
     // Place level tiles
-    gameGrid.setTile(4,4, TileFactory("stone"));
+    gameGrid.setTile(0,3, TileFactory("deco_stump"));
+    gameGrid.setTile(1,2, TileFactory("deco_stump"));
+    gameGrid.setTile(0,1, TileFactory("stone"));
+
+    gameGrid.setTile(8,8, TileFactory("deco_stump"));
+    gameGrid.setTile(8,9, TileFactory("deco_stump"));
+    gameGrid.setTile(9,8, TileFactory("deco_stump"));
     gameGrid.setTile(9,9, TileFactory("beehive"));
 
-    gameGrid.setTile(
-        0, 0,
-        CodeBlockFactory("game")
-    );
-    gameGrid.setTile(
-        9, 0,
-        CodeBlockFactory("meme")
-    );
+    gameGrid.setTile(0,8, TileFactory("deco_stump"));
+    gameGrid.setTile(1,8, TileFactory("deco_stump"));
+    gameGrid.setTile(1,9, TileFactory("lava"));
+
+    gameGrid.setTile(4,7, CodeBlockFactory("deco_stump"));
+
+    gameGrid.setTile(0,9, CodeBlockFactory("up"));
+
+    gameGrid.setTile(5,7, CodeBlockFactory("walkable"));
+
+    gameGrid.setTile(9,0, CodeBlockFactory("move"));
 
 
     // Return the grids
