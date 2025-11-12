@@ -302,8 +302,9 @@ const playerObj = new BeePlayerTile(tilePlayerBee);
 levels.registerLevel(testLevel);
 levels.registerLevel(level1);
 levels.registerLevel(level2);
+levels.registerLevel(level3);
 
-let startLevel = level1;
+let startLevel = level3;
 
 
 // UI Elements
