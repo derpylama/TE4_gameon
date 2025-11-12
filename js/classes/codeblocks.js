@@ -58,7 +58,7 @@ class CodeBlockAction extends CodeBlock {
     constructor(value, text, adjacentCodeBlocksCanBe = ["any", "any"]) {
         super(tileCodeblockAction, value, text);
         this.adjacentCodeBlocksCanBe = adjacentCodeBlocksCanBe; // e.g., ["object", "modifier"]   what left and rigth codeblocks can be 
-        this.executed = false;
+        this.executed = false; //maybe change executed
     }
 
     validate(adjacentBlocks) {

@@ -247,4 +247,7 @@ class Grid {
 
         return null;
     }
+    isinsideGrid(row, col) {
+        return !(row < 0 || row >= this.grid.length || col < 0 || col >= this.grid[0].length);
+    }
 }
