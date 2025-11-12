@@ -106,6 +106,11 @@ function checkTile(tile) {
         var gameGrid = currentGrids[0];
         var freeSpace = inventoryGrid.getFirstEmptyCell();
 
+        if (!freeSpace) {
+            // Inventory full
+            return "inventory_full";
+        }
+
         // if (!inventoryGrid.gridContains(tile)) {
         //     inventoryGrid.setTile(freeSpace[0], freeSpace[1], tile)
         // }
