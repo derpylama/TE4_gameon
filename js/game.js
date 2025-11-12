@@ -379,6 +379,9 @@ const startMenuButton = new UIButton(
     false
 );
 
+new UIText(855, 40, {"text":"Inventory", "color":"#ffff00"});
+new UIText(855, 395, {"text":"Code Area", "color":"#ffff00"});
+
 
 // Define loops
 function GameLoop() {

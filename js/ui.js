@@ -1,7 +1,18 @@
 const existingUiElements = [];
 
-class UIButton {
+class UIElement {
+    constructor() {
+        this.renderedState = null; // [x,y,width,height] of last render
+    }
+
+    render(ctx) {
+        // Override in subclasses
+    }
+}
+
+class UIButton extends UIElement {
     constructor(x,y, width,height, texture, text, onClick, worksWhenOverlay = false, register=true, global=true) {
+        super();
         this.x = x;
         this.y = y;
         this.width = width;
@@ -11,8 +22,6 @@ class UIButton {
         this.onClick = onClick;
         this.clickHandler = null;
         this.worksWhenOverlay = worksWhenOverlay;
-
-        this.renderedState = null; // [x,y,width,height] of last render
 
         if (register) this._registerClick();
         if (global) existingUiElements.push(this);
@@ -95,5 +104,60 @@ class UIButton {
                 color
             );
         }
+    }
+}
+
+class UIText extends UIElement {
+    constructor(x, y, text, global=true) {
+        super();
+        this.x = x;
+        this.y = y;
+        this.text = text;
+
+        if (global) existingUiElements.push(this);
+    }
+
+    render(ctx) {
+        let font = getFont();
+        let align = "left";
+        let color = "#ffffff";
+        let fontSize = 20;
+
+        let text = this.text;
+
+        // If text is object check for fontSize, font, color, align fields
+        if (typeof text === "object" && text !== null) {
+            if (text.fontSize !== undefined) {
+                fontSize = text.fontSize;
+            }
+            if (text.font !== undefined) {
+                font = text.font;
+            }
+            if (text.color !== undefined) {
+                color = text.color;
+            }
+            if (text.align !== undefined) {
+                align = text.align;
+            }
+            if (text.xOffset !== undefined) {
+                this.x += text.xOffset;
+            }
+            if (text.yOffset !== undefined) {
+                this.y += text.yOffset;
+            }
+            if (text.text !== undefined) {
+                text = text.text;
+            }
+        }
+
+        renderText(
+            ctx,
+            this.x,
+            this.y,
+            text,
+            `${fontSize}px ${font}`,
+            align,
+            color
+        );
     }
 }
