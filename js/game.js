@@ -303,7 +303,7 @@ levels.registerLevel(testLevel);
 levels.registerLevel(level1);
 levels.registerLevel(level2);
 
-let startLevel = testLevel;
+let startLevel = level1;
 
 
 // UI Elements

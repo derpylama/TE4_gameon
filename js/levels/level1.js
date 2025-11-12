@@ -15,42 +15,28 @@ level1 = new Level("level1", () => {
 
 
     // Place level tiles
-    gameGrid.setTile(4,8, new StoneTile());
+    gameGrid.setTile(4,8, TileFactory("stone"));
 
-    gameGrid.setTile(3,9, new DisabledVoidTile_NonVoidAboveBellowLeft());
-    gameGrid.setTile(5,9, new DisabledVoidTile_NonVoidAboveBellowLeft());
+    gameGrid.setTile(3,9, TileFactory("void_nonvoid_above_bellow_left"));
+    gameGrid.setTile(5,9, TileFactory("void_nonvoid_above_bellow_left"));
 
-    gameGrid.setTile(4,9, new BeehiveTile());
+    gameGrid.setTile(4,9, TileFactory("beehive"));
 
     gameGrid.setTile(
         3, 0,
-        new CodeBlockObject(
-            "stone",
-            {"text": "Stone", "color": "#ffde2c"},
-            StoneTile
-        )
+        CodeBlockFactory("stone")
     );
     gameGrid.setTile(
         3, 6,
-        new CodeBlockModifier(
-            "left",
-            {"text": "Left", "color": "#000000"},
-        )
+        CodeBlockFactory("left")
     );
     gameGrid.setTile(
         3, 7,
-        new CodeBlockModifier(
-            "right",
-            {"text": "Right", "color": "#000000"},
-        )
+        CodeBlockFactory("right")
     );
     gameGrid.setTile(
         6, 5,
-        new CodeBlockAction(
-            "move",
-            {"text": "Move", "color": "#ffde2c"},
-            ["object", "modifier"]
-        )
+        CodeBlockFactory("move")
     );
     
 

@@ -7,33 +7,19 @@ level2 = new Level("level2", () => {
     // Inventory
     inventoryGrid.setTile(
         0, 0,
-        new CodeBlockObject(
-            "stone",
-            {"text": "Stone", "color": "#ffde2c"},
-            StoneTile
-        )
+        CodeBlockFactory("stone")
     );
     inventoryGrid.setTile(
         0, 1,
-        new CodeBlockAction(
-            "move",
-            {"text": "Move", "color": "#ffde2c"},
-            ["object", "modifier"]
-        )
+        CodeBlockFactory("move")
     );
     inventoryGrid.setTile(
         0, 2,
-        new CodeBlockModifier(
-            "left",
-            {"text": "Left", "color": "#000000"},
-        )
+        CodeBlockFactory("left")
     );
     inventoryGrid.setTile(
         0, 3,
-        new CodeBlockModifier(
-            "right",
-            {"text": "Right", "color": "#000000"},
-        )
+        CodeBlockFactory("right")
     );
 
 
@@ -41,6 +27,7 @@ level2 = new Level("level2", () => {
     codeGrid.setTile(0,0, null);
     codeGrid.setTile(0,1, null);
     codeGrid.setTile(0,2, null);
+
     codeGrid.setTile(1,0, null);
     codeGrid.setTile(1,1, null);
     codeGrid.setTile(1,2, null);
@@ -51,36 +38,23 @@ level2 = new Level("level2", () => {
 
     
     // Place level tiles
-    gameGrid.setTile(8,9, new DisabledVoidTile_NonVoidAboveBellowLeft());
-    gameGrid.setTile(8,8, new LavaTile());
-    gameGrid.setTile(9,8, new LavaTile());
+    gameGrid.setTile(8,9, TileFactory("void_nonvoid_above_bellow_left"));
+    gameGrid.setTile(8,8, TileFactory("lava"));
+    gameGrid.setTile(9,8, TileFactory("lava"));
+    gameGrid.setTile(9,9, TileFactory("beehive"));
 
     gameGrid.setTile(
         0, 0,
-        new CodeBlockAction(
-            "is",
-            {"text": "Is", "fontSizeOffset": -4, "color": "#ffde2c"},
-            ["object", "any"]
-        )
+        CodeBlockFactory("is")
     );
     gameGrid.setTile(
         9, 0,
-        new CodeBlockObject(
-            "stone",
-            {"text": "Stone", "color": "#ffde2c"},
-            StoneTile
-        )
+        CodeBlockFactory("stone")
     );
     gameGrid.setTile(
         0, 9,
-        new CodeBlockObject(
-            "lava",
-            {"text": "Lava", "color": "#ffde2c"},
-            LavaTile
-        )
+        CodeBlockFactory("lava")
     );
-
-    gameGrid.setTile(9,9, new BeehiveTile());
 
 
     // Return the grids
