@@ -26,14 +26,14 @@ function CodeBlockFactory(value) {
             return new CodeBlockObject(
                 "beehive",
                 {"text": "BeeHive", "color": "#ffde2c", "fontSizeOffset": -6},
-                LavaTile
+                BeehiveTile
             );
 
         case "game":
             return new CodeBlockObject(
                 "game",
                 {"text": "Game", "color": "#ffde2c"},
-                StoneTile
+                null
             );
 
         case "deco_stump":

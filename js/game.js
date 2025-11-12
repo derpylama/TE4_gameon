@@ -1,5 +1,6 @@
 const DEBUG = window.location.search.includes("debug");
 const GLOSSY = window.location.search.includes("glossy");
+const DEBUGLEVEL = window.location.search.includes("dglevel");
 var MEME = window.location.search.includes("meme");
 
 const CAN_MOVE_ACTION_INTO_ANY_WALKABLE = true;
@@ -304,7 +305,7 @@ levels.registerLevel(level1);
 levels.registerLevel(level2);
 levels.registerLevel(level3);
 
-let startLevel = level1;
+let startLevel = DEBUGLEVEL ? testLevel : level1;
 
 
 // UI Elements
@@ -330,7 +331,10 @@ const onGameReset = (x=-1,y=-1,type=-1) => {
     // Is there something there already die?
     const existingTile = currentGrids[0].getTile(pos[0], pos[1]);
     if (existingTile !== null && !(existingTile instanceof BeePlayerTile)) {
-        triggerGameOver("Crushed, stood where reality reset!");
+        triggerGameOver({
+            "text":"Crushed, stood where reality reset!",
+            "fontSizeOffset": -5
+        });
     }
 
     // Reset player position
