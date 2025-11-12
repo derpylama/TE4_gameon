@@ -202,7 +202,7 @@ const overlayRealityIsWrong = new Overlay(
 );
 
 const onOverlayWonClickContinue = (x,y,type) => {
-    currentGrids = levels.setLoadAndRunLevel(level2);
+    currentGrids = levels.setLoadAndRunNextLevel();
     overlayer.hideOverlay();
     gameWon = false;
 };
@@ -304,7 +304,7 @@ levels.registerLevel(level1);
 levels.registerLevel(level2);
 levels.registerLevel(level3);
 
-let startLevel = level3;
+let startLevel = level1;
 
 
 // UI Elements

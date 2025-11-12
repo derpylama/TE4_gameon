@@ -134,13 +134,11 @@ class LevelHandler {
     }
 
     setLoadAndRunNextLevel() {
-        
-        if ((this.currentIndex + 1) in this.levels) {
-            this.setLoadAndRunLevelByIndex( this.currentIndex +1 );
+        if (this.currentIndex + 1 < this.levels.length) {
+            this.currentIndex += 1;
+            return this.loadAndRunLevel();
         }
-        else{
-            window.location.reload();
-        }
+        return [null, null, null];
     }
 }
 
