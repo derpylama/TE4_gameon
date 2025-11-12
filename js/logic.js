@@ -79,7 +79,17 @@ window.addEventListener("load", () => {
 function triggerGameOver(reason = null) {
     audio.playSound("sfx.death");
     gameOver = true;
-    overlayGameOver.setText("reason", "Reason: " + reason);
+
+    if (reason === null) {
+        reason = ""
+    } else {
+        if (typeof reason === "object") {
+            reason.text = "Reason: " + reason.text;
+        } else {
+            reason = "Reason: " + reason;
+        }
+    }
+    overlayGameOver.setText("reason", reason); 
     overlayer.showOverlayObj(overlayGameOver);
 }
 
@@ -98,7 +108,10 @@ function checkTile(tile) {
         return "goal";
     }
     else if (tile.isDeath) {
-        triggerGameOver("Your choices led to your demise.");
+        triggerGameOver({
+            "text": "Your choices led to your demise.",
+            "fontSizeOffset": -2
+        });
         return "death";
     }
     else if (tile instanceof CodeBlockAction || tile instanceof CodeBlockEntity || tile instanceof CodeBlockModifier){

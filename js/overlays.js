@@ -19,6 +19,9 @@ class Overlay {
 
     additionalRenders(ctx) {
         if (this.texts.hasOwnProperty("reason")) {
+
+            let text = this.texts["reason"] || "";
+
             let textX = 430;
             let textY = 560;
             let fontSize = 20;
@@ -26,7 +29,32 @@ class Overlay {
             let align = "center";
             let color = "#ff0000";
 
-            let text = this.texts["reason"] || "";
+            if (typeof text === "object" && text !== null) {
+                if (text.fontSize !== undefined) {
+                    fontSize = text.fontSize;
+                }
+                if (text.fontSizeOffset !== undefined) {
+                    fontSize += text.fontSizeOffset;
+                }
+                if (text.font !== undefined) {
+                    font = text.font;
+                }
+                if (text.color !== undefined) {
+                    color = text.color;
+                }
+                if (text.align !== undefined) {
+                    align = text.align;
+                }
+                if (text.xOffset !== undefined) {
+                    textX += text.xOffset;
+                }
+                if (text.yOffset !== undefined) {
+                    textY += text.yOffset;
+                }
+                if (text.text !== undefined) {
+                    text = text.text;
+                }
+            }
 
             renderText(ctx, textX, textY, text, `${fontSize}px ${font}`, align, color);
         }
