@@ -2,7 +2,7 @@ const DEBUG = window.location.search.includes("debug");
 const GLOSSY = window.location.search.includes("glossy");
 var MEME = window.location.search.includes("meme");
 
-const CAN_MOVE_ACTION_INTO_ANY_WALKABLE = false;
+const CAN_MOVE_ACTION_INTO_ANY_WALKABLE = true;
 
 // Defines
 let lastTime = performance.now();
