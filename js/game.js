@@ -257,6 +257,7 @@ const overlayRealityIsWrong = new Overlay(
 
 const onOverlayWonClickContinue = (x,y,type) => {
     currentGrids = levels.setLoadAndRunLevel(level2);
+    interpreter.initRecordState(currentGrids[0]);
     overlayer.hideOverlay();
     gameWon = false;
 };
@@ -358,7 +359,7 @@ levels.registerLevel(level1);
 levels.registerLevel(level2);
 levels.registerLevel(level3);
 
-let startLevel = level3;
+let startLevel = level1;
 
 
 // UI Elements
@@ -378,6 +379,7 @@ const onGameReset = (x=-1,y=-1,type=-1) => {
     // Get current player position
     let pos = currentGrids[0].getPosOfObj(playerObj);
 
+
     // Reload current level
     currentGrids = levels.setLoadAndRunLevel(levels.getCurrentLevel());
 
@@ -390,27 +392,6 @@ const onGameReset = (x=-1,y=-1,type=-1) => {
     // Reset player position
     playerObj.moveTo(pos[0], pos[1]);
 }
-const iconTrash = new Texture("./assets/images/icons/trash.png");
-const iconTrashActive = new Texture("./assets/images/icons/trash_active.png");
-const resetButton = new UIButton(
-    835, 740, 64, 64,
-    new DataDrivenTexture(
-        (_, cellContext) => {
-
-            // If resetAnimStarted is null set it to now else check if time has passed
-            const now = Date.now();
-            if (now - resetAnimStarted >= 500) {
-                resetAnimStarted = null;
-                return iconTrash;
-            }
-
-            return iconTrashActive;
-        }
-    ),
-    {"text": "Reset", "fontSize": 15, "yOffset": 13, "color": "#FFFFFF"},
-    onGameReset,
-    true // Works with overlay open
-);
 
 let startMenuSize = 80;
 const startMenuButton = new UIButton(
